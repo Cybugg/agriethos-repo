@@ -375,3 +375,11 @@ background: rgb(252, 255, 249);
 .text-success-900{
  color: rgb(8, 62, 8);
 }
+
+/* Some notes to note concerning tailwindcss text-sizes */
+/* text-5xl == 48px */
+/* text-4xl == 36px */
+/* text-3xl == 30px */
+/* text-2xl == 24px */
+/* text-xl == 20px */
+/* text-base == 16px */

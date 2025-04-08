@@ -1,11 +1,13 @@
 // Farmers dashboard
+import Image from 'next/image';
 import React from 'react'
 
 export default function Home() {
     return (
       <div className="h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}
-       <div className='flex flex-col gap-2'>
+        <div className='flex items-start justify-between'>
+     <div className='flex flex-col gap-2'>
         <div className='text-2xl'>
           Home
         </div>
@@ -13,6 +15,11 @@ export default function Home() {
           Your farm at a glance
         </div>
        </div>
+       <div>
+<Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
+       </div>
+        </div>
+  
        {/* Overview Stats */}
        <div className='flex mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
         {/* Item 1 */}
@@ -68,6 +75,28 @@ export default function Home() {
           </div>
         </div>
        </div>
+
+      {/* Second Section */}
+      <div className='flex gap-5 items-center mt-6'>
+        {/* Crop log */}
+     <div className='h-[395px] w-full rounded-lg border-[0.75px] border-grey-200'>
+<div className='flex items-center justify-between'>
+<div>
+Crop Growth
+</div>
+<div>
+
+</div>
+</div>
+    </div>
+    {/* Today's Weather */}
+    <div className='h-[395px] w-[448px] rounded-lg border-[0.75px] border-grey-200'>
+{/* Title */}
+<div>
+  Today's Weather
+</div>
+    </div>
+      </div>
       </div>
     );
   }

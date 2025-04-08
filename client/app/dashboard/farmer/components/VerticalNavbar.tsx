@@ -11,7 +11,7 @@ type NavItemProps = {
 
 const NavItem: React.FC<NavItemProps> = ({ icon, label, active}) => (
   <div className={`group relative flex items-center justify-start w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px]  ${active&&"bg-primary-500 "}`}>
-   <span><Image src={icon} alt="logo" width={24} height={24167} className=""></Image>
+   <span><Image src={icon} alt="logo" width={24} height={24} className=""></Image>
    </span> 
    <div>
    {label}

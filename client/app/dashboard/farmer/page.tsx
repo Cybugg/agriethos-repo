@@ -77,11 +77,11 @@ export default function Home() {
        </div>
 
       {/* Second Section */}
-      <div className='flex gap-5 items-center mt-6'>
+      <div className='flex gap-5 items-center mt-6 '>
         {/* Crop log */}
-     <div className='h-[395px] w-full rounded-lg border-[0.75px] border-grey-200'>
+     <div className='h-[395px] w-full rounded-lg border-[0.75px] border-grey-200 p-4'>
 <div className='flex items-center justify-between'>
-<div>
+<div className='text-xl'>
 Crop Growth
 </div>
 <div>
@@ -90,10 +90,104 @@ Crop Growth
 </div>
     </div>
     {/* Today's Weather */}
-    <div className='h-[395px] w-[448px] rounded-lg border-[0.75px] border-grey-200'>
+    <div className='h-[395px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4'>
 {/* Title */}
-<div>
+<div className='text-xl'>
   Today's Weather
+</div>
+{/* lists of weather variables */}
+<div className='flex flex-col gap-6'>
+
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Location
+</div>
+<div>
+Osun, Nigeria
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Date
+</div>
+<div>
+3rd April, 2025
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Temperature(Min/Max)
+</div>
+<div>
+24°C/34°C
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Rainfall Forecast
+</div>
+<div>
+Light rain by afternoon
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Wind
+</div>
+<div>
+Moderate breeze
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Humidity 
+</div>
+<div>
+78%
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Sunlight Duration
+</div>
+<div>
+8 hours
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Dew Point
+</div>
+<div>
+20°C
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Extreme Weather Alert
+</div>
+<div>
+None
+</div>
+</div>
 </div>
     </div>
       </div>

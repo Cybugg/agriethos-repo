@@ -21,7 +21,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, active}) => (
 
 const VerticalNavbar: React.FC = () => {
   return (
-    <div className="h-screen w-[352px] py-[80px] px-[32px] bg-white  flex flex-col  gap-[40px] items-center shadow-lg border-r-grey-200 border-r-[0.75px] ">
+    <div className="h-screen w-[352px] py-[80px] px-[32px] bg-white  fixed flex flex-col  gap-[40px] items-center border-r-grey-200 border-r-[0.75px] ">
       {/* Top: Logo or Brand */}
       <div className="flex flex-col w-full items-center space-y-4">
         <div className="text-2xl font-bold flex items-center justify-start w-full"><Image src={"/static/logo-black.png"} alt="logo" width={167} height={34.99} className=""></Image></div>

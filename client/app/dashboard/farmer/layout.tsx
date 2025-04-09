@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex">
       <VerticalNavbar />
-      <main className="flex-1">{children}</main>
+      <main className="ml-[352px] flex-1">{children}</main>
     </div>
   );
 }

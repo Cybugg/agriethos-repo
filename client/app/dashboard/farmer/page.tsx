@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function Home() {
     return (
-      <div className="h-screen px-[32px] py-[80px] bg-white text-black">
+      <div className="min-h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}
         <div className='flex items-start justify-between'>
      <div className='flex flex-col gap-2'>
@@ -19,13 +19,13 @@ export default function Home() {
 <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
        </div>
         </div>
-  
+       {/* Section One */}
        {/* Overview Stats */}
-       <div className='flex mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
+       <section className='flex mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
         {/* Item 1 */}
         <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]  border-r-[0.75px] border-grey-200'>
           <div className='flex items-center justify-between'>
-           <div className='text-sm text-grey-400'>
+           <div className='text-sm text-grey-200'>
             Total Active Crops
           </div>
           <div className='text-success-500 '>
@@ -39,7 +39,7 @@ export default function Home() {
              {/* Item 2 */}
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] border-r-[0.75px] border-grey-200'>
           <div className='flex'>
-           <div className='text-sm text-grey-400'>
+           <div className='text-sm text-grey-200'>
           Farm Location
           </div>
          
@@ -51,10 +51,10 @@ export default function Home() {
              {/* Item 3 */}
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] border-r-[0.75px] border-grey-200'>
           <div className='flex items-center justify-between'>
-           <div className='text-sm text-grey-400'>
+           <div className='text-sm text-grey-200'>
        Last Logged Activity
           </div>
-          <div className='text-sm text-grey-400'>
+          <div className='text-sm text-grey-200'>
              2 Days ago
           </div >
           </div>
@@ -65,7 +65,7 @@ export default function Home() {
              {/* Item 4 */}
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]'>
           <div className='flex'>
-           <div className='text-sm text-grey-400'>
+           <div className='text-sm text-grey-200'>
            Verified Blockchain Entries
           </div>
       
@@ -74,13 +74,14 @@ export default function Home() {
             11
           </div>
         </div>
-       </div>
+       </section>
 
-      {/* Second Section */}
-      <div className='flex gap-5 items-center mt-6 '>
+      {/* Section Two */}
+      <section className='flex gap-5 items-start mt-6 '>
         {/* Crop log */}
-     <div className='h-[395px] w-full rounded-lg border-[0.75px] border-grey-200 p-4'>
+     <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4'>
 <div className='flex items-center justify-between'>
+  {/* Title */}
 <div className='text-xl'>
 Crop Growth
 </div>
@@ -90,13 +91,13 @@ Crop Growth
 </div>
     </div>
     {/* Today's Weather */}
-    <div className='h-[395px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4'>
+    <div className='min-h-[440px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
 {/* Title */}
 <div className='text-xl'>
   Today's Weather
 </div>
 {/* lists of weather variables */}
-<div className='flex flex-col gap-6'>
+<div className='flex flex-col gap-4 w-[416px]'>
 
 {/* Variable */}
 <div className='flex items-center justify-between'>
@@ -190,7 +191,120 @@ None
 </div>
 </div>
     </div>
-      </div>
+      </section>
+
+      {/* Section three */}
+      <section className='flex gap-5 mt-6'>
+        {/* Recent Crop Logs */}
+        <div className='min-h-[378px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
+        <div className='flex items-center justify-between'>
+        {/* Title */}
+        <div className='text-xl'>
+        Recent Crop Logs
+        </div>
+        {/* Crop Log variables */}
+<div className='flex flex-col gap-4 w-[346px]'>
+
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Crop Name/Growth Stage
+</div>
+<div>
+Corn/Pre-harvest
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Date
+</div>
+<div>
+3rd April, 2025
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Time
+</div>
+<div>
+14:39PM
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+VEri
+</div>
+<div>
+Light rain by afternoon
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Wind
+</div>
+<div>
+Moderate breeze
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Humidity 
+</div>
+<div>
+78%
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Sunlight Duration
+</div>
+<div>
+8 hours
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Dew Point
+</div>
+<div>
+20°C
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Extreme Weather Alert
+</div>
+<div>
+None
+</div>
+</div>
+</div>
+        <div>
+     </div>
+     </div>
+        </div>
+        {/* Verification status */}
+        <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
+
+        </div>
+      </section>
       </div>
     );
   }

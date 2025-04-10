@@ -196,11 +196,12 @@ None
       {/* Section three */}
       <section className='flex gap-5 mt-6'>
         {/* Recent Crop Logs */}
-        <div className='min-h-[378px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
+        <div className=' w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col '>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-xl'>
         Recent Crop Logs
+        </div>
         </div>
         {/* Crop Log variables */}
 <div className='flex flex-col gap-4 w-[346px]'>
@@ -239,70 +240,19 @@ Time
 <div className='flex items-center justify-between'>
   {/* Variable Name */}
 <div className='text-grey-200'>
-VEri
+Verifaction Status
 </div>
-<div>
-Light rain by afternoon
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-200'>
-Wind
-</div>
-<div>
-Moderate breeze
+<div className='text-success-500'>
+Success
 </div>
 </div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-200'>
-Humidity 
-</div>
-<div>
-78%
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-200'>
-Sunlight Duration
-</div>
-<div>
-8 hours
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-200'>
-Dew Point
-</div>
-<div>
-20°C
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-200'>
-Extreme Weather Alert
-</div>
-<div>
-None
-</div>
-</div>
-</div>
+
         <div>
      </div>
      </div>
         </div>
         {/* Verification status */}
-        <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
-
+        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
         </div>
       </section>
       </div>

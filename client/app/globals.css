@@ -233,7 +233,7 @@ background: rgb(252, 255, 249);
  color: rgb(233, 62, 62);
 }
 .text-error-500{
- color: rgb(227, 14, 14);
+ color: #e30e0e;
 }
 .text-error-600{
  color: rgb(207, 13, 13);
@@ -269,7 +269,7 @@ background: rgb(252, 255, 249);
   background: rgb(255, 198, 0);
 }
 .bg-warning-600{
-  background: rgb(232, 180, 0);
+  background: #e8b400;
 }
 .bg-warning-700{
   background: rgb(181, 141, 0);
@@ -330,7 +330,7 @@ background: rgb(252, 255, 249);
   background: rgb(67, 169, 67);
 }
 .bg-success-500{
-  background: rgb(20, 148, 20);
+  background: #149414;
 }
 .bg-success-600{
   background: rgb(18, 135, 18);

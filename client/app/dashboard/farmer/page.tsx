@@ -252,7 +252,95 @@ Success
      </div>
         </div>
         {/* Verification status */}
-        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
+        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[400px]'>
+        <div className='flex items-center justify-between'>
+        {/* Title */}
+        <div className='text-xl'>
+        Verifaction Status
+        </div>
+        </div>
+        {/* Verification variables */}
+<div className='flex flex-col gap-4 w-full'>
+
+{/* Variable */}
+<div className='flex items-center justify-between text-center'>
+  {/* Variable Name */}
+<div className='text-grey-200'>
+Entry Name
+</div>
+<div className='text-grey-200'>
+Blockchain Hash
+</div>
+<div className='text-grey-200'>
+Verification Status
+</div>
+<div className='text-grey-200'>
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between text-center'>
+  {/* Variable Name */}
+<div className=''>
+Corn Pre-harvest
+</div>
+<div className=''>
+0xA4B5...F7D2
+</div>
+<div className=''>
+Verification Status
+</div>
+<div className=''>
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between text-center'>
+  {/* Variable Name */}
+<div className=''>
+Entry Name
+</div>
+<div className=''>
+Blockchain Hash
+</div>
+<div className=''>
+Verification Status
+</div>
+<div className=''>
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between text-center'>
+  {/* Variable Name */}
+<div className=''>
+Entry Name
+</div>
+<div className=''>
+Blockchain Hash
+</div>
+<div className=''>
+Verification Status
+</div>
+<div className=''>
+</div>
+</div>
+{/* Variable */}
+<div className='flex items-center justify-between text-center'>
+  {/* Variable Name */}
+<div className=''>
+Entry Name
+</div>
+<div className=''>
+Blockchain Hash
+</div>
+<div className=''>
+Verification Status
+</div>
+<div className=''>
+</div>
+</div>
+        <div>
+     </div>
+     </div>
+      
         </div>
       </section>
       </div>

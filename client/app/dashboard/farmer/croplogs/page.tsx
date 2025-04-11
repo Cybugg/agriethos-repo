@@ -2,6 +2,35 @@
 import React, { useEffect } from 'react'
 import { useNavContext } from '../NavContext';
 import Image from 'next/image';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+// Define the type for a single data item
+interface PieDataItem {
+  name: string;
+  value: number;
+}
+
+// Define props type
+interface PieChartComponentProps {
+  data: PieDataItem[];
+}
+
+// Custom color palette
+const COLORS = ['#149414', '#ffc600', '#e30e0e', '#FF8042'];
+
+// Sample Data
+const sampleData = [
+  { name: 'Success', value: 60 },
+  { name: 'pending', value: 30 },
+  { name: 'rejected', value: 10 },
+];
 
 function page() {
       const {setCurrentPage} = useNavContext();
@@ -9,6 +38,7 @@ function page() {
       useEffect(()=>{
         setCurrentPage("logs")
       },[])
+      
   return (
        <div className="min-h-screen px-[32px] py-[80px] bg-white text-black">
               {/* Header and Descriptive Text */}
@@ -85,7 +115,7 @@ function page() {
       <div className='w-full'>
       3 December, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hover:underline'>
+      <div className='text-success-700 w-full font-bold cursor-pointer '>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -107,7 +137,7 @@ function page() {
       <div className='w-full'>
     3 june, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hover:underline'>
+      <div className='text-success-700 w-full font-bold cursor-pointer '>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -129,7 +159,7 @@ function page() {
       <div className='w-full'>
       7 Augusr, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hover:underline'>
+      <div className='text-success-700 w-full font-bold cursor-pointer '>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -151,7 +181,7 @@ function page() {
       <div className='w-full'>
       3 June, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hover:underline'>
+      <div className='text-success-700 w-full font-bold cursor-pointer '>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -173,7 +203,7 @@ function page() {
       <div className='w-full'>
       2 April, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hover:underline'>
+      <div className='text-success-700 w-full font-bold cursor-pointer '>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -308,7 +338,7 @@ View QR Code
         </div>
 
         {/* Verification Statistics */}
-        <div className=' w-full basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
+        <div className=' w-full basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col  overflow-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-xl'>
@@ -316,36 +346,29 @@ View QR Code
         </div>
         </div>
         {/* Pie-chart */}
-<div className='flex flex-col gap-4 w-full items-  justify-center '>
-     </div>
-     {/* Labels */}
-     <div className='flex items-center justify-between'>
-{/* item */}
-<div className='gap-2 flex items-center'>
-<div className='p-2 rounded-full h-2 w-2 bg-success-500'>
-
-</div>
-<div>
-  Success
-</div>
-</div>
-{/* item */}
-<div className='gap-2 flex items-center'>
-<div className='p-2 rounded-full h-2 w-2 bg-warning-500'>
-
-</div>
-<div>
-  Pending
-</div>
-</div>
-{/* item */}
-<div className='gap-2 flex items-center'>
-<div className='p-2 rounded-full h-2 w-2 bg-error-500'>
-</div>
-<div>
-  Rejected
-</div>
-</div>
+<div className='flex flex-col gap-4 w-full justify-center '>
+<ResponsiveContainer width="100%" height={300}>
+      <PieChart>
+        {/* Pie component for data rendering */}
+        <Pie
+          data={sampleData}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={100}
+          fill="#8884d8"
+          label
+        >
+          {/* Map through data to assign colors */}
+          {sampleData.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
      </div>
         </div>
             </section>

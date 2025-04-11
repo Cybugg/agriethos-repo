@@ -93,9 +93,9 @@ export default function Home() {
         </div>
        {/* Section One */}
        {/* Overview Stats */}
-       <section className='flex mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
+       <section className='flex flex-col lg:flex-row mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
         {/* Item 1 */}
-        <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]  border-r-[0.75px] border-grey-200'>
+        <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]  lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
           <div className='flex items-center justify-between'>
            <div className='text-sm text-grey-400'>
             Total Active Crops
@@ -109,7 +109,7 @@ export default function Home() {
           </div>
         </div>
              {/* Item 2 */}
-             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] border-r-[0.75px] border-grey-200'>
+             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
           <div className='flex'>
            <div className='text-sm text-grey-400'>
           Farm Location
@@ -121,7 +121,7 @@ export default function Home() {
           </div>
         </div>
              {/* Item 3 */}
-             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] border-r-[0.75px] border-grey-200'>
+             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
           <div className='flex items-center justify-between'>
            <div className='text-sm text-grey-400'>
        Last Logged Activity
@@ -184,9 +184,12 @@ Crop Growth
           <Tooltip />
           <Legend />
           {/* <Line type="monotone" dataKey="preHarvest" stroke="#00b894" name="Pre-Harvest" /> */}
-          <Line type="monotone" dataKey="postHarvest" stroke="#149414" name="Post-Harvest" />
+          <Line type="monotone" dataKey="preHarvest" stroke="#149414" name="Pre-Harvest" />
         </LineChart>
       </ResponsiveContainer>
+      <div className='text-xs text-grey-500 w-full text-center'>
+        Only for demonstration purpose, this feature is coming soon.
+      </div>
     </div>
     {/* Today's Weather */}
     <div className='min-h-[440px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
@@ -392,7 +395,7 @@ Corn Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-24'>
+<div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -413,7 +416,7 @@ Corn Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-24'>
+<div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -434,7 +437,7 @@ Tomato Post-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-24'>
+<div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -455,7 +458,7 @@ Ground Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-24'>
+<div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -476,7 +479,7 @@ Corn Post-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-24'>
+<div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>

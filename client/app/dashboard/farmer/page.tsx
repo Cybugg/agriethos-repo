@@ -1,9 +1,79 @@
+"use client"
 // Farmers dashboard
 import Image from 'next/image';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+import { useNavContext } from './NavContext';
+
+
+// Define the shape of the chart data
+interface GrowthDataPoint {
+  time: string;
+  preHarvest: number;
+  postHarvest: number;
+}
+
+// Define available crop types
+type CropType = 'maize' | 'rice';
+type RangeType = 'week' | 'month' | 'year';
+
+// Mock dataset
+const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
+  maize: {
+    week: [
+      { time: 'Mon', preHarvest: 20, postHarvest: 5 },
+      { time: 'Tue', preHarvest: 35, postHarvest: 10 },
+      { time: 'Wed', preHarvest: 50, postHarvest: 15 },
+      { time: 'Thu', preHarvest: 65, postHarvest: 20 },
+      { time: 'Fri', preHarvest: 80, postHarvest: 25 },
+    ],
+    month: [
+      { time: 'Week 1', preHarvest: 30, postHarvest: 10 },
+      { time: 'Week 2', preHarvest: 60, postHarvest: 15 },
+      { time: 'Week 3', preHarvest: 90, postHarvest: 20 },
+      { time: 'Week 4', preHarvest: 100, postHarvest: 30 },
+    ],
+    year: [
+      { time: 'Q1', preHarvest: 25, postHarvest: 5 },
+      { time: 'Q2', preHarvest: 50, postHarvest: 20 },
+      { time: 'Q3', preHarvest: 75, postHarvest: 40 },
+      { time: 'Q4', preHarvest: 100, postHarvest: 60 },
+    ],
+  },
+  rice: {
+    week: [
+      { time: 'Mon', preHarvest: 10, postHarvest: 2 },
+      { time: 'Tue', preHarvest: 25, postHarvest: 5 },
+      { time: 'Wed', preHarvest: 40, postHarvest: 10 },
+      { time: 'Thu', preHarvest: 60, postHarvest: 15 },
+      { time: 'Fri', preHarvest: 80, postHarvest: 18 },
+    ],
+    month: [
+      { time: 'Week 1', preHarvest: 20, postHarvest: 8 },
+      { time: 'Week 2', preHarvest: 50, postHarvest: 15 },
+      { time: 'Week 3', preHarvest: 70, postHarvest: 25 },
+      { time: 'Week 4', preHarvest: 100, postHarvest: 35 },
+    ],
+    year: [
+      { time: 'Q1', preHarvest: 20, postHarvest: 5 },
+      { time: 'Q2', preHarvest: 45, postHarvest: 15 },
+      { time: 'Q3', preHarvest: 75, postHarvest: 30 },
+      { time: 'Q4', preHarvest: 100, postHarvest: 50 },
+    ],
+  },
+};
 
 export default function Home() {
-  
+  const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
+  const [selectedRange, setSelectedRange] = useState<RangeType>('week');
+  const {setCurrentPage} = useNavContext();
+  const data = cropData[selectedCrop][selectedRange];
+
+  useEffect(()=>{
+    setCurrentPage("home")
+  },[])
     return (
       <div className="min-h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}
@@ -79,6 +149,8 @@ export default function Home() {
 {/* ########################################################################################################### */}
       {/* Section Two */}
       <section className='flex gap-8 items-start mt-6 '>
+
+ {/* ////////////////////////////////////////////////////////////////////////////////////////////// */}
         {/* Crop log */}
      <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4'>
 <div className='flex items-center justify-between'>
@@ -103,6 +175,17 @@ Crop Growth
 </select>  </div>
 </div>
 </div>
+<ResponsiveContainer width="100%" height={300} className={" mt-16"}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {/* <Line type="monotone" dataKey="preHarvest" stroke="#00b894" name="Pre-Harvest" /> */}
+          <Line type="monotone" dataKey="postHarvest" stroke="#149414" name="Post-Harvest" />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
     {/* Today's Weather */}
     <div className='min-h-[440px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
@@ -266,7 +349,7 @@ Success
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////// */}
         {/* Verification status */}
-        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[300px]  overflow-scroll'>
+        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-xl'>
@@ -287,7 +370,7 @@ Blockchain Hash
 <div className='text-grey-600  w-full'>
 Verification Status
 </div>
-<div className='text-grey-600 w-full'>
+<div className='text-grey-600 w-24'>
 
 </div>
 </div>
@@ -308,7 +391,7 @@ Corn Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-full'>
+<div className='w-24'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -329,7 +412,7 @@ Corn Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-full'>
+<div className='w-24'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -350,7 +433,7 @@ Tomato Post-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-full'>
+<div className='w-24'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -371,7 +454,7 @@ Ground Pre-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-full'>
+<div className='w-24'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
@@ -392,7 +475,7 @@ Corn Post-harvest
 </div>
 
 {/* Verification Link */}
-<div className='w-full'>
+<div className='w-24'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>

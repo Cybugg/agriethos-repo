@@ -86,9 +86,10 @@ export default function Home() {
           Your farm at a glance
         </div>
        </div>
-       <div>
-<Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
-       </div>
+       <div className='flex gap-2 items-center'>
+                  <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl'>Connect Wallet</button>
+          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
+                 </div>
         </div>
        {/* Section One */}
        {/* Overview Stats */}

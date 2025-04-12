@@ -55,8 +55,39 @@ body {
 .bg-primary-900{
   background: rgb(69, 99, 32);
 }
+/* Text */
+.text-primary-50{
+ color: rgb(246, 253, 237);
+}
+.text-primary-100{
+ color: rgb(227, 249, 200);
+}
+.text-primary-200{
+ color: rgb(214, 246, 173);
+}
+.text-primary-300{
+ color: rgb(195, 242, 135);
+}
+.text-primary-400{
+ color: rgb(183, 239, 112);
+}
+.text-primary-500{
+ color: #a5eb4c;
+}
+.text-primary-600{
+ color: rgb(150, 214, 69);
+}
+.text-primary-700{
+ color: rgb(117, 167, 54);
+}
+.text-primary-800{
+ color: rgb(91, 129, 42);
+}
+.text-primary-900{
+ color: rgb(69, 99, 32);
+}
 /* Secondary */
-/* Background */
+/*Background*/
 .bg-secondary-50{
 background: rgb(252, 255, 249);
 }

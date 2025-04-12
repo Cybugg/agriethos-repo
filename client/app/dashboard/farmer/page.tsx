@@ -68,18 +68,19 @@ const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
 export default function Home() {
   const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
-  const {setCurrentPage} = useNavContext();
+  const {setCurrentPage,setMobileDisplay} = useNavContext();
   const data = cropData[selectedCrop][selectedRange];
 
   useEffect(()=>{
-    setCurrentPage("home")
+    setCurrentPage("home");
+    setMobileDisplay(false);
   },[])
     return (
-      <div className="min-h-screen px-[32px] py-[80px] bg-white text-black">
+      <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}
         <div className='flex items-start justify-between'>
      <div className='flex flex-col gap-2'>
-        <div className='text-2xl'>
+        <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
           Home
         </div>
         <div className='text-grey-600'>
@@ -87,9 +88,10 @@ export default function Home() {
         </div>
        </div>
        <div className='flex gap-2 items-center'>
-                  <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl'>Connect Wallet</button>
-          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
-                 </div>
+                    <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Connect Wallet</button>
+            <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
+            <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer lg:hidden" onClick={()=>setMobileDisplay(true)}/>
+                   </div>
         </div>
        {/* Section One */}
        {/* Overview Stats */}
@@ -104,7 +106,7 @@ export default function Home() {
              +20%
           </div >
           </div>
-          <div className='text-2xl'>
+          <div className=' text-2xl '>
             4
           </div>
         </div>
@@ -116,7 +118,7 @@ export default function Home() {
           </div>
          
           </div>
-          <div className='text-2xl'>
+          <div className='text-2xl '>
             Osun, Nigeria
           </div>
         </div>
@@ -130,7 +132,7 @@ export default function Home() {
              2 Days ago
           </div >
           </div>
-          <div className='text-2xl'>
+          <div className='text-2xl '>
           Corn/Pre-harvest
           </div>
         </div>
@@ -142,21 +144,21 @@ export default function Home() {
           </div>
       
           </div>
-          <div className='text-2xl'>
+          <div className='text-2xl '>
             11
           </div>
         </div>
        </section>
 {/* ########################################################################################################### */}
       {/* Section Two */}
-      <section className='flex gap-8 items-start mt-6 '>
+      <section className='lg:flex  lg:flex-row gap-8 items-start mt-6 '>
 
  {/* ////////////////////////////////////////////////////////////////////////////////////////////// */}
         {/* Crop log */}
-     <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4'>
-<div className='flex items-center justify-between'>
+     <div className='min-h-[440px] w-full rounded-lg border-[0.75px] border-grey-200 p-4 hidden lg:block'>
+<div className='lg:flex items-center justify-between '>
   {/* Title */}
-<div className='text-xl'>
+<div className='text-lg font-semibold lg:font-normal lg:text-xl'>
 Crop Growth
 </div>
 <div className='flex gap-2'>
@@ -176,7 +178,7 @@ Crop Growth
 </select>  </div>
 </div>
 </div>
-<ResponsiveContainer width="100%" height={300} className={" mt-16"}>
+<ResponsiveContainer width="100%" height={300} className={"mt-16 hidden lg:block"}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" />
@@ -192,13 +194,13 @@ Crop Growth
       </div>
     </div>
     {/* Today's Weather */}
-    <div className='min-h-[440px] w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
+    <div className='w-full lg:min-h-[440px] lg:w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
 {/* Title */}
-<div className='text-xl'>
+<div className='text-lg font-semibold lg:font-normal lg:text-xl'>
   Today's Weather
 </div>
 {/* lists of weather variables */}
-<div className='flex flex-col gap-4 w-[416px]'>
+<div className='flex flex-col gap-4 lg:w-[416px]'>
 
 {/* Variable */}
 <div className='flex items-center justify-between'>
@@ -295,17 +297,17 @@ None
       </section>
 {/* ############################################################################################### */}
       {/* Section three */}
-      <section className='flex gap-8 mt-6'>
+      <section className='flex flex-col lg:flex-row gap-8 mt-6'>
         {/* Recent Crop Logs */}
-        <div className=' w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col h-[250px]'>
+        <div className='w-full lg:w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col h-[250px]'>
         <div className='flex items-center justify-between'>
         {/* Title */}
-        <div className='text-xl'>
+        <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Recent Crop Logs
         </div>
         </div>
         {/* Crop Log variables */}
-<div className='flex flex-col gap-4 w-[346px]'>
+<div className='flex flex-col gap-4 lg:w-[346px]'>
 
 {/* Variable */}
 <div className='flex items-center justify-between'>
@@ -356,7 +358,7 @@ Success
         <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
-        <div className='text-xl'>
+        <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Verifaction Status
         </div>
         </div>
@@ -368,10 +370,10 @@ Success
 <div className='text-grey-600  w-full'>
 Entry Name
 </div>
-<div className='text-grey-600 w-full'>
+<div className='text-grey-600 w-full hidden lg:block'>
 Blockchain Hash
 </div>
-<div className='text-grey-600  w-full'>
+<div className='text-grey-600  w-full '>
 Verification Status
 </div>
 <div className='text-grey-600 w-24'>
@@ -384,12 +386,12 @@ Verification Status
 <div className=' w-full'>
 Corn Pre-harvest
 </div>
-<div className=' w-full'>
+<div className=' w-full hidden lg:block'>
 0xA4B5...F7D2
 </div>
 <div className='w-full'>
   <button className='bg-[#F2FEF2] px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
-<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
+<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} className='w-3 h-3 lg:w-4 lg:h-4' />
 <div className='text-xs'>Success</div>
 </button>
 </div>
@@ -405,12 +407,12 @@ Corn Pre-harvest
 <div className=' w-full'>
 Corn Pre-harvest
 </div>
-<div className=' w-full'>
+<div className=' w-full hidden lg:block'>
 0xA4B5...F7D2
 </div>
 <div className='w-full'>
   <button className='bg-[#FFF1F1] px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
-<Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
+<Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} className='w-3 h-3 lg:w-4 lg:h-4' />
 <div className='text-xs'>Rejected</div>
 </button>
 </div>
@@ -426,12 +428,12 @@ Corn Pre-harvest
 <div className=' w-full'>
 Tomato Post-harvest
 </div>
-<div className=' w-full'>
+<div className=' w-full hidden lg:block'>
 0xA4B5...F7D2
 </div>
 <div className='w-full'>
   <button className='bg-[#FFF9E6] px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
-<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
+<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} className='w-3 h-3 lg:w-4 lg:h-4'  />
 <div className='text-xs'>Pending</div>
 </button>
 </div>
@@ -447,12 +449,12 @@ Tomato Post-harvest
 <div className=' w-full'>
 Ground Pre-harvest
 </div>
-<div className=' w-full'>
+<div className=' w-full hidden lg:block'>
 0xA4B5...F7D2
 </div>
 <div className='w-full'>
   <button className='bg-[#FFF9E6] px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
-<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
+<Image src={"/icons/pending.svg"} alt='Pending img' className='w-3 h-3 lg:w-4 lg:h-4' width={16} height={16}  />
 <div className='text-xs'>Pending</div>
 </button>
 </div>
@@ -468,12 +470,12 @@ Ground Pre-harvest
 <div className=' w-full'>
 Corn Post-harvest
 </div>
-<div className=' w-full'>
+<div className=' w-full hidden lg:block'>
 0xA4B5...F7D2
 </div>
 <div className='w-full'>
   <button className='bg-[#F2FEF2] px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
-<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
+<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} className='w-3 h-3 lg:w-4 lg:h-4' />
 <div className='text-xs'>Success</div>
 </button>
 </div>

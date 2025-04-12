@@ -33,28 +33,30 @@ const sampleData = [
 ];
 
 function page() {
-      const {setCurrentPage} = useNavContext();
+      const {setCurrentPage,setMobileDisplay} = useNavContext();
     
       useEffect(()=>{
-        setCurrentPage("logs")
+        setCurrentPage("logs");
+        setMobileDisplay(false);
       },[])
       
   return (
-       <div className="min-h-screen px-[32px] py-[80px] bg-white text-black">
+       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
               {/* Header and Descriptive Text */}
               <div className='flex items-start justify-between'>
            <div className='flex flex-col gap-2'>
-              <div className='text-2xl'>
+              <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
                 Crop Logs
               </div>
               <div className='text-grey-600'>
                 Keep track of every farming activity
               </div>
              </div>
-             <div className='flex gap-2 items-center'>
-              <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl'>Connect Wallet</button>
-      <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer"></Image>
-             </div>
+              <div className='flex gap-2 items-center'>
+                                 <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Connect Wallet</button>
+                         <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
+                         <Image src={"/icons/burger.svg"} alt="menu" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
+                                </div>
               </div>
    
       {/* ########################################################################################################### */}
@@ -62,16 +64,16 @@ function page() {
             <section className=' mt-6 '>
        {/* ////////////////////////////////////////////////////////////////////////////////////////////// */}
               {/* */}
-           <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-center items-start max-h-[400px] overflow-scroll'>
+           <div className='w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-center items-start lg:max-h-[400px] overflow-scroll'>
       <div className='flex items-center justify-between w-full'>
         {/* Title */}
-      <div className='text-xl'>
+      <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
       Crops Growth & Tracking
       </div>
       <div className='flex gap-2'>
     
       <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2'>
-      <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> Add Crop
+      <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Crop</span> 
      </div>
       </div>
       </div>
@@ -84,16 +86,16 @@ function page() {
       <div className='text-grey-600 w-full'>
     Crop Name
       </div>
-      <div className='text-grey-600 w-full'>
-      Planning Date
+      <div className='text-grey-600 w-full hidden lg:block'>
+      Planting Date
       </div>
       <div className='text-grey-600 w-full'>
       Growth Stage
       </div>
-      <div className='text-grey-600 w-full'>
+      <div className='text-grey-600 w-full hidden lg:block'>
       Harvest Date
       </div>
-      <div className='text-grey-600 w-full'>
+      <div className='text-grey-600 w-full hidden lg:block'>
       Images
       </div>
       <div className='text-grey-600 w-24'>
@@ -106,16 +108,16 @@ function page() {
       <div className='w-full'>
     Strawberry
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       2 April, 2025
       </div>
       <div className='w-full'>
       Pre-harvest
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       3 December, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer '>
+      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -128,16 +130,16 @@ function page() {
       <div className='w-full'>
     Banana
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       8 April, 2025
       </div>
       <div className='w-full'>
       Pre-harvest
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
     3 june, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer '>
+      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -150,16 +152,16 @@ function page() {
       <div className='w-full'>
     Yam
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       2 April, 2025
       </div>
       <div className='w-full'>
       Pre-harvest
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       7 Augusr, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer '>
+      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -172,16 +174,16 @@ function page() {
       <div className='w-full'>
     Tomato
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       4 january, 2025
       </div>
       <div className='w-full'>
       Pre-harvest
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       3 June, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer '>
+      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -194,16 +196,16 @@ function page() {
       <div className='w-full'>
     Corn
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       16 Febuary, 2025
       </div>
       <div className='w-full'>
       Post-harvest
       </div>
-      <div className='w-full'>
+      <div className='w-full hidden lg:block'>
       2 April, 2025
       </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer '>
+      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
      <span className='hover:underline'>View Images</span>
       </div>
       <div className='w-24'>
@@ -215,11 +217,11 @@ function page() {
             </section>
       {/* ############################################################################################### */}
             {/* Section two */}
-            <section className='mt-6 flex gap-8 items-start '>
+            <section className='mt-6 flex flex-col lg:flex-row gap-8 items-start '>
   <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
-        <div className='text-xl'>
+        <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Verifications
         </div>
         </div>
@@ -232,7 +234,7 @@ function page() {
 Crop Name
 </div>
 <div className='text-grey-600  w-full'>
-Verification Status
+<span className='hidden lg:block'>Verification</span> Status
 </div>
 <div className='text-grey-600 w-full'>
 </div>
@@ -251,8 +253,8 @@ Strawberry
 </div>
 {/* Verification action */}
 <div className='w-full'>
-  <button className='hover:underline text-black'>
-View QR Code
+  <button className='hover:underline text-black font-bold'>
+  <span className='lg:hidden'>QR Code</span><span className='hidden lg:block'>View QR Code</span>
 </button>
 </div>
 </div>
@@ -270,8 +272,8 @@ Corn Pre-harvest
 </div>
 {/* Verification action */}
 <div className='w-full'>
-  <button className='hover:underline text-black'>
-Request Re-verification
+  <button className='hover:underline text-black font-bold'>
+<span className='lg:hidden'>Reverify</span><span className='hidden lg:block'>Request Re-verification </span>
 </button>
 </div>
 </div>
@@ -289,7 +291,7 @@ Tomato Post-harvest
 </div>
 {/* Verification action */}
 <div className='w-full'>
-  <button className='hover:underline text-black'>
+  <button className='hover:underline text-black font-bold'>
 
 </button>
 </div>
@@ -308,7 +310,7 @@ Ground Pre-harvest
 </div>
 {/* Verification action */}
 <div className='w-full'>
-  <button className='hover:underline text-black'>
+  <button className='hover:underline text-black font-bold'>
 
 </button>
 </div>
@@ -327,8 +329,8 @@ Corn Post-harvest
 </div>
 {/* Verification action */}
 <div className='w-full'>
-  <button className='hover:underline text-black'>
-View QR Code
+  <button className='hover:underline text-black font-bold'>
+<span className='lg:hidden'>QR Code</span><span className='hidden lg:block'>View QR Code</span>
 </button>
 </div>
 </div>
@@ -338,10 +340,10 @@ View QR Code
         </div>
 
         {/* Verification Statistics */}
-        <div className=' w-full basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col  overflow-scroll'>
+        <div className=' w-full lg:basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col  overflow-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
-        <div className='text-xl'>
+        <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Verifications Statistics
         </div>
         </div>

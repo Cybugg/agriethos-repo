@@ -28,8 +28,8 @@ const COLORS = ['#149414', '#ffc600', '#e30e0e', '#FF8042'];
 // Sample Data
 const sampleData = [
   { name: 'Success', value: 60 },
-  { name: 'pending', value: 30 },
-  { name: 'rejected', value: 10 },
+  { name: 'Pending', value: 30 },
+  { name: 'Rejected', value: 10 },
 ];
 
 function page() {
@@ -72,7 +72,7 @@ function page() {
       </div>
       <div className='flex gap-2'>
     
-      <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2'>
+      <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2'>
       <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Crop</span> 
      </div>
       </div>
@@ -218,7 +218,7 @@ function page() {
       {/* ############################################################################################### */}
             {/* Section two */}
             <section className='mt-6 flex flex-col lg:flex-row gap-8 items-start '>
-  <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
+  <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-y-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
@@ -340,7 +340,7 @@ Corn Post-harvest
         </div>
 
         {/* Verification Statistics */}
-        <div className=' w-full lg:basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col  overflow-scroll'>
+        <div className=' w-full lg:basis-2/5 rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col  '>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>

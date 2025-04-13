@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import { useNavContext } from '../NavContext';
 import Image from 'next/image';
+import EditOverview from '../components/editOverview';
 
 function page() {
       const {setCurrentPage,setMobileDisplay} = useNavContext();
@@ -11,7 +12,12 @@ function page() {
         setMobileDisplay(false);
       },[])
   return (
-     <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+    <div> 
+        {/* Pop ups */}
+      {/* Edit overview */}
+      {/* <EditOverview /> */}
+ <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+    
            {/* Header and Descriptive Text */}
            <div className='flex items-start justify-between'>
         <div className='flex flex-col gap-2'>
@@ -206,6 +212,8 @@ function page() {
            </div>
          </section>
          </div>
+    </div>
+    
   )
 }
 

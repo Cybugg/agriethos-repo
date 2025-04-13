@@ -355,7 +355,7 @@ Success
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////// */}
         {/* Verification status */}
-        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-scroll'>
+        <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-y-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
@@ -363,7 +363,7 @@ Success
         </div>
         </div>
         {/* Verification variables */}
-<div className='flex flex-col gap-4 w-full items-  justify-center '>
+<div className='flex flex-col gap-4 w-full  justify-center '>
 {/* Variable <header>*/}
 <div className='flex items-center w-full  justify-between '>
   {/* Variable Name */}
@@ -377,7 +377,6 @@ Blockchain Hash
 Verification Status
 </div>
 <div className='text-grey-600 w-24'>
-
 </div>
 </div>
 {/* Variable */}

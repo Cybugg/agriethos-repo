@@ -53,7 +53,7 @@ function page() {
               </div>
              </div>
               <div className='flex gap-2 items-center'>
-                                 <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Connect Wallet</button>
+                                 <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button>
                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                          <Image src={"/icons/burger.svg"} alt="menu" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                 </div>

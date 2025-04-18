@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import AddCrop from '../components/addCrops';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -41,7 +42,10 @@ function page() {
       },[])
       
   return (
-       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+    <div>
+       <AddCrop />
+<div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+       
               {/* Header and Descriptive Text */}
               <div className='flex items-start justify-between'>
            <div className='flex flex-col gap-2'>
@@ -53,7 +57,7 @@ function page() {
               </div>
              </div>
               <div className='flex gap-2 items-center'>
-                                 <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button>
+                                 {/* <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button> */}
                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                          <Image src={"/icons/burger.svg"} alt="menu" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                 </div>
@@ -64,7 +68,7 @@ function page() {
             <section className=' mt-6 '>
        {/* ////////////////////////////////////////////////////////////////////////////////////////////// */}
               {/* */}
-           <div className='w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-center items-start lg:max-h-[400px] overflow-scroll'>
+           <div className='w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-center items-start lg:max-h-[400px] overflow-y-scroll'>
       <div className='flex items-center justify-between w-full'>
         {/* Title */}
       <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
@@ -78,138 +82,103 @@ function page() {
       </div>
       </div>
        {/* lists of farm variables */}
-       <div className='flex flex-col gap-4 w-full justify-between '>
+       <div className='flex flex-col gap-4 w-full justify-between'>
       
       {/* Variable */}
-      <div className='flex items-center justify-between'>
+      <div className='hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full'>
         {/* Variable Name */}
-      <div className='text-grey-600 w-full'>
+      <div className='text-grey-600 basis-1/3 '>
     Crop Name
       </div>
-      <div className='text-grey-600 w-full hidden lg:block'>
-      Planting Date
-      </div>
-      <div className='text-grey-600 w-full'>
+    
+      <div className='text-grey-600 basis-1/3 '>
       Growth Stage
       </div>
-      <div className='text-grey-600 w-full hidden lg:block'>
-      Harvest Date
-      </div>
-      <div className='text-grey-600 w-full hidden lg:block'>
-      Images
-      </div>
-      <div className='text-grey-600 w-24'>
-      
+    
+      <div className='text-grey-600 basis-1/3 '>
+      Crop Status
       </div>
       </div>
        {/* Variable */}
-       <div className='flex items-center justify-between'>
+       <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center'>
         {/* Variable Name */}
-      <div className='w-full'>
+      <div className=' basis-1/3 flex items-center justify-center '>
     Strawberry
       </div>
-      <div className='w-full hidden lg:block'>
-      2 April, 2025
-      </div>
-      <div className='w-full'>
+   
+      <div className=' basis-1/3 flex items-center justify-center  '>
       Pre-harvest
       </div>
-      <div className='w-full hidden lg:block'>
-      3 December, 2025
-      </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
-     <span className='hover:underline'>View Images</span>
-      </div>
-      <div className='w-24'>
-      <Image src={"/icons/edit.png"} className='cursor-pointer' alt='edit img' width={24} height={24} />
+   
+      <div className='  basis-1/3 flex items-center justify-center '>
+           <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+<div className='text-xs'>Update</div>
+</button>
       </div>
       </div>
        {/* Variable */}
-       <div className='flex items-center justify-between'>
+       <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
         {/* Variable Name */}
-      <div className='w-full'>
+      <div className='basis-1/3 flex items-center justify-center '>
     Banana
       </div>
-      <div className='w-full hidden lg:block'>
-      8 April, 2025
-      </div>
-      <div className='w-full'>
+      
+      <div className='basis-1/3 flex items-center justify-center '>
       Pre-harvest
       </div>
-      <div className='w-full hidden lg:block'>
-    3 june, 2025
-      </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
-     <span className='hover:underline'>View Images</span>
-      </div>
-      <div className='w-24'>
-      <Image src={"/icons/edit.png"} className='cursor-pointer' alt='edit img' width={24} height={24} />
-      </div>
+<div className='basis-1/3 flex items-center justify-center '>
+     <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+<div className='text-xs'>Update</div>
+</button>
+</div>
+     
       </div>
        {/* Variable */}
-       <div className='flex items-center justify-between'>
+       <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
         {/* Variable Name */}
-      <div className='w-full'>
+      <div className='basis-1/3 flex items-center justify-center '>
     Yam
       </div>
-      <div className='w-full hidden lg:block'>
-      2 April, 2025
-      </div>
-      <div className='w-full'>
+     
+      <div className='basis-1/3 flex items-center justify-center '>
       Pre-harvest
       </div>
-      <div className='w-full hidden lg:block'>
-      7 Augusr, 2025
-      </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
-     <span className='hover:underline'>View Images</span>
-      </div>
-      <div className='w-24'>
-      <Image src={"/icons/edit.png"} className='cursor-pointer' alt='edit img' width={24} height={24} />
+     
+      <div className='basis-1/3 flex items-center justify-center '>
+     under review
       </div>
       </div>
        {/* Variable */}
-       <div className='flex items-center justify-between'>
+       <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
         {/* Variable Name */}
-      <div className='w-full'>
+      <div className='basis-1/3 flex items-center justify-center '>
     Tomato
       </div>
-      <div className='w-full hidden lg:block'>
-      4 january, 2025
-      </div>
-      <div className='w-full'>
+   
+      <div className='basis-1/3 flex items-center justify-center '>
       Pre-harvest
       </div>
-      <div className='w-full hidden lg:block'>
-      3 June, 2025
-      </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
-     <span className='hover:underline'>View Images</span>
-      </div>
-      <div className='w-24'>
-      <Image src={"/icons/edit.png"} className='cursor-pointer' alt='edit img' width={24} height={24} />
+    
+      <div className='basis-1/3 flex items-center justify-center  text-error-500'>
+     Rejected
       </div>
       </div>
        {/* Variable */}
-       <div className='flex items-center justify-between'>
+       <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between '>
         {/* Variable Name */}
-      <div className='w-full'>
+      <div className='basis-1/3 flex items-center justify-center '>
     Corn
       </div>
-      <div className='w-full hidden lg:block'>
-      16 Febuary, 2025
-      </div>
-      <div className='w-full'>
+  
+      <div className='basis-1/3 flex items-center justify-center '>
       Post-harvest
       </div>
-      <div className='w-full hidden lg:block'>
-      2 April, 2025
-      </div>
-      <div className='text-success-700 w-full font-bold cursor-pointer hidden lg:block'>
-     <span className='hover:underline'>View Images</span>
-      </div>
-      <div className='w-24'>
-      <Image src={"/icons/edit.png"} className='cursor-pointer' alt='edit img' width={24} height={24} />
+      
+      <div className='basis-1/3   flex items-center justify-center'>
+      <button className='bg-[#F2FEF2]  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
+<div className='text-xs'>Success</div>
+</button>
       </div>
       </div>
       </div>
@@ -240,7 +209,7 @@ Crop Name
 </div>
 </div>
 {/* Variable */}
-<div className='flex items-center justify-between '>
+<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
   {/* Variable Name */}
 <div className=' w-full'>
 Strawberry
@@ -259,7 +228,7 @@ Strawberry
 </div>
 </div>
 {/* Variable */}
-<div className='flex items-center justify-between '>
+<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
   {/* Variable Name */}
 <div className=' w-full'>
 Corn Pre-harvest
@@ -278,7 +247,7 @@ Corn Pre-harvest
 </div>
 </div>
 {/* Variable */}
-<div className='flex items-center justify-between '>
+<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
   {/* Variable Name */}
 <div className=' w-full'>
 Tomato Post-harvest
@@ -297,7 +266,7 @@ Tomato Post-harvest
 </div>
 </div>
 {/* Variable */}
-<div className='flex items-center justify-between '>
+<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
   {/* Variable Name */}
 <div className=' w-full'>
 Ground Pre-harvest
@@ -316,7 +285,7 @@ Ground Pre-harvest
 </div>
 </div>
 {/* Variable */}
-<div className='flex items-center justify-between '>
+<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
   {/* Variable Name */}
 <div className=' w-full'>
 Corn Post-harvest
@@ -375,6 +344,8 @@ Corn Post-harvest
         </div>
             </section>
             </div>
+    </div>
+       
   )
 }
 

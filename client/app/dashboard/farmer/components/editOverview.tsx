@@ -21,25 +21,41 @@ const EditOverview:React.FC = () => {
 {/* Form  */}
 <div className="w-full flex flex-col gap-6">
 {/* item 1*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Country:
+        </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="country" defaultValue={""}  className="bg-white outline-none border-none text-black w-full">
+    <select id="country" name="country" defaultValue={""}  className="bg-white outline-none border-none text-black w-full">
         <option value={""} disabled  className="bg-white text-black" >Country</option>
         <option value={"NG"} className="bg-white text-black" >Nigeria</option>
     </select>
 </div>
-
-{/* item 2*/}
-<div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="state" defaultValue={""} className="bg-white outline-none border-none text-black w-full">
-        <option value={""} disabled  className="bg-white text-black" >State</option>
-        <option value={"Osun"} className="bg-white text-black" >Osun</option>
-    </select>
 </div>
+{/* item 2*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        State:
+        </div>
+<div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <select id="state" name="state" defaultValue={""} className="bg-white outline-none border-none text-black w-full">
+        <option value={""} disabled  className="bg-white text-black" >State</option>
+        <option value={"OS"} className="bg-white text-black" >Osun</option>
+    </select>
+</div></div>
 {/* item 2.5*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Farm size {"(in acres)"}:
+        </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
 <input type="number" placeholder="Farm size in acres" className="w-full outline-none"/>
-</div>
+</div></div>
 {/* item 3*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Farm type:
+        </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
     <select id="location" name="farm" defaultValue={""}  className="bg-white outline-none border-none text-black w-full">
         <option value={""} disabled  className="bg-white text-black" >Farm type</option>
@@ -50,8 +66,12 @@ const EditOverview:React.FC = () => {
         <option value={"qquaponic"} >Aquaponic farming</option>
         <option value={"industrial"} >Industrial farming</option>
     </select>
-</div>
+</div></div>
 {/* item 4*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Soil type:
+        </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
     <select id="location" name="soil" defaultValue={""} className="bg-white outline-none border-none text-black w-full">
         <option value={""} disabled  className="bg-white text-black" >Soil type</option>
@@ -62,8 +82,12 @@ const EditOverview:React.FC = () => {
         <option value={"chalk"} >Chalk soil</option>
         <option value={"silt"} >Silt soil</option>
     </select>
-</div>
+</div></div>
 {/* item 5*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Water source:
+        </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
     <select id="location" name="water" defaultValue={""}  className="bg-white outline-none border-none text-black w-full">
         <option value={""} disabled  className="bg-white text-black" >Water source</option>
@@ -72,7 +96,7 @@ const EditOverview:React.FC = () => {
         <option value={"rain water"} className="bg-white text-black" >Rain water</option>
         <option value={"irrigation"} className="bg-white text-black" >Irrigation</option>
     </select>
-</div>
+</div></div>
 {/* item 6 submit*/}
 <button className="bg-primary-500 text-center p-3 rounded-lg w-full">
   Save

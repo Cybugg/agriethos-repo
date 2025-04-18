@@ -3,6 +3,8 @@ import React, { useEffect } from 'react'
 import { useNavContext } from '../NavContext';
 import Image from 'next/image';
 import EditOverview from '../components/editOverview';
+import EditFarmMethod from '../components/editFarmMethod';
+import EditFarmImage from '../components/ediitFarmImage';
 
 function page() {
       const {setCurrentPage,setMobileDisplay} = useNavContext();
@@ -16,6 +18,8 @@ function page() {
         {/* Pop ups */}
       {/* Edit overview */}
       {/* <EditOverview /> */}
+      {/* <EditFarmMethod /> */}
+      <EditFarmImage />
  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
     
            {/* Header and Descriptive Text */}
@@ -29,7 +33,7 @@ function page() {
            </div>
           </div>
              <div className='flex gap-2 items-center'>
-                                           <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button>
+                                           {/* <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button> */}
                                    <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                                    <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)} />
                                           </div>

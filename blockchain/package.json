@@ -14,5 +14,8 @@
     "ethers": "^6.13.5",
     "hardhat": "^2.23.0",
     "ipfs-http-client": "^60.0.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0"
   }
 }

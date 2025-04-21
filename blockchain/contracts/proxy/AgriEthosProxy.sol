@@ -23,14 +23,14 @@ contract AgriEthosProxy {
     event AdminChanged(address indexed previousAdmin, address indexed newAdmin);
     
     // Constructor sets the admin, implementation and storage
-    constructor(address _implementation, address _admin, address _storage) {
-        require(_implementation != address(0), "Implementation cannot be zero address");
-        require(_admin != address(0), "Admin cannot be zero address");
-        require(_storage != address(0), "Storage cannot be zero address");
+    constructor(address initialImplementation, address initialAdmin, address initialStorage) {
+        require(initialImplementation != address(0), "Implementation cannot be zero address");
+        require(initialAdmin != address(0), "Admin cannot be zero address");
+        require(initialStorage != address(0), "Storage cannot be zero address");
         
-        _setAdmin(_admin);
-        _setImplementation(_implementation);
-        _setStorage(_storage);
+        _setAdmin(initialAdmin);
+        _setImplementation(initialImplementation);
+        _setStorage(initialStorage);
     }
     
     // Modifier to restrict access to admin
@@ -41,8 +41,8 @@ contract AgriEthosProxy {
     
     // Fallback function delegates all calls to the implementation
     fallback() external payable {
-        address implementation = _implementation();
-        require(implementation != address(0), "Implementation not set");
+        address implementationAddr = _implementation();
+        require(implementationAddr != address(0), "Implementation not set");
         
         // Execute call against implementation via delegatecall
         assembly {
@@ -50,7 +50,7 @@ contract AgriEthosProxy {
             calldatacopy(0, 0, calldatasize())
             
             // Execute the function call using delegate call
-            let result := delegatecall(gas(), implementation, 0, calldatasize(), 0, 0)
+            let result := delegatecall(gas(), implementationAddr, 0, calldatasize(), 0, 0)
             
             // Get any return value
             returndatacopy(0, 0, returndatasize())

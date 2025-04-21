@@ -4,9 +4,16 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.28",
+  solidity: {
+    version: "0.8.28",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200 // You can adjust this number depending on your use case
+      }
+    }
+  },
   networks: {
-    // Local network configuration
     hardhat: {
       chainId: 1337,
       mining: {
@@ -14,12 +21,10 @@ const config: HardhatUserConfig = {
         interval: 0
       }
     },
-    // Local node configuration
     localhost: {
       url: "http://127.0.0.1:8545",
       chainId: 1337
     },
-    // Keep testnet configs for later use
     sepolia: {
       url: process.env.SEPOLIA_RPC_URL || `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []

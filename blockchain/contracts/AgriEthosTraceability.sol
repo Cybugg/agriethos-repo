@@ -70,7 +70,15 @@ contract AgriEthosTraceability is RetailRegistry {
     /**
      * @dev Query comprehensive traceability data for a product using QR code
      * @param _qrCode QR code of the product
-     * @return complete traceability information including all supply chain steps
+     * @return entityType Type of entity (CROP, HARVEST, etc.)
+     * @return entityId ID of the entity
+     * @return productName Name of the product
+     * @return farmId ID of the farm
+     * @return farmName Name of the farm
+     * @return farmerId ID of the farmer
+     * @return farmerName Name of the farmer
+     * @return productStatus Status of the product
+     * @return hasCertifications Whether the product has certifications
      */
     function queryTraceability(string memory _qrCode) public returns (
         string memory entityType,

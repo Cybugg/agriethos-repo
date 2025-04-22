@@ -1,10 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const FarmerSchema = new mongoose.Schema({
+const farmerSchema = new mongoose.Schema({
   walletAddress: {
     type: String,
     required: true,
-    unique: true,
+    unique: true, 
+    lowercase: true,
+  },
+  nonce:{
+    type:String,
+    required:true
+  },
+  role:{
+    type: String,
+    required: true,
+    default:'farmer'
   },
   createdAt: {
     type: Date,
@@ -12,4 +22,6 @@ const FarmerSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Farmer', FarmerSchema);
+const User = mongoose.model("Farmer", farmerSchema);
+
+module.exports = User;

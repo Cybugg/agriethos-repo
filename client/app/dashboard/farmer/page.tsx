@@ -6,6 +6,9 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { useNavContext } from './NavContext';
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/app/Context/AuthContext';
+import { BsPerson } from 'react-icons/bs';
 
 
 // Define the shape of the chart data
@@ -68,8 +71,16 @@ const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
 export default function Home() {
   const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
+  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const {setCurrentPage,setMobileDisplay} = useNavContext();
+  const { address, logout ,isLoginStatusLoading} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
+  const router = useRouter();
+
+  // Route protection
+  useEffect(() => {
+    if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+  }, [address])
 
   useEffect(()=>{
     setCurrentPage("home");
@@ -88,9 +99,19 @@ export default function Home() {
         </div>
        </div>
        <div className='flex gap-2 items-center'>
-                    {/* <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button> */}
+                    <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                      
+                    <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                    <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                       { displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                          Disconnect
+                        </div>}
+                    </div>
+                    </div> 
+                       
+                       </button>
             <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-            <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer lg:hidden" onClick={()=>setMobileDisplay(true)}/>
+            <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
                    </div>
         </div>
        {/* Section One */}

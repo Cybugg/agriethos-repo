@@ -2,25 +2,26 @@ const Farmer = require('../models/Farmer');
 const {ethers} = require('ethers');
 
 const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
-const timestamp = new Date().toISOString();
+
 
 exports.requestNonce = async (req, res) => {
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: "Address required" });
+  const timestamp = new Date().toISOString();
 
-  let user = await Farmer.findOne({ walletAddress: address.toLowerCase() });
+  let user = await Farmer.findOne({ walletAddress: address.toLowerCase()});
 
   if (!user) {
-    user = new Farmer({ address: address.toLowerCase(), nonce: generateNonce() });
+    user = new Farmer({ walletAddress: address.toLowerCase(), nonce: generateNonce() });
   } else {
     user.nonce = generateNonce(); // refresh nonce each time
   }
-
+  user.last_transaction_stamp = timestamp;
   await user.save();
-  res.json({ nonce: user.nonce });
+  res.json({ nonce: user.nonce ,timestamp:timestamp});
 };
 
-
+// 2025-04-22T14:21:16.924Z
 exports.verifySignature = async (req, res) => {
 
   // Get address and signature from the client
@@ -44,17 +45,20 @@ Sign this message to verify you own this wallet and authenticate securely.
 
 Wallet Address: ${address}
 Nonce: ${user.nonce}
-Timestamp: ${timestamp}
+Timestamp: ${user.last_transaction_stamp}
 
 This request will not trigger a blockchain transaction or cost any gas.
 
 Only sign this message if you trust AgriEthos.
   `;
 
+  console.log(address,user.nonce,user.last_transaction_stamp);
+
+
   try {
     // verify the message
     const recovered = ethers.verifyMessage(message, signature);
-    // If the the parsed address is same as the 
+    // If the the parsed address is same as the recovered
     if (recovered.toLowerCase() === address.toLowerCase()) {
 
       // Reset nonce to prevent reuse

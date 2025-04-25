@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavContext } from '../NavContext';
 import Image from 'next/image';
 import {
@@ -11,6 +11,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import AddCrop from '../components/addCrops';
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/app/Context/AuthContext';
+import { BsPerson } from 'react-icons/bs';
+import { PiPlant } from 'react-icons/pi';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -34,16 +38,24 @@ const sampleData = [
 ];
 
 function page() {
+      const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
+      const { address, logout ,isLoginStatusLoading} = useAuth();
+      const router = useRouter();
     
       useEffect(()=>{
         setCurrentPage("logs");
         setMobileDisplay(false);
       },[])
+
+         // Route protection
+          useEffect(() => {
+          if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+        }, [address])
       
   return (
     <div>
-       <AddCrop />
+       {/* <AddCrop /> */}
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
        
               {/* Header and Descriptive Text */}
@@ -55,9 +67,24 @@ function page() {
               <div className='text-grey-600'>
                 Keep track of every farming activity
               </div>
+                <div className='flex gap-2 text-primary-700 text-xs font-bold'>
+                     
+                          <PiPlant /> <div>Jameo Farm</div>
+                      
+                      </div>
              </div>
               <div className='flex gap-2 items-center'>
-                                 {/* <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button> */}
+                                <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                                                              
+              <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+             <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+{ displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+  Disconnect
+  </div>}
+ </div>
+ </div> 
+                                                                                               
+                                                                                               </button>
                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                          <Image src={"/icons/burger.svg"} alt="menu" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                 </div>
@@ -85,7 +112,7 @@ function page() {
        <div className='flex flex-col gap-4 w-full justify-between'>
       
       {/* Variable */}
-      <div className='hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full'>
+      <div className=' gap-24 flex items-center text-center justify-between w-full'>
         {/* Variable Name */}
       <div className='text-grey-600 basis-1/3 '>
     Crop Name
@@ -145,7 +172,10 @@ function page() {
       </div>
      
       <div className='basis-1/3 flex items-center justify-center '>
-     under review
+      <button className='bg-[#FFF9E6] px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
+<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
+<div className='text-xs'>Pending</div>
+</button>
       </div>
       </div>
        {/* Variable */}
@@ -160,7 +190,10 @@ function page() {
       </div>
     
       <div className='basis-1/3 flex items-center justify-center  text-error-500'>
-     Rejected
+      <button className='bg-[#FFF1F1] px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
+<Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
+<div className='text-xs'>Rejected</div>
+</button>
       </div>
       </div>
        {/* Variable */}
@@ -191,7 +224,7 @@ function page() {
         <div className='flex items-center justify-between'>
         {/* Title */}
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
-        Verifications
+       Post-harvest Verifications
         </div>
         </div>
         {/* Verification variables */}

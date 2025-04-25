@@ -16,6 +16,11 @@ const farmerSchema = new mongoose.Schema({
     required: true,
     default:'farmer'
   },
+  last_transaction_stamp:{
+   type:String,
+   required: true,
+   default:'farmer'
+  },
   createdAt: {
     type: Date,
     default: Date.now,

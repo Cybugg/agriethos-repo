@@ -1,25 +1,38 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavContext } from '../NavContext';
 import Image from 'next/image';
 import EditOverview from '../components/editOverview';
 import EditFarmMethod from '../components/editFarmMethod';
 import EditFarmImage from '../components/ediitFarmImage';
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/app/Context/AuthContext';
+import { BsPerson } from 'react-icons/bs';
+import { PiPlant } from 'react-icons/pi';
 
 function page() {
+    const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-    
+        const { address, logout ,isLoginStatusLoading} = useAuth();
+        const router = useRouter();
+
+    // Route protection
+    useEffect(() => {
+    if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+  }, [address])
+
       useEffect(()=>{
         setCurrentPage("farm");
         setMobileDisplay(false);
       },[])
+      
   return (
     <div> 
         {/* Pop ups */}
       {/* Edit overview */}
       {/* <EditOverview /> */}
       {/* <EditFarmMethod /> */}
-      <EditFarmImage />
+      {/* <EditFarmImage /> */}
  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
     
            {/* Header and Descriptive Text */}
@@ -31,9 +44,24 @@ function page() {
            <div className='text-grey-600'>
              Manage and update your farm details
            </div>
+             <div className='flex gap-2 text-primary-700  font-bold'>
+                  
+                       <PiPlant /> <div>Jameo Farm</div>
+                   
+                   </div>
           </div>
              <div className='flex gap-2 items-center'>
-                                           {/* <button className='px-2 py-1 border-2 border-[#a5eb4c] rounded-2xl hidden lg:block'>Add Wallet</button> */}
+                                         <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                               
+                                                             <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                                             <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                                { displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                                                                   Disconnect
+                                                                 </div>}
+                                                             </div>
+                                                             </div> 
+                                                                
+                                                                </button>
                                    <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                                    <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)} />
                                           </div>

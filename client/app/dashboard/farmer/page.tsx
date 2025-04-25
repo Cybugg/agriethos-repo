@@ -9,6 +9,8 @@ import { useNavContext } from './NavContext';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
 import { BsPerson } from 'react-icons/bs';
+import { GiFarmer } from 'react-icons/gi';
+import { PiPlant } from 'react-icons/pi';
 
 
 // Define the shape of the chart data
@@ -96,6 +98,11 @@ export default function Home() {
         </div>
         <div className='text-grey-600'>
           Your farm at a glance
+        </div>
+        <div className='flex gap-2 text-primary-700  font-bold'>
+       
+            <PiPlant /> <div>Jameo Farm</div>
+        
         </div>
        </div>
        <div className='flex gap-2 items-center'>

@@ -1,4 +1,5 @@
-const Farm = require('../models/FarmProperties');
+const FarmProperty = require('../models/FarmProperties');
+
 
 exports.createFarmProperty = async (req, res) => {
     try {
@@ -10,13 +11,22 @@ exports.createFarmProperty = async (req, res) => {
         soilType,
         waterSource,
         irrigationType,
-        images,
         coverCrops,
         farmType,
         companionPlanting,
-        fertilizerType
+        fertilizerType,
+        pesticideUsage
       } = req.body;
-  
+      const images = req.files.map(file => file.path); // 🖼️ Get all uploaded Cloudinary URLs
+
+    // Check if exactly 4 images are uploaded
+    if (!images || images.length !== 4) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Exactly 4 images are required.'
+      });
+    }
+
       if (!farmerId || !farmName || !location) {
         return res.status(400).json({ error: 'Required fields missing' });
       }
@@ -33,6 +43,7 @@ exports.createFarmProperty = async (req, res) => {
         companionPlanting,
         fertilizerType,
         coverCrops,
+        pesticideUsage,
         images: images || [], // optional
       });
   
@@ -44,7 +55,7 @@ exports.createFarmProperty = async (req, res) => {
     }
   };
   
-  export const updateFarmProperty = async (req, res) => {
+  exports.updateFarmProperty = async (req, res) => {
     try {
       const { id } = req.params; // FarmProperty ID
       const updateData = req.body; // The fields you want to update
@@ -68,7 +79,7 @@ exports.createFarmProperty = async (req, res) => {
 
 exports.getFarmsByFarmer = async (req, res) => {
   try {
-    const farms = await Farm.find({ farmer: req.params.farmerId }).populate('farmer');
+    const farms = await FarmProperty.find({ farmer: req.params.farmerId }).populate('farmer');
     res.status(200).json(farms);
   } catch (err) {
     res.status(500).json({ error: err.message });

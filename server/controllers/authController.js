@@ -65,7 +65,7 @@ Only sign this message if you trust AgriEthos.
       user.nonce = generateNonce();
       await user.save();
 
-      return res.json({ success: true, message: "Wallet verified", address });
+      return res.json({ success: true, message: "Wallet verified", data:{address,farmerId:user._id} });
     } else {
       return res.status(401).json({ error: "Signature verification failed" });
     }

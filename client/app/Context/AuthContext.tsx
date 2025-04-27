@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     setAddress(null);
-    router.push('/login');
+    router.push('/auth');
   };
 
   return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, logout, isLoginStatusLoading }}>

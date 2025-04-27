@@ -13,6 +13,10 @@ const farmPropertySchema = new mongoose.Schema({
   waterSource: { type: String },
   soilType: { type: String },
   irrigationType: { type: String },
+  fertilizerType: { type: String },
+  coverCrops:{type:Boolean},
+  companionPlanting:{type:Boolean},
+  
   images: [{ type: String }], // array of image URLs
   createdAt: { type: Date, default: Date.now },
 });

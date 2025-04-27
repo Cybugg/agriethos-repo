@@ -21,7 +21,7 @@ exports.requestNonce = async (req, res) => {
   res.json({ nonce: user.nonce ,timestamp:timestamp});
 };
 
-// 2025-04-22T14:21:16.924Z
+
 exports.verifySignature = async (req, res) => {
 
   // Get address and signature from the client

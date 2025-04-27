@@ -15,6 +15,11 @@ const farmerSchema = new mongoose.Schema({
     type:String,
     required:true
   },
+  newUser:{
+    type:String,
+    required:true,
+    default:"true"
+  },
   role:{
     type: String,
     required: true,

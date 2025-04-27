@@ -29,10 +29,10 @@ const EditFarmImage:React.FC = () => {
 
 
 <button className="border-[0.75px] border-[#CFCFCF] p-3 text-grey-600 rounded-2xl flex items-center gap-2">
-Upload <span className="">Images</span> <BiUpload className="text-2xl text-primary-500"/>
+Upload  <span className="font-bold ">4</span>Images <BiUpload className="text-2xl text-primary-500"/>
 </button>
 <div className="text-xs text-grey-500">
-You are required to upload 4 images of your farm
+Note: You are required to upload 4 images of your farm
 </div>
 </div>
 

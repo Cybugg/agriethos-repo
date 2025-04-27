@@ -1,5 +1,5 @@
 const FarmProperty = require('../models/FarmProperties');
-
+const Farmer = require('../models/Farmer');
 
 exports.createFarmProperty = async (req, res) => {
     try {
@@ -46,8 +46,13 @@ exports.createFarmProperty = async (req, res) => {
         pesticideUsage,
         images: images || [], // optional
       });
-  
+
       await newProperty.save();
+
+      let user = await Farmer.findOne({ _id: farmerId});
+      user.newUser = "false";
+      await user.save()
+
       res.status(201).json({ message: 'Farm property created', farmProperty: newProperty });
     } catch (err) {
       console.error('Error creating farm property:', err);

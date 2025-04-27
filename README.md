@@ -161,10 +161,10 @@ nodemon server (Install nodemon globally)
 
 | Method | Endpoint | Description |
 |:------:|:---------|:------------|
-| `POST` | `/api/farm-properties` | Create a farm property |
-| `GET` | `/api/farm-properties/:id` | Get farm property by ID |
-| `PUT` | `/api/farm-properties/:id` | Update farm property |
-| `DELETE` | `/api/farm-properties/:id` | Delete farm property |
+| `POST` | `/api/farm/farm-properties` | Create a farm property |
+| `GET` | `/api/farm/farm-properties/:id` | Get farm property by ID |
+| `PUT` | `/api/farm/farm-properties/:id` | Update farm property |
+| `DELETE` | `/api/farm/farm-properties/:id` | Delete farm property |
 
 ---
 

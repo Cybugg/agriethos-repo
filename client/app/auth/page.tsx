@@ -11,7 +11,7 @@ import {useRouter} from "next/navigation";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress } = useAuth();
+  const { setAddress ,setFarmerId,setNewUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const router = useRouter();
@@ -63,14 +63,17 @@ Only sign this message if you trust AgriEthos.
       body: JSON.stringify({ address: addr, signature }),
     }); 
     const loginData = await resLogin.json();
-    
+    const {address,farmerId,newUser} = await loginData.data
     if (loginData.success) {
       console.log("✅ Login successful!");
         setLoading(false);
         setSuccess("sucess")
-        setAddress(addr);
-        router.replace("/dashboard/farmer")
-        
+        setAddress(address);
+        setFarmerId(farmerId);
+        setNewUser(newUser);
+        console.log(address,farmerId)
+      if(newUser === "false")  router.replace("/dashboard/farmer")
+        else if (newUser === "true") router.replace("/onboard/"+farmerId)
     } else {
       setMsg(loginData.error || "Login failed.");
       setLoading(false);

@@ -44,7 +44,27 @@ exports.createFarmProperty = async (req, res) => {
     }
   };
   
-
+  export const updateFarmProperty = async (req, res) => {
+    try {
+      const { id } = req.params; // FarmProperty ID
+      const updateData = req.body; // The fields you want to update
+  
+      const updatedFarm = await FarmProperty.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedFarm) {
+        return res.status(404).json({ success: false, message: 'Farm Property not found' });
+      }
+  
+      res.status(200).json({ success: true, data: updatedFarm });
+    } catch (error) {
+      console.error('Error updating farm property:', error);
+      res.status(500).json({ success: false, message: 'Server Error', error: error.message });
+    }
+  };
 
 exports.getFarmsByFarmer = async (req, res) => {
   try {

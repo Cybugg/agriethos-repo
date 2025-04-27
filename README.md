@@ -42,10 +42,10 @@ AgriEthos.com is a decentralized application (dApp) that enhances transparency, 
    MONGO_URI=your_mongodb_connection_string
    BLOCKCHAIN_NODE_URL=your_blockchain_rpc_url
    ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+   4. Start the development server (Frontend):
+      ```bash
+      npm run dev
+      ```
 
 ## 📜 Smart Contract Deployment
 1. Navigate to the smart contract directory:
@@ -60,6 +60,141 @@ AgriEthos.com is a decentralized application (dApp) that enhances transparency, 
    ```bash
    npx hardhat run scripts/deploy.js --network testnet
    ```
+
+
+---
+
+# AgriEthos Backend
+
+This is the backend server for **AgriEthos**, a decentralized platform where farmers can manage their farm properties and crops.  
+The backend is built with **Node.js**, **Express.js**, and **MongoDB (Mongoose)**.
+
+---
+
+## 🚀 Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- dotenv
+- cors
+- bcryptjs (optional if password hashing later)
+- JWT (optional for token-based auth later)
+- Ethers.js (for wallet signature verification)
+
+---
+
+## 📁 Project Structure
+
+```bash
+server/
+├── controllers/
+│   ├── authController.js
+│   ├── farmPropertyController.js
+│   └── cropController.js
+├── models/
+│   ├── Farmer.js
+│   ├── FarmProperty.js
+│   └── Crop.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── farmPropertyRoutes.js
+│   └── cropRoutes.js
+├── middleware/
+│   └── authMiddleware.js
+├── config/
+│   └── db.js
+├── server.js
+├── .env
+└── README.md
+```
+
+---
+
+## 🔧 Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/cybugg/agriethos-repo.git
+cd agriethos-backend
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env` file in the root:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+PORT=5000
+JWT_SECRET=your_jwt_secret_key (optional for token auth)
+```
+
+### 4. Run the server
+
+```bash
+nodemon server (Install nodemon globally)
+```
+
+(Nodemon will auto-restart the server on changes.)
+
+---
+
+## 📡 API Endpoints
+
+### Auth Routes
+
+| Method | Endpoint | Description |
+|:------:|:---------|:------------|
+| `POST` | `/api/auth/wallet-login` | Wallet-based login (address + signature) |
+| `GET` | `/api/auth/check-auth` | Check if the user is authenticated |
+
+---
+
+### Farm Property Routes
+
+| Method | Endpoint | Description |
+|:------:|:---------|:------------|
+| `POST` | `/api/farm-properties` | Create a farm property |
+| `GET` | `/api/farm-properties/:id` | Get farm property by ID |
+| `PUT` | `/api/farm-properties/:id` | Update farm property |
+| `DELETE` | `/api/farm-properties/:id` | Delete farm property |
+
+---
+
+### Crop Routes
+
+| Method | Endpoint | Description |
+|:------:|:---------|:------------|
+| `POST` | `/api/crops` | Create a crop linked to a farm property |
+| `GET` | `/api/crops/:id` | Get crop by ID |
+| `PUT` | `/api/crops/:id` | Update crop |
+| `DELETE` | `/api/crops/:id` | Delete crop |
+
+---
+
+## 🛡️ Security
+
+- Signature verification with Ethers.js.
+- Future implementation: JWT authentication and access control (optional).
+- Only the farmer who owns a farm property can update it (authorization layer).
+
+---
+
+## 📦 Future Enhancements
+
+- Connect with decentralized storage for farm images (IPFS, MiniIO, or S3).
+- Implement notification system for farmers.
+- Full audit trail (tracking changes).
+
+---
+
 
 ## 💰 Revenue Model
 - Transaction fees for blockchain records

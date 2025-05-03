@@ -1,0 +1,192 @@
+const Crop = require('../models/Crop');
+const FarmProperty = require('../models/FarmProperties');
+
+// Create a new crop
+exports.createCrop = async (req, res) => {
+  try {
+    const {
+      farmerId,
+      farmPropertyId,
+      cropName,
+      plantingDate,
+      harvestingDate,
+      growthStage,
+      notes
+    } = req.body;
+
+    // Validate required fields
+    if (!farmerId || !farmPropertyId || !cropName || !plantingDate || !growthStage) {
+      return res.status(400).json({
+        success: false,
+        message: 'Required fields missing'
+      });
+    }
+
+    // Verify farm property exists and belongs to this farmer
+    const farmProperty = await FarmProperty.findOne({
+      _id: farmPropertyId,
+      farmerId: farmerId
+    });
+
+    if (!farmProperty) {
+      return res.status(404).json({
+        success: false,
+        message: 'Farm property not found or does not belong to this farmer'
+      });
+    }
+
+    // Process uploaded images if any
+    const images = req.files ? req.files.map(file => file.path) : [];
+
+    // Create new crop record
+    const newCrop = new Crop({
+      farmerId,
+      farmPropertyId,
+      cropName,
+      plantingDate,
+      harvestingDate,
+      growthStage,
+      notes,
+      images
+    });
+
+    await newCrop.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Crop created successfully',
+      data: newCrop
+    });
+  } catch (error) {
+    console.error('Error creating crop:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// Get crops by farmer ID
+exports.getCropsByFarmer = async (req, res) => {
+  try {
+    const { farmerId } = req.params;
+    
+    const crops = await Crop.find({ farmerId })
+      .sort({ createdAt: -1 }) // Sort by most recent first
+      .populate('farmPropertyId', 'farmName location'); // Get farm details
+    
+    res.status(200).json({
+      success: true,
+      count: crops.length,
+      data: crops
+    });
+  } catch (error) {
+    console.error('Error fetching crops:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// Update crop details
+exports.updateCrop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    
+    // If there are new images to add
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map(file => file.path);
+    }
+
+    // Update the timestamp
+    updateData.updatedAt = Date.now();
+    
+    const updatedCrop = await Crop.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedCrop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: updatedCrop
+    });
+  } catch (error) {
+    console.error('Error updating crop:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// Delete crop
+exports.deleteCrop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const crop = await Crop.findById(id);
+    
+    if (!crop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+    
+    await crop.remove();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Crop deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting crop:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// Get single crop by ID
+exports.getCrop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const crop = await Crop.findById(id)
+      .populate('farmPropertyId', 'farmName location');
+    
+    if (!crop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: crop
+    });
+  } catch (error) {
+    console.error('Error fetching crop:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};

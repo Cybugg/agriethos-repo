@@ -14,9 +14,9 @@ const farmPropertySchema = new mongoose.Schema({
   soilType: { type: String },
   irrigationType: { type: String },
   fertilizerType: { type: String },
-  pesticideUsage: { type: Boolean },
-  coverCrops:{type:Boolean},
-  companionPlanting:{type:Boolean},
+  pesticideUsage: { type: String, default:"false" },
+  coverCrops:{type: String, default:"false"},
+  companionPlanting:{type:String, default:"false"},
   images: {
     type:[String]  // array of image URLs
   },

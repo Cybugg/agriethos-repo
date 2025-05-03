@@ -63,7 +63,7 @@ const EditOverview:React.FC = () => {
         <option value={"conventional"} >Conventional farming</option>
         <option value={"hydroponic"} >Hydroponic farming</option>
         <option value={"vertical"} >Vertical farming</option>
-        <option value={"qquaponic"} >Aquaponic farming</option>
+        <option value={"aquaponic"} >Aquaponic farming</option>
         <option value={"industrial"} >Industrial farming</option>
     </select>
 </div></div>

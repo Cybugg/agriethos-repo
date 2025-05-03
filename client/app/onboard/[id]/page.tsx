@@ -1,11 +1,13 @@
 "use client"
 
+import FarmOnboardingForm from "@/app/components/Onboarding";
+
 export default function Home() {
   
     return (
-      <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-red-500 text-black">
+      <div className="text-black bg-white flex h-screen items-start justify-center ">
         {/* Header and Descriptive Text */}
-       
+       <FarmOnboardingForm />
       </div>
     );
   }

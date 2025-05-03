@@ -1,0 +1,319 @@
+'use client';
+
+import { useState } from 'react';
+import Switch from './switch';
+import { BiUpload } from 'react-icons/bi';
+
+interface FarmFormData {
+    farmName: string,
+    location: string,
+    size: string,
+    farmType: string,
+    waterSource: string,
+    soilType: string,
+    irrigationType: string,
+    fertilizerType: string,
+    pesticideUsage: string,
+    coverCrops:string,
+    companionPlanting:string,
+    images: File[];
+}
+
+const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
+
+export default function FarmOnboardingForm() {
+  const [formData, setFormData] = useState<FarmFormData>({
+    farmName: "",
+    location: "",
+    size: "",
+    farmType: "",
+    waterSource: "",
+    soilType: "",
+    irrigationType: "",
+    fertilizerType: "",
+    pesticideUsage: "",
+    coverCrops:"",
+    companionPlanting:"",
+    images: []
+  });
+
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const totalSteps = steps.length;
+
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setFormData((prev) => ({
+        ...prev,
+        images: filesArray,
+      }));
+    }
+  };
+
+  const handleSubmit = () => {
+    console.log('Submitting farm data:', formData);
+    // Here you will send formData to the backend
+  };
+
+  const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
+
+  return (
+    <div className="max-w-xl mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
+      {/* Progress Bar */}
+      <div className="mb-6">
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-primary-500 h-2 rounded-full transition-all"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-600 mt-2 text-center">
+          Step {currentStep + 1} of {totalSteps} - {steps[currentStep]}
+        </p>
+      </div>
+
+      {/* Step Content */}
+      {currentStep === 0 && (
+        <div className="space-y-4 w-full">
+            <div className='text-3xl py-12 text-center'>
+                What's the name of your farm?
+                </div>
+          <input
+            type="text"
+            name="farmName"
+            placeholder="e.g Jameo Farm"
+            value={formData.farmName}
+            onChange={handleChange}
+            className="w-full border p-2 rounded outline-none"
+          />
+       
+          
+        </div>
+      )}
+        {currentStep === 1 && (
+        <div className="space-y-4 w-full">
+            <div className='text-3xl py-12 text-center'>
+                A bit more about your farm...
+                </div>
+                <div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Location:
+        </div>
+          <input
+            type="text"
+            name="location"
+            placeholder="e.g Ile-ife, Osun, Nigeria"
+            value={formData.location}
+            onChange={handleChange}
+            className="w-full border p-2 rounded outline-none"
+          /></div>
+                    <div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+    Farm size {"(in acres)"}:
+        </div>
+          <input
+            type="text"
+            name="size"
+            placeholder="e.g 5"
+            value={formData.size}
+            onChange={handleChange}
+            className="w-full border p-2 rounded outline-none"
+          /></div>
+                    <div className="">
+    <span className="text-grey-600 text-xs">
+        Farm type:
+        </span>
+     
+<div className="border-[0.75px] border-[#CFCFCF] p-2 rounded  w-full">
+    <select id="location" name="farmType" defaultValue={""}  className="bg-white outline-none border-none w-full text-gray-600" >
+        <option className='bg-white text-black' value={""} disabled   >Select one</option>
+        <option className='bg-white text-black' value={"organic"} >Organic farming</option>
+        <option className='bg-white text-black' value={"conventional"} >Conventional farming</option>
+        <option className='bg-white text-black' value={"hydroponic"} >Hydroponic farming</option>
+        <option className='bg-white text-black' value={"vertical"} >Vertical farming</option>
+        <option className='bg-white text-black' value={"qquaponic"} >Aquaponic farming</option>
+        <option className='bg-white text-black' value={"industrial"} >Industrial farming</option>
+    </select>
+</div></div>
+        </div>
+      )}
+
+
+      {currentStep === 2 && (
+        <div className="space-y-4 w-full">
+        {/* Soil Type */}
+            <div className="">
+<span className="text-grey-600 text-xs">
+Soil type:
+    </span>
+ 
+    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <select id="location" name="soil" defaultValue={""} className="bg-white outline-none border-none text-gray-600 w-full">
+        <option className='bg-white text-black' value={""} disabled   >Select one</option>
+        <option className='bg-white text-black' value={"sandy"} >Sandy soil</option>
+        <option className='bg-white text-black' value={"clay"} >Clay soil</option>
+        <option className='bg-white text-black' value={"loamy"} >Loamy soil</option>
+        <option className='bg-white text-black' value={"peaty"} >peaty soil</option>
+        <option className='bg-white text-black' value={"chalk"} >Chalk soil</option>
+        <option className='bg-white text-black' value={"silt"} >Silt soil</option>
+    </select>
+</div></div>             
+{/* Water Source */}
+<div className="">
+<span className="text-grey-600 text-xs">
+Water source:
+    </span>
+ 
+    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <select id="location" name="water" defaultValue={""}  className="bg-white outline-none border-none text-gray-600 w-full">
+        <option  value={""} disabled  className="bg-white text-black" >Select one</option>
+        <option  value={"surface water"} className="bg-white text-black" >Surface water e.g rivers</option>
+        <option  value={"ground water"} className="bg-white text-black" >Ground water e.g wells, boreholes, etc</option>
+        <option  value={"rain water"} className="bg-white text-black" >Rain water</option>
+        <option  value={"irrigation"} className="bg-white text-black" >Irrigation</option>
+    </select>
+</div></div>
+                <div className="">
+<span className="text-grey-600 text-xs">
+Irrigation method:
+    </span>
+ 
+    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <select id="irrigation" name="irrigation_mthod" defaultValue={""} className="bg-white outline-none border-none text-gray-600 w-full">
+        <option  value={""} disabled  className="bg-white text-black" >Select one</option>
+        <option  value={"sprinkler"} className="bg-white text-black" >Sprinkler</option>
+        <option  value={"drip"} className="bg-white text-black" >Drip</option>
+        <option  value={"flood"} className="bg-white text-black" >Flood</option>
+        <option  value={"rain-fed"} className="bg-white text-black" >Rain-fed</option>
+        <option  value={"none"} className="bg-white text-black" >None</option>
+    </select>
+</div></div>
+    </div>
+      )}
+
+{currentStep === 3 && (
+        <div className="space-y-4">
+        {/* item 3*/}
+<div className=" p-3 rounded-lg w-full flex justify-between items-center text-gray-600">
+    {/* label */}
+   <div>
+   Pesticide usage
+   </div>
+   {/* switch */}
+   <div>
+<Switch isOn={false} handleToggle={()=>{}} />
+   </div>
+</div>
+{/* item 4*/}
+<div className=" p-3 rounded-lg w-full flex justify-between items-center text-gray-600">
+     {/* label */}
+   <div>
+   Cover crops used 
+   </div>
+   {/* switch */}
+   <div>
+   <Switch isOn={false} handleToggle={()=>{}} />
+   </div>
+</div>
+{/* item 5*/}
+<div className=" p-3 rounded-lg w-full flex justify-between items-center text-gray-600">
+   {/* label */}
+   <div>
+Companion planting
+   </div>
+   {/* switch */}
+   <div>
+   <Switch isOn={false} handleToggle={()=>{}} />
+   </div>
+</div>
+        </div>
+      )}
+
+{currentStep === 4 && (
+        <div className="space-y-4">
+
+          <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
+          
+      <div className='text-3xl py-12 text-center'>
+         Share beautiful view of your farm
+                </div>
+          <button className="border-[0.75px] border-[#CFCFCF] p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
+           <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full border-none p-2 rounded"
+          />
+     
+          </button>
+          <div className="text-xs text-grey-500">
+          Note: You are required to upload 4 images of your farm
+          </div>
+          </div>
+         
+          {formData.images.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {formData.images.map((file, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(file)}
+                  alt={`Farm Image ${index + 1}`}
+                  className="w-24 h-24 object-cover rounded"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="mt-6 flex justify-between">
+        {currentStep > 0 && (
+          <button
+            onClick={handleBack}
+            className="border mr-5   text-black px-4 py-2 rounded hover:bg-primary-400"
+          >
+            Back
+          </button>
+        )}
+        {currentStep < totalSteps - 1 ? (
+          <button
+            onClick={handleNext}
+            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto"
+          >
+            Continue
+          </button>
+        ) : (
+          <button
+            onClick={handleSubmit}
+            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto"
+          >
+            Submit
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}

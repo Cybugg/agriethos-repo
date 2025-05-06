@@ -5,6 +5,9 @@ const cors = require("cors");
 const authRoutes = require('./routes/authRoutes');
 const farmProperties = require("./routes/farmPropertiesRoutes");
 const cropRoutes = require('./routes/cropRoutes');
+const harvestRoutes = require('./routes/harvestRoutes');
+const processingRoutes = require('./routes/processingRoutes');
+const batchRoutes = require('./routes/batchRoutes');
 
 const app = express();
 dotenv.config();
@@ -21,7 +24,9 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/farm', farmProperties);
 app.use('/api/crops', cropRoutes);
-
+app.use('/api/harvests', harvestRoutes);
+app.use('/api/processing', processingRoutes);
+app.use('/api/batches', batchRoutes);
 
 // Connect to MongoDB (function to be put later in /config/db.js)
 mongoose.connect(process.env.MONGO_URI, {

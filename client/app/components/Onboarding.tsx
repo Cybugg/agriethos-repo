@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Switch from './switch';
 import { BiUpload } from 'react-icons/bi';
+import axios from 'axios';
+import { useAuth } from '../Context/AuthContext';
 
 interface FarmFormData {
     farmName: string,
@@ -13,15 +15,16 @@ interface FarmFormData {
     soilType: string,
     irrigationType: string,
     fertilizerType: string,
-    pesticideUsage: string,
-    coverCrops:string,
-    companionPlanting:string,
+    pesticideUsage: boolean,
+    coverCrops:boolean,
+    companionPlanting:boolean,
     images: File[];
 }
 
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
+  const {farmerId} = useAuth();
   const [formData, setFormData] = useState<FarmFormData>({
     farmName: "",
     location: "",
@@ -31,11 +34,14 @@ export default function FarmOnboardingForm() {
     soilType: "",
     irrigationType: "",
     fertilizerType: "",
-    pesticideUsage: "",
-    coverCrops:"",
-    companionPlanting:"",
+    pesticideUsage: false,
+    coverCrops:false,
+    companionPlanting:false,
     images: []
   });
+  function boolToStr (arg:Boolean){
+    return arg === true? "true" : "false";
+  }
 
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -53,7 +59,9 @@ export default function FarmOnboardingForm() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -63,6 +71,10 @@ export default function FarmOnboardingForm() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      if (e.target.files.length != 4) {
+        alert('Please select 4 images.');
+        return;
+      }
       const filesArray = Array.from(e.target.files);
       setFormData((prev) => ({
         ...prev,
@@ -71,9 +83,47 @@ export default function FarmOnboardingForm() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log('Submitting farm data:', formData);
-    // Here you will send formData to the backend
+    if (formData.images.length !=4) {
+      alert('You must upload 4 images');
+      return;
+    }
+    try {
+      const data = new FormData();
+      
+      // Append text fields
+      farmerId && data.append('farmerId',farmerId.toString())
+      data.append('farmName', formData.farmName);
+      data.append('location', formData.location);
+      data.append('size', formData.size);
+      data.append('farmType', formData.farmType);
+      data.append('waterSource', formData.waterSource);
+      data.append('soilType', formData.soilType);
+      data.append('irrigationType', formData.irrigationType);
+      data.append('fertilizerType', formData.fertilizerType);
+      data.append('pesticideUsage',boolToStr(formData.pesticideUsage));
+      data.append('coverCrops',boolToStr(formData.coverCrops)); 
+      data.append('companionPlanting',boolToStr(formData.companionPlanting));
+     
+      // Append multiple images correctly
+      formData.images.forEach((file: File) => {
+        data.append('images', file); // 'images' must match backend field
+      });
+    
+      const res = await axios.post('http://localhost:5000/api/farm/farm-properties', data, {headers: {
+          'Content-Type': 'multipart/form-data',
+        }});
+    
+     
+    
+      const result = await res.data;
+      console.log('Upload result:', result);
+    
+    } catch (err) {
+      console.error('Upload failed:', err);
+    }
+
   };
 
   const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
@@ -146,13 +196,13 @@ export default function FarmOnboardingForm() {
         </span>
      
 <div className="border-[0.75px] border-[#CFCFCF] p-2 rounded  w-full">
-    <select id="location" name="farmType" defaultValue={""}  className="bg-white outline-none border-none w-full text-gray-600" >
+    <select id="farmType" name="farmType" defaultValue={""} onChange={handleChange} className="bg-white outline-none border-none w-full text-gray-600" >
         <option className='bg-white text-black' value={""} disabled   >Select one</option>
         <option className='bg-white text-black' value={"organic"} >Organic farming</option>
         <option className='bg-white text-black' value={"conventional"} >Conventional farming</option>
         <option className='bg-white text-black' value={"hydroponic"} >Hydroponic farming</option>
         <option className='bg-white text-black' value={"vertical"} >Vertical farming</option>
-        <option className='bg-white text-black' value={"qquaponic"} >Aquaponic farming</option>
+        <option className='bg-white text-black' value={"aquaponic"} >Aquaponic farming</option>
         <option className='bg-white text-black' value={"industrial"} >Industrial farming</option>
     </select>
 </div></div>
@@ -169,7 +219,7 @@ Soil type:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="soil" defaultValue={""} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="location" name="soilType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option className='bg-white text-black' value={""} disabled   >Select one</option>
         <option className='bg-white text-black' value={"sandy"} >Sandy soil</option>
         <option className='bg-white text-black' value={"clay"} >Clay soil</option>
@@ -178,7 +228,21 @@ Soil type:
         <option className='bg-white text-black' value={"chalk"} >Chalk soil</option>
         <option className='bg-white text-black' value={"silt"} >Silt soil</option>
     </select>
-</div></div>             
+</div></div>       
+        {/* Fertilizer Type */}
+        <div className="">
+<span className="text-grey-600 text-xs">
+Fertilizer type:
+    </span>
+ 
+    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <select id="location" name="fertilizerType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
+    <option value={""} disabled  className="bg-white text-black" >Select one</option>
+        <option value={"organic"} className="bg-white text-black" >Organice</option>
+        <option value={"synthetic"} className="bg-white text-black" >synthetic</option>
+        <option value={"none"} className="bg-white text-black" >None</option>
+    </select>
+</div></div>      
 {/* Water Source */}
 <div className="">
 <span className="text-grey-600 text-xs">
@@ -186,7 +250,7 @@ Water source:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="water" defaultValue={""}  className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="location" name="waterSource" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option  value={""} disabled  className="bg-white text-black" >Select one</option>
         <option  value={"surface water"} className="bg-white text-black" >Surface water e.g rivers</option>
         <option  value={"ground water"} className="bg-white text-black" >Ground water e.g wells, boreholes, etc</option>
@@ -194,13 +258,15 @@ Water source:
         <option  value={"irrigation"} className="bg-white text-black" >Irrigation</option>
     </select>
 </div></div>
+{/* Fertilizer type  */}
+
                 <div className="">
 <span className="text-grey-600 text-xs">
 Irrigation method:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="irrigation" name="irrigation_mthod" defaultValue={""} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="irrigation" name="irrigationType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option  value={""} disabled  className="bg-white text-black" >Select one</option>
         <option  value={"sprinkler"} className="bg-white text-black" >Sprinkler</option>
         <option  value={"drip"} className="bg-white text-black" >Drip</option>
@@ -212,6 +278,7 @@ Irrigation method:
     </div>
       )}
 
+{/* Pesticide Usage */}
 {currentStep === 3 && (
         <div className="space-y-4">
         {/* item 3*/}
@@ -222,7 +289,7 @@ Irrigation method:
    </div>
    {/* switch */}
    <div>
-<Switch isOn={false} handleToggle={()=>{}} />
+<Switch isOn={formData.pesticideUsage} handleToggle={()=>{setFormData(prev =>({...prev,pesticideUsage:!prev.pesticideUsage}))}} />
    </div>
 </div>
 {/* item 4*/}
@@ -233,7 +300,7 @@ Irrigation method:
    </div>
    {/* switch */}
    <div>
-   <Switch isOn={false} handleToggle={()=>{}} />
+   <Switch isOn={formData.coverCrops} handleToggle={()=>{setFormData(prev =>({...prev,coverCrops:!prev.coverCrops}))}} />
    </div>
 </div>
 {/* item 5*/}
@@ -244,7 +311,7 @@ Companion planting
    </div>
    {/* switch */}
    <div>
-   <Switch isOn={false} handleToggle={()=>{}} />
+   <Switch isOn={formData.companionPlanting} handleToggle={()=>{setFormData(prev =>({...prev,companionPlanting:!prev.companionPlanting}))}} />
    </div>
 </div>
         </div>
@@ -262,6 +329,7 @@ Companion planting
            <input
             type="file"
             multiple
+             max={4}
             accept="image/*"
             onChange={handleImageChange}
             className="w-full border-none p-2 rounded"
@@ -281,6 +349,7 @@ Companion planting
                   src={URL.createObjectURL(file)}
                   alt={`Farm Image ${index + 1}`}
                   className="w-24 h-24 object-cover rounded"
+                 
                 />
               ))}
             </div>

@@ -78,6 +78,7 @@ export default function Home() {
   const { address, logout ,isLoginStatusLoading} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
+ 
 
   // Route protection
   useEffect(() => {

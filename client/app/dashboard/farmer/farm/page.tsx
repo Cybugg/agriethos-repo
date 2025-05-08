@@ -32,7 +32,7 @@ function page() {
       {/* Edit overview */}
       {/* <EditOverview /> */}
       {/* <EditFarmMethod /> */}
-      <EditFarmImage />
+      {/* <EditFarmImage /> */}
  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
     
            {/* Header and Descriptive Text */}

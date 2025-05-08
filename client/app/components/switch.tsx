@@ -7,7 +7,7 @@ type SwitchProps = {
   onColor?: string;
 };
 
-const Switch: React.FC<SwitchProps> = ({ isOn, handleToggle, onColor = "#06D6A0" }) => {
+const Switch: React.FC<SwitchProps> = ({ isOn, handleToggle, onColor = "#96d645" }) => {
   return (
     <div onClick={handleToggle} style={{ cursor: "pointer" }}>
       <div

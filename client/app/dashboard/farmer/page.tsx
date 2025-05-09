@@ -11,6 +11,8 @@ import { useAuth } from '@/app/Context/AuthContext';
 import { BsPerson } from 'react-icons/bs';
 import { GiFarmer } from 'react-icons/gi';
 import { PiPlant } from 'react-icons/pi';
+import { useFarm } from '@/app/Context/FarmContext';
+import axios from 'axios';
 
 
 // Define the shape of the chart data
@@ -75,9 +77,10 @@ export default function Home() {
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, logout ,isLoginStatusLoading} = useAuth();
+  const { address, logout ,isLoginStatusLoading,farmerId} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
+  const { farm, setFarm } = useFarm();
  
 
   // Route protection
@@ -85,10 +88,29 @@ export default function Home() {
     if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
   }, [address])
 
-  useEffect(()=>{
-    setCurrentPage("home");
-    setMobileDisplay(false);
-  },[])
+   useEffect(()=>{
+          setCurrentPage("home");
+          setMobileDisplay(false);
+        },[])
+  
+  useEffect(() => {
+    if (!isLoginStatusLoading  ) {
+      const fetchFarm = async () => {
+        try {
+          const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+farmerId);
+          if (!res.ok) throw new Error('Failed to fetch');
+          const data = await res.json();
+          setFarm(data); // assuming your backend sends a valid farm object
+        } catch (err) {
+          console.error('Error fetching farm data:', err);
+        }
+      };
+  
+      fetchFarm();
+    }
+   
+  }, [setFarm,address,farm]);
+
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}

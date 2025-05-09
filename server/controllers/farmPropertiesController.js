@@ -84,7 +84,7 @@ exports.createFarmProperty = async (req, res) => {
 
 exports.getFarmsByFarmer = async (req, res) => {
   try {
-    const farms = await FarmProperty.find({ farmer: req.params.farmerId }).populate('farmer');
+    const farms = await FarmProperty.find({ farmer: req.params.farmerId }).populate('farmerId');
     res.status(200).json(farms);
   } catch (err) {
     res.status(500).json({ error: err.message });

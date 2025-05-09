@@ -85,7 +85,10 @@ export default function FarmOnboardingForm() {
 
   const handleSubmit = async () => {
     console.log('Submitting farm data:', formData);
-    if (formData.images.length !=4) {
+   
+    if(!formData.companionPlanting||!formData.coverCrops ||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!formData.pesticideUsage||!formData.size||!formData.soilType||!formData.waterSource){
+      console.log("Fill out all fields")
+    } if (formData.images.length !=4) {
       alert('You must upload 4 images');
       return;
     }

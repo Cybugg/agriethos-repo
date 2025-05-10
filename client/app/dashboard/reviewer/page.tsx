@@ -74,22 +74,24 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium">Active Farms</h3>
+                  <h3 className="font-medium text-black">Active Farms</h3>
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8">
-                <span className="font-medium">Tomatoes</span>
+              <div className="flex-1 mx-8 text-center">
+                <span className="font-medium text-black">Tomatoes</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
                 <Button
                   variant="outline"
-                  className="w-24 border-[#d9d9d9] text-[#898989] hover:bg-[#f6fded] hover:text-[#003024]"
+                  className="w-[121px] h-[43px] rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-3"
                 >
                   Skip
                 </Button>
-                <Button className="w-24 bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645]">Review</Button>
+                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                  Review
+                </Button>
               </div>
             </div>
 
@@ -106,22 +108,24 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium">God's Grace Farms</h3>
+                  <h3 className="font-medium text-black">God's Grace Farms</h3>
                   <p className="text-sm text-[#898989]">Lagos, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8">
-                <span className="font-medium">Lettuce</span>
+              <div className="flex-1 mx-8 text-center">
+                <span className="font-medium text-black">Lettuce</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
                 <Button
                   variant="outline"
-                  className="w-24 border-[#d9d9d9] text-[#898989] hover:bg-[#f6fded] hover:text-[#003024]"
+                  className="w-[121px] h-[43px] rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-3"
                 >
                   Skip
                 </Button>
-                <Button className="w-24 bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645]">Review</Button>
+                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                  Review
+                </Button>
               </div>
             </div>
 
@@ -138,22 +142,24 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium">Greenland Farm</h3>
+                  <h3 className="font-medium text-black">Greenland Farm</h3>
                   <p className="text-sm text-[#898989]">Pretoria, South Africa</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8">
-                <span className="font-medium">Strawberry</span>
+              <div className="flex-1 mx-8 text-center">
+                <span className="font-medium text-black">Strawberry</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
                 <Button
                   variant="outline"
-                  className="w-24 border-[#d9d9d9] text-[#898989] hover:bg-[#f6fded] hover:text-[#003024]"
+                  className="w-[121px] h-[43px] rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-3"
                 >
                   Skip
                 </Button>
-                <Button className="w-24 bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645]">Review</Button>
+                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                  Review
+                </Button>
               </div>
             </div>
 
@@ -170,22 +176,24 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium">Active Farms</h3>
+                  <h3 className="font-medium text-black">Active Farms</h3>
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8">
-                <span className="font-medium">Maize</span>
+              <div className="flex-1 mx-8 text-center">
+                <span className="font-medium text-black">Maize</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
                 <Button
                   variant="outline"
-                  className="w-24 border-[#d9d9d9] text-[#898989] hover:bg-[#f6fded] hover:text-[#003024]"
+                  className="w-[121px] h-[43px] rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-3"
                 >
                   Skip
                 </Button>
-                <Button className="w-24 bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645]">Review</Button>
+                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                  Review
+                </Button>
               </div>
             </div>
           </div>

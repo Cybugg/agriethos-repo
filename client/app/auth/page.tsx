@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '../Context/AuthContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Image from 'next/image';
 import Loader from '../components/loader';
@@ -11,10 +11,20 @@ import {useRouter} from "next/navigation";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser} = useAuth();
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const router = useRouter();
+
+
+
+
+  useEffect(()=>
+    {
+      if (address && farmerId){router.replace("/dashboard/farmer/")}
+     
+    },[address,farmerId]
+  )
 
   // onConnect getNonce -> 
   const connectWallet = async () => {

@@ -61,7 +61,11 @@ const handleSetId = ( id: string | null) => {
 }
   const logout = () => {
     setAddress(null);
-    router.push('/auth');
+    setFarmerId(null);
+    localStorage.removeItem("farmerId")
+    localStorage.removeItem("walletAddress")
+    localStorage.removeItem("newUser")
+    router.replace('/auth');
   };
   // handle farmer ID
 const handleNewUser = ( newPerson: string | null) => {

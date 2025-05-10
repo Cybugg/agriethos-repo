@@ -6,16 +6,17 @@ exports.createCrop = async (req, res) => {
   try {
     const {
       farmerId,
-      farmPropertyId,
       cropName,
       plantingDate,
-      harvestingDate,
+      expectedHarvestingDate,
       growthStage,
-      notes
+      preNotes
     } = req.body;
 
+   
+
     // Validate required fields
-    if (!farmerId || !farmPropertyId || !cropName || !plantingDate || !growthStage) {
+    if (!farmerId || !cropName || !plantingDate || !growthStage|| !expectedHarvestingDate) {
       return res.status(400).json({
         success: false,
         message: 'Required fields missing'
@@ -24,7 +25,6 @@ exports.createCrop = async (req, res) => {
 
     // Verify farm property exists and belongs to this farmer
     const farmProperty = await FarmProperty.findOne({
-      _id: farmPropertyId,
       farmerId: farmerId
     });
 
@@ -41,16 +41,19 @@ exports.createCrop = async (req, res) => {
     // Create new crop record
     const newCrop = new Crop({
       farmerId,
-      farmPropertyId,
+      farmPropertyId:farmProperty._id,
       cropName,
       plantingDate,
-      harvestingDate,
+      expectedHarvestingDate,
       growthStage,
-      notes,
-      images
+      preNotes,
+      verificationStatus:"pending"
     });
-
+    const farm = await FarmProperty.findByIdAndUpdate(newCrop.farmPropertyId, {
+      $push: { crops: newCrop._id }
+    });
     await newCrop.save();
+    await farm.save();
 
     res.status(201).json({
       success: true,
@@ -74,7 +77,7 @@ exports.getCropsByFarmer = async (req, res) => {
     
     const crops = await Crop.find({ farmerId })
       .sort({ createdAt: -1 }) // Sort by most recent first
-      .populate('farmPropertyId', 'farmName location'); // Get farm details
+      .populate('farmPropertyId'); // Get farm details
     
     res.status(200).json({
       success: true,

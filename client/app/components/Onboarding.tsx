@@ -87,6 +87,7 @@ export default function FarmOnboardingForm() {
     console.log('Submitting farm data:', formData);
    
     if(!formData.companionPlanting||!formData.coverCrops ||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!formData.pesticideUsage||!formData.size||!formData.soilType||!formData.waterSource){
+      alert("Fill out all fields")
       console.log("Fill out all fields")
     } if (formData.images.length !=4) {
       alert('You must upload 4 images');

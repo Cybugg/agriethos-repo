@@ -40,6 +40,7 @@ const sampleData = [
 
 function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
+      const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const { address, logout ,isLoginStatusLoading} = useAuth();
       const router = useRouter();
@@ -47,6 +48,7 @@ function page() {
       useEffect(()=>{
         setCurrentPage("logs");
         setMobileDisplay(false);
+      
       },[])
 
          // Route protection
@@ -56,7 +58,7 @@ function page() {
       
   return (
     <div>
-       <AddCrop />
+       {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} />}
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
        
               {/* Header and Descriptive Text */}
@@ -104,7 +106,7 @@ function page() {
       </div>
       <div className='flex gap-2'>
     
-      <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2'>
+      <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2' onClick={()=>setDisplayAddCrop(true)}>
       <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Crop</span> 
      </div>
       </div>
@@ -115,62 +117,72 @@ function page() {
       {/* Variable */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b'>
           {/* S/N */}
-      <div  className='basis-1/4 flex items-center justify-center '>
+      <div  className='basis-1/5 flex items-center justify-center '>
  S/N
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900 basis-1/4 '>
+      <div className='text-grey-900 basis-1/5 '>
     Crop Name
       </div>
     
-      <div className='text-grey-900 basis-1/4 '>
+      <div className='text-grey-900 basis-1/5 '>
       Growth Stage
       </div>
+      <div className='text-grey-900 basis-1/5 '>
+      Date Created
+      </div>
     
-      <div className='text-grey-900 basis-1/4 '>
+      <div className='text-grey-900 basis-1/5 '>
       Crop Status
       </div>
       </div>
        {/* Variable */}
        <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center'>
            {/* s/n */}
-           <div className='basis-1/4 flex items-center justify-center '>
+           <div className='basis-1/5 flex items-center justify-center '>
           1
         </div>
         {/* Variable Name */}
-      <div className=' basis-1/4 flex items-center justify-center '>
+      <div className=' basis-1/5 flex items-center justify-center '>
     Strawberry
       </div>
    
-      <div className=' basis-1/4 flex items-center justify-center  '>
+      <div className=' basis-1/5 flex items-center justify-center  '>
       Pre-harvest
       </div>
+
+      <div className=' basis-1/5 flex items-center justify-center  '>
+      05/06/25
+      </div>
    
-      <div className='  basis-1/4 flex items-center justify-center '>
-           <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+      <div className='  basis-1/5 flex items-center justify-center '>
+           <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] hover:bg-[#1494140c]'>
            <div className="w-4 h-4"><GrUpdate /></div>
-           <div className='text-xs'>Update</div>
+           <div className='text-xs'>Upgrade</div>
 </button>
       </div>
       </div>
        {/* Variable */}
        <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
         {/* s/n */}
-        <div className='basis-1/4 flex items-center justify-center '>
+        <div className='basis-1/5 flex items-center justify-center '>
           2
         </div>
         {/* Variable Name */}
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
     Banana
       </div>
       
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
       Pre-harvest
       </div>
-<div className='basis-1/4 flex items-center justify-center '>
-     <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+      <div className=' basis-1/5 flex items-center justify-center  '>
+      05/06/25
+      </div>
+<div className='basis-1/5 flex items-center justify-center '>
+     <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] hover:bg-[#1494140c]'>
       <div className="w-4 h-4"><GrUpdate /></div>
-<div className='text-xs'>Update</div>
+<div className='text-xs'>Upgrade</div>
 </button>
 </div>
      
@@ -178,19 +190,21 @@ function page() {
        {/* Variable */}
        <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
            {/* s/n */}
-           <div className='basis-1/4 flex items-center justify-center '>
+           <div className='basis-1/5 flex items-center justify-center '>
           3
         </div>
         {/* Variable Name */}
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
     Yam
       </div>
      
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
       Pre-harvest
       </div>
-     
-      <div className='basis-1/4 flex items-center justify-center '>
+       <div className=' basis-1/5 flex items-center justify-center  '>
+      05/06/25
+      </div>
+      <div className='basis-1/5 flex items-center justify-center '>
       <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Pending</div>
@@ -200,19 +214,22 @@ function page() {
        {/* Variable */}
        <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'>
            {/* s/n */}
-           <div className='basis-1/4 flex items-center justify-center '>
+           <div className='basis-1/5 flex items-center justify-center '>
           4
         </div>
         {/* Variable Name */}
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
     Tomato
       </div>
    
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
       Pre-harvest
       </div>
-    
-      <div className='basis-1/4 flex items-center justify-center  text-error-500'>
+    <div className=' basis-1/5 flex items-center justify-center  '>
+      05/06/25
+      </div>
+      <div className='basis-1/5 flex items-center justify-center  text-error-500'>
+      
       <button className='bg-[#FFF1F1] px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
@@ -222,19 +239,21 @@ function page() {
        {/* Variable */}
        <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between '>
            {/* s/n */}
-           <div className='basis-1/4 flex items-center justify-center '>
+           <div className='basis-1/5 flex items-center justify-center '>
           5
         </div>
         {/* Variable Name */}
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
     Corn
       </div>
   
-      <div className='basis-1/4 flex items-center justify-center '>
+      <div className='basis-1/5 flex items-center justify-center '>
       Post-harvest
       </div>
-      
-      <div className='basis-1/4   flex items-center justify-center'>
+      <div className=' basis-1/5 flex items-center justify-center  '>
+      05/06/25
+      </div>
+      <div className='basis-1/5   flex items-center justify-center'>
       <button className='bg-[#F2FEF2]  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>

@@ -29,13 +29,22 @@ const cropSchema = new mongoose.Schema({
   },
   verificationStatus: {
     type: String,
-    enum: ['pending', 'verified', 'rejected'],
+    enum: ['pending', 'verified', 'rejected','toUpgrade'],
     default: 'pending'
   },
   images: {
     type: [String]
   },
-  notes: {
+  expectedHarvestingDate: {
+    type: String
+  },
+  preNotes: {
+    type: String
+  },
+  postNotes: {
+    type: String
+  },
+  storageMethod: {
     type: String
   },
   createdAt: {

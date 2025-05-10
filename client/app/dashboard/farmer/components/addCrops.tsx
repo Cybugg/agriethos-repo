@@ -1,10 +1,81 @@
 "use client"
 import Switch from "@/app/components/switch";
+import { useAuth } from "@/app/Context/AuthContext";
+import axios from "axios";
 import Image from "next/image";
-import React, {ReactNode} from "react";
+import { useRouter } from "next/navigation";
+import React, {ReactNode, useState} from "react";
+
+interface props {
+    setDisplayAddCrop:(boolVal:boolean)=>void
+}
+
+interface FarmFormData {
+    cropName:string
+    plantingDate:string
+    expectedHarvestingDate:string
+    growthStage:string
+    preNotes:string
+}
+
+const AddCrop:React.FC<props> = ({setDisplayAddCrop}) => {
+      const [formData, setFormData] = useState<FarmFormData>({
+        cropName:"",
+        plantingDate:"",
+        expectedHarvestingDate:"",
+        growthStage:"",
+        preNotes:""
+      })
+      const {farmerId} = useAuth();
+      const router = useRouter();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
 
-const AddCrop:React.FC = () => {
+  const handleSubmit = async () => {
+   
+   
+    if(!formData.cropName||!formData.expectedHarvestingDate ||!formData.growthStage ||!formData.plantingDate||!formData.preNotes){
+        alert("Fill out all fields")
+       console.log("Fill out all fields")
+      return
+    } 
+    try {
+      const data = new FormData();
+      
+      // Append text fields
+      farmerId && data.append('farmerId',farmerId.toString())
+      data.append('cropName', formData.cropName);
+      data.append('expectedHarvestingDate', formData.expectedHarvestingDate);
+      data.append('growthStage', formData.growthStage);
+      data.append('plantingDate', formData.plantingDate);
+      data.append('preNotes', formData.preNotes);
+    
+      console.log('Submitting farm data*****:', data);
+
+      const res = await axios.post('http://localhost:5000/api/crops/', data, {headers: {
+          'Content-Type': 'multipart/form-data',
+        }});
+ 
+     
+    
+      const result = await res.data;
+      setDisplayAddCrop(false);
+      router.refresh()
+      console.log('Upload result:', result);
+    
+    } catch (err) {
+      console.error('Upload failed:', err);
+    }
+
+  };
     return (
         <div className="z-50 h-screen fixed flex items-center justify-center w-full bg-black bg-opacity-10 backdrop-blur-lg text-black p-8">
 
@@ -15,7 +86,7 @@ const AddCrop:React.FC = () => {
      <div className="text-lg">
       Add Crop
      </div>
-    <div className="cursor-pointer">
+    <div className="cursor-pointer" onClick={()=>setDisplayAddCrop(false)}>
       <Image src="/icons/cancel.svg" alt="cancel" width={24} height={24} />
     </div>
     </div>    
@@ -28,7 +99,7 @@ const AddCrop:React.FC = () => {
         Crop name:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-   <input type="text" placeholder="Crop name"name="crop_name" className="w-full outline-none"  />
+   <input type="text" placeholder="Crop name"name="cropName" className="w-full outline-none"  onChange={handleChange}  />
 </div></div>
 
 {/* item 2*/}
@@ -38,7 +109,7 @@ const AddCrop:React.FC = () => {
         Planting date:
         </div>
    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-<input type="date" placeholder="Planting date"name="planting_date" className="w-full outline-none"  />
+<input type="date" placeholder="Planting date"name="plantingDate" className="w-full outline-none"  onChange={handleChange}   />
 </div> 
 </div>
 {/* item 2.5*/}
@@ -48,7 +119,7 @@ const AddCrop:React.FC = () => {
        Expected Harvesting date:
         </div>
    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-<input type="date" placeholder="harvesting date"name="harvesting_date" className="w-full outline-none"  />
+<input type="date" placeholder="Expected harvesting date" name="expectedHarvestingDate" className="w-full outline-none"  onChange={handleChange}   />
 </div> 
 </div>
 
@@ -60,11 +131,21 @@ const AddCrop:React.FC = () => {
         Crop growth stage:
         </div>
 <div className="p-3 rounded-lg w-full flex justify-between items-center border-[0.75px] border-[#CFCFCF]">
-  <select id={"growth_stage"} name="growth_stage" className="bg-white outline-none border-none text-black w-full "  defaultValue={""} >
-    <option disabled  value={""}>Select Crop-growth stage</option>
+  <select id={"growthStage"} name="growthStage" onChange={handleChange} className="bg-white outline-none border-none text-black w-full "  defaultValue={""} >
+    <option disabled  value={""}>Select</option>
     <option   value={"pre-harvest"}>Pre-harvest</option>
     {/* <option   value={"post-harvest"}>Post-harvest</option> */}
   </select>
+</div></div>
+{/* item 3*/}
+{/* Growth Stage */}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Notes {"(Brief description)"}:
+        </div>
+<div className="p-3 rounded-lg w-full flex justify-between items-center border-[0.75px] border-[#CFCFCF]">
+  <textarea id={"preNotes"} name="preNotes" onChange={handleChange} className="bg-white outline-none border-none text-black w-full border"   defaultValue={""} >
+  </textarea>
 </div></div>
 
 {/* item 4  */}
@@ -80,7 +161,7 @@ PNG, JPG up to 2MB
 </div> */}
 
 {/* item 6 submit*/}
-<button className="bg-primary-500 text-center p-3 rounded-lg w-full">
+<button className="bg-primary-500 text-center p-3 rounded-lg w-full" onClick={()=> handleSubmit()}>
   Submit
 </button>
 

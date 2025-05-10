@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import Image from 'next/image';
 import Loader from '../components/loader';
 import {useRouter} from "next/navigation";
+import Alert from '../components/alert';
 
 
 
@@ -14,6 +15,7 @@ export default function Page() {
   const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const [successSub, setSuccessSub] = useState<boolean>(false)
   const router = useRouter();
 
 
@@ -81,6 +83,7 @@ Only sign this message if you trust AgriEthos.
         setAddress(address);
         setFarmerId(farmerId);
         setNewUser(newUser);
+        setSuccessSub(true);
         console.log(address,farmerId)
       if(newUser === "false")  router.replace("/dashboard/farmer")
         else if (newUser === "true") router.replace("/onboard/"+farmerId)
@@ -111,7 +114,7 @@ Only sign this message if you trust AgriEthos.
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><div>Connect with Metamask</div><Image src={"/icons/metamask.png"} alt="metamask" width={18} height={14} /></div>}
     </button>
       </div> 
-    
+    {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
   </div>
     </div>

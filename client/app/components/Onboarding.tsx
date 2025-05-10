@@ -5,6 +5,9 @@ import Switch from './switch';
 import { BiUpload } from 'react-icons/bi';
 import axios from 'axios';
 import { useAuth } from '../Context/AuthContext';
+import { useRouter } from 'next/navigation';
+import Alert from './alert';
+import Confirm from './confirm';
 
 interface FarmFormData {
     farmName: string,
@@ -39,6 +42,9 @@ export default function FarmOnboardingForm() {
     companionPlanting:false,
     images: []
   });
+  const [successSub, setSuccessSub] = useState<boolean>(false);
+
+  const router = useRouter();
   function boolToStr (arg:Boolean){
     return arg === true? "true" : "false";
   }
@@ -123,6 +129,8 @@ export default function FarmOnboardingForm() {
     
       const result = await res.data;
       console.log('Upload result:', result);
+      setSuccessSub(true);
+      router.replace("/dashboard/farmer");
     
     } catch (err) {
       console.error('Upload failed:', err);
@@ -134,6 +142,7 @@ export default function FarmOnboardingForm() {
 
   return (
     <div className="max-w-xl mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
+      {/* <Confirm /> */}
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -381,12 +390,13 @@ Companion planting
         ) : (
           <button
             onClick={handleSubmit}
-            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto"
+            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto cursor-pointer"
           >
             Submit
           </button>
         )}
       </div>
+      {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)}/>}
     </div>
   );
 }

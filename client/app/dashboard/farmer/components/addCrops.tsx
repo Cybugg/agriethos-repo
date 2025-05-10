@@ -45,7 +45,7 @@ const AddCrop:React.FC = () => {
 {/* Harvesting date */}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
-        Harvesting date:
+       Expected Harvesting date:
         </div>
    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
 <input type="date" placeholder="harvesting date"name="harvesting_date" className="w-full outline-none"  />
@@ -63,21 +63,21 @@ const AddCrop:React.FC = () => {
   <select id={"growth_stage"} name="growth_stage" className="bg-white outline-none border-none text-black w-full "  defaultValue={""} >
     <option disabled  value={""}>Select Crop-growth stage</option>
     <option   value={"pre-harvest"}>Pre-harvest</option>
-    <option   value={"post-harvest"}>Post-harvest</option>
+    {/* <option   value={"post-harvest"}>Post-harvest</option> */}
   </select>
 </div></div>
 
 {/* item 4  */}
 {/* Crop images */}
-<div className="flex flex-col items-center justify-center w-full border-[0.75px] border-[#CFCFCF] gap-6 rounded-lg text-grey-200 text-xs py-8 px-6">
+{/* <div className="flex flex-col items-center justify-center w-full border-[0.75px] border-[#CFCFCF] gap-6 rounded-lg text-grey-200 text-xs py-8 px-6">
     <Image src="/icons/image.svg" alt="img_icon" width={40} height={40} />
 <div>
-    <span className="text-primary-500  font-bold">Upload 4 images</span> or drag and drop 
+    <span className="text-primary-500  font-bold">Upload 2 images</span> or drag and drop 
 </div> 
 <div className=""> 
 PNG, JPG up to 2MB
 </div>
-</div>
+</div> */}
 
 {/* item 6 submit*/}
 <button className="bg-primary-500 text-center p-3 rounded-lg w-full">

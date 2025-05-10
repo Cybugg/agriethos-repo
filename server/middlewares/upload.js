@@ -12,7 +12,7 @@ const storage = new CloudinaryStorage({
       folder: 'farm_properties',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
       transformation: [
-        { width: 800, height: 800, crop: "limit" }, // Resize
+        { width: 800, height: 600, crop: "limit" }, // Resize
         { quality: "auto" }, // Smart compress
         { fetch_format: "auto" }, // Auto format (webp if supported)
       ],

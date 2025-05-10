@@ -36,6 +36,7 @@ function page() {
               if (!res.ok) throw new Error('Failed to fetch');
               const data = await res.json();
               console.log(data);
+              console.log(data[0]["images"][0])
               setFarm(data); // assuming  backend sends a valid farm object
             } catch (err) {
               console.error('Error fetching farm data:', err);
@@ -46,6 +47,10 @@ function page() {
         }
         }
           , [farmerId,farm,setFarm]);
+          // capitalize first character
+          function CFL(string:string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+          }
   return (
     <div> 
         {/* Pop ups */}
@@ -66,7 +71,7 @@ function page() {
            </div>
              <div className='flex gap-2 text-primary-700  font-bold'>
                   
-                       <PiPlant /> <div>{farm?farm[0].farmName:"N/A"}</div>
+                       <PiPlant /> <div>{CFL(farm?farm[0].farmName:"N/A")}</div>
                    
                    </div>
           </div>
@@ -116,7 +121,7 @@ function page() {
    Location
    </div>
    <div>
-   {farm?farm[0].location:"N/A"}
+   {CFL(farm?farm[0].location:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -126,7 +131,7 @@ function page() {
    Size
    </div>
    <div>
-   {farm?farm[0].size:"N/A"} acres
+   {(farm?farm[0].size:"N/A")} acres
    </div>
    </div>
    {/* Variable */}
@@ -136,7 +141,7 @@ function page() {
    farm Type
    </div>
    <div>
-   {farm?farm[0].farmType:"N/A"}
+   {CFL(farm?farm[0].farmType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -146,7 +151,7 @@ function page() {
    Soil Type
    </div>
    <div>
-{farm?farm[0].soilType:"N/A"}
+{CFL(farm?farm[0].soilType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -156,7 +161,7 @@ function page() {
    Water Source
    </div>
    <div>
-  {farm?farm[0].waterSource:"N/A"}
+  {CFL(farm?farm[0].waterSource:"N/A")}
    </div>
    </div>
    </div>
@@ -186,7 +191,7 @@ function page() {
    Fertilizer type
    </div>
    <div>
-  {farm?farm[0].fertilizerType:"N/A"}
+  {CFL(farm?farm[0].fertilizerType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -196,7 +201,7 @@ function page() {
    Irrigation method
    </div>
    <div>
-  {farm?farm[0].irrigationType:"N/A"}
+  {CFL(farm?farm[0].irrigationType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -206,7 +211,7 @@ function page() {
    Pesticide usage
    </div>
    <div>
-  {farm&& farm[0].pesticdeUsage === "true"?"used":"N/A"}
+  {farm&& farm[0].pesticdeUsage === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -216,7 +221,7 @@ function page() {
    Cover crops 
    </div>
    <div>
-  {farm && farm[0].coverCrop === "true"?"used":"N/A"}
+  {farm && farm[0].coverCrop === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -226,7 +231,7 @@ function page() {
    Companion planting
    </div>
    <div>
-{farm&& farm[0].companionPlanting === "true"?"used":"N/A"}
+{farm&& farm[0].companionPlanting === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    </div>
@@ -249,10 +254,10 @@ function page() {
    </div>
            {/* Farm Images */}
            <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
-            <div className='w-50'>
-              {farm && farm[0].images.map((url:string,ind:number) =>{<Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100} key={ind}/>})}
-            </div>
- 
+            
+              {farm && farm[0]["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
+ )}
+           
            </div>
          </section>
          </div>

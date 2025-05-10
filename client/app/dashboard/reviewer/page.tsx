@@ -78,7 +78,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8 text-center">
+              <div className="w-[120px] mx-8 text-right">
                 <span className="font-medium text-black">Tomatoes</span>
               </div>
               <div className="flex items-center gap-4">
@@ -112,7 +112,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Lagos, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8 text-center">
+              <div className="w-[120px] mx-8 text-right">
                 <span className="font-medium text-black">Lettuce</span>
               </div>
               <div className="flex items-center gap-4">
@@ -146,7 +146,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Pretoria, South Africa</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8 text-center">
+              <div className="w-[120px] mx-8 text-right">
                 <span className="font-medium text-black">Strawberry</span>
               </div>
               <div className="flex items-center gap-4">
@@ -180,7 +180,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="flex-1 mx-8 text-center">
+              <div className="w-[120px] mx-8 text-right">
                 <span className="font-medium text-black">Maize</span>
               </div>
               <div className="flex items-center gap-4">

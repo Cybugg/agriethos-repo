@@ -1,11 +1,14 @@
 'use client';
 
-import React from 'react';
-import { Bell, Check, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bell, Check, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
+import MobileNav from "../components/MobileNav";
 
 export default function CropHistoryPage() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  
   // Sample data for crop history
   const cropHistory = [
     { id: 1, cropName: 'Lettuce', farm: 'God\'s Grace Farms', growthStage: 'Pre-harvest', status: 'Success' },
@@ -35,10 +38,43 @@ export default function CropHistoryPage() {
     }
   };
 
+  // Card view for mobile screens
+  const MobileCardView = () => (
+    <div className="flex flex-col gap-4 md:hidden">
+      {cropHistory.map((crop) => (
+        <div key={crop.id} className="border border-[#cfcfcf] rounded-lg p-4 hover:bg-[#f6fded]">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-medium">{crop.cropName}</h3>
+            <StatusBadge status={crop.status} />
+          </div>
+          <div className="text-sm text-[#898989] mb-2">
+            {crop.farm}
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="px-3 py-1 text-xs rounded-full bg-[#f0f4f3] text-[#898989]">
+              {crop.growthStage}
+            </span>
+            <Link href={`/dashboard/reviewer/review/${crop.id}`} className="text-[#003024] text-sm">
+              View
+            </Link>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <div className="w-[317px] border-r border-[#cfcfcf] flex flex-col">
+      {/* Mobile Nav */}
+      <MobileNav 
+        isOpen={mobileNavOpen} 
+        onClose={() => setMobileNavOpen(false)} 
+        currentPage="history" 
+      />
+      
+      {/* Sidebar - Hidden on mobile */}
+      <div className="hidden md:flex md:w-[317px] border-r border-[#cfcfcf] flex-col">
+        {/* Same sidebar content */}
         <div className="p-6">
           <Image src="/icons/agriethos-logo-3-1-2.png" alt="Agriethos Logo" width={40} height={40} className="mb-8" />
           Agriethos
@@ -66,7 +102,7 @@ export default function CropHistoryPage() {
             History
           </Link>
           <Link
-            href="#"
+            href="/dashboard/reviewer/statistics"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
           >
             <Image 
@@ -82,20 +118,28 @@ export default function CropHistoryPage() {
 
       {/* Main content */}
       <div className="flex-1 overflow-auto">
-        <header className="flex justify-between items-center p-6 border-b border-[#cfcfcf]">
+        <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div>
-            <h1 className="text-2xl font-semibold text-[#000000]">History</h1>
-            <p className="text-[#898989]">View past crop submissions</p>
+            <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">History</h1>
+            <p className="text-sm text-[#898989]">View past crop submissions</p>
           </div>
-          <button className="p-2 rounded-full hover:bg-[#f6fded]">
-            <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button className="p-2 rounded-full hover:bg-[#f6fded]">
+              <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
+            </button>
+            <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
+              <Menu size={24} />
+            </button>
+          </div>
         </header>
 
         {/* Main content */}
-        <div className="p-6">
-          {/* Crop History Table */}
-          <div className="overflow-x-auto bg-white rounded-lg">
+        <div className="p-4 md:p-6">
+          {/* Card view for mobile */}
+          <MobileCardView />
+          
+          {/* Table view for desktop */}
+          <div className="hidden md:block overflow-x-auto bg-white rounded-lg">
             <table className="min-w-full">
               <thead>
                 <tr className="text-left bg-[#f9f9f9]">

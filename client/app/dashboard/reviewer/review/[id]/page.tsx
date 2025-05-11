@@ -1,12 +1,14 @@
 'use client';
 
-import React from 'react';
-import { ArrowLeft, Bell } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
 import { useParams } from 'next/navigation';
+import MobileNav from "../../components/MobileNav";
 
 export default function CropReviewPage() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const params = useParams();
   const id = params.id;
 
@@ -34,14 +36,22 @@ export default function CropReviewPage() {
 
   return (
     <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <div className="w-[317px] border-r border-[#cfcfcf] flex flex-col">
+      {/* Mobile Nav */}
+      <MobileNav 
+        isOpen={mobileNavOpen} 
+        onClose={() => setMobileNavOpen(false)} 
+        currentPage="review" 
+      />
+      
+      {/* Sidebar - Hidden on mobile */}
+      <div className="hidden md:flex md:w-[317px] border-r border-[#cfcfcf] flex-col">
+        {/* Sidebar content same as before */}
         <div className="p-6">
           <Image src="/icons/agriethos-logo-3-1-2.png" alt="Agriethos Logo" width={40} height={40} className="mb-8" />
           Agriethos
         </div>
         <nav className="flex flex-col px-4 gap-2">
-          <Link href="/dashboard/reviewer" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#a5eb4c] text-[#003024] font-medium">
+          <Link href="/dashboard/reviewer" className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors">
             <Image 
               src="/icons/ph-house-line-fill.svg" 
               alt="Home Icon" 
@@ -51,7 +61,7 @@ export default function CropReviewPage() {
             Home
           </Link>
           <Link
-            href="#"
+            href="/dashboard/reviewer/history"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
           >
             <Image 
@@ -63,7 +73,7 @@ export default function CropReviewPage() {
             History
           </Link>
           <Link
-            href="#"
+            href="/dashboard/reviewer/statistics"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
           >
             <Image 
@@ -79,26 +89,31 @@ export default function CropReviewPage() {
 
       {/* Main content */}
       <div className="flex-1 overflow-auto">
-        <header className="flex justify-between items-center p-6 border-b border-[#cfcfcf]">
+        <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div className="flex items-center gap-2">
             <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded]">
               <ArrowLeft size={20} />
             </Link>
             <div>
-              <h1 className="text-2xl font-semibold text-[#000000]">Review Crop</h1>
-              <p className="text-[#898989]">Reviewing crop submission #{id}</p>
+              <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Review Crop</h1>
+              <p className="text-xs md:text-sm text-[#898989]">Reviewing submission #{id}</p>
             </div>
           </div>
-          <button className="p-2 rounded-full hover:bg-[#f6fded]">
-            <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button className="p-2 rounded-full hover:bg-[#f6fded]">
+              <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
+            </button>
+            <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
+              <Menu size={24} />
+            </button>
+          </div>
         </header>
 
         {/* Main content */}
-        <div className="p-6">
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className="p-4 md:p-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Crop details card */}
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-6 flex-1">
+            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
               <h2 className="text-lg font-semibold mb-4">Crop to Review</h2>
               
               <div className="space-y-4">
@@ -140,7 +155,7 @@ export default function CropReviewPage() {
             </div>
             
             {/* Instructions card */}
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-6 flex-1">
+            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
               <h2 className="text-lg font-semibold mb-4">Agent Instructions</h2>
               
               <ol className="list-decimal pl-5 space-y-2 mb-6">

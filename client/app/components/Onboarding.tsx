@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Switch from './switch';
 import { BiUpload } from 'react-icons/bi';
 import axios from 'axios';
@@ -46,6 +46,14 @@ export default function FarmOnboardingForm() {
   const [showConfirm,setShowConfirm] = useState<boolean>(false);
 
   const router = useRouter();
+
+
+  useEffect(
+    ()=>{
+      if(!farmerId)router.replace("/auth");
+
+    },[]
+  )
   function boolToStr (arg:Boolean){
     return arg === true? "true" : "false";
   }
@@ -210,7 +218,7 @@ export default function FarmOnboardingForm() {
         </span>
      
 <div className="border-[0.75px] border-[#CFCFCF] p-2 rounded  w-full">
-    <select id="farmType" name="farmType" defaultValue={""} onChange={handleChange} className="bg-white outline-none border-none w-full text-gray-600" >
+    <select id="farmType" value={formData.farmType} name="farmType" defaultValue={""} onChange={handleChange} className="bg-white outline-none border-none w-full text-gray-600" >
         <option className='bg-white text-black' value={""} disabled   >Select one</option>
         <option className='bg-white text-black' value={"organic"} >Organic farming</option>
         <option className='bg-white text-black' value={"conventional"} >Conventional farming</option>
@@ -233,7 +241,7 @@ Soil type:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="soilType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="location" value={formData.soilType} name="soilType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option className='bg-white text-black' value={""} disabled   >Select one</option>
         <option className='bg-white text-black' value={"sandy"} >Sandy soil</option>
         <option className='bg-white text-black' value={"clay"} >Clay soil</option>
@@ -250,7 +258,7 @@ Fertilizer type:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="fertilizerType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="location" name="fertilizerType" value={formData.fertilizerType} defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
     <option value={""} disabled  className="bg-white text-black" >Select one</option>
         <option value={"organic"} className="bg-white text-black" >Organic</option>
         <option value={"synthetic"} className="bg-white text-black" >synthetic</option>
@@ -264,7 +272,7 @@ Water source:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="waterSource" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="location" name="waterSource" defaultValue={""} value={formData.waterSource}  onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option  value={""} disabled  className="bg-white text-black" >Select one</option>
         <option  value={"surface water"} className="bg-white text-black" >Surface water e.g rivers</option>
         <option  value={"ground water"} className="bg-white text-black" >Ground water e.g wells, boreholes, etc</option>
@@ -280,7 +288,7 @@ Irrigation method:
     </span>
  
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="irrigation" name="irrigationType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
+    <select id="irrigation" name="irrigationType" defaultValue={""} value={formData.irrigationType}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
         <option  value={""} disabled  className="bg-white text-black" >Select one</option>
         <option  value={"sprinkler"} className="bg-white text-black" >Sprinkler</option>
         <option  value={"drip"} className="bg-white text-black" >Drip</option>
@@ -337,19 +345,21 @@ Companion planting
           <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
           
       <div className='text-3xl py-12 text-center'>
-         Share beautiful view of your farm
+         Share 4 images of your farm
                 </div>
-          <button className="border-[0.75px] border-[#CFCFCF] p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
+          <button className="border  p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
            <input
             type="file"
             multiple
            max={4}
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full border-none p-2 rounded"
+            className="w-full h-56 border-none p-2 rounded"
           />
-     
           </button>
+          <div className="text-lg text-grey-500">
+          or Drag and Drop above
+          </div>
           <div className="text-xs text-grey-500">
           Note: You are required to upload 4 images of your farm
           </div>

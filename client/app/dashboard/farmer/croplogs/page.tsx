@@ -42,7 +42,7 @@ function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-      const { address, logout ,isLoginStatusLoading} = useAuth();
+      const { address, logout ,isLoginStatusLoading,newUser} = useAuth();
       const router = useRouter();
     
       useEffect(()=>{
@@ -54,6 +54,7 @@ function page() {
          // Route protection
           useEffect(() => {
           if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+          if(address && newUser ==="true"){router.push('/onboard')}
         }, [address])
       
   return (

@@ -86,7 +86,7 @@ Only sign this message if you trust AgriEthos.
         setSuccessSub(true);
         console.log(address,farmerId)
       if(newUser === "false")  router.replace("/dashboard/farmer")
-        else if (newUser === "true") router.replace("/onboard/"+farmerId)
+        else if (newUser === "true") router.replace("/onboard")
     } else {
       setMsg(loginData.error || "Login failed.");
       setLoading(false);

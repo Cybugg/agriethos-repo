@@ -43,6 +43,7 @@ export default function FarmOnboardingForm() {
     images: []
   });
   const [successSub, setSuccessSub] = useState<boolean>(false);
+  const [showConfirm,setShowConfirm] = useState<boolean>(false);
 
   const router = useRouter();
   function boolToStr (arg:Boolean){
@@ -134,7 +135,7 @@ export default function FarmOnboardingForm() {
     
     } catch (err) {
       console.error('Upload failed:', err);
-    }
+    } 
 
   };
 
@@ -142,7 +143,7 @@ export default function FarmOnboardingForm() {
 
   return (
     <div className="max-w-xl mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
-      {/* <Confirm /> */}
+      {showConfirm &&<Confirm onCancel={()=>setShowConfirm(false)} onConfirm={handleSubmit} mainMsg=' Have you confirmed that every details you provided are correct?' subMsg='Submissions are subjected to review'/>}
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -251,7 +252,7 @@ Fertilizer type:
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
     <select id="location" name="fertilizerType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
     <option value={""} disabled  className="bg-white text-black" >Select one</option>
-        <option value={"organic"} className="bg-white text-black" >Organice</option>
+        <option value={"organic"} className="bg-white text-black" >Organic</option>
         <option value={"synthetic"} className="bg-white text-black" >synthetic</option>
         <option value={"none"} className="bg-white text-black" >None</option>
     </select>
@@ -342,7 +343,7 @@ Companion planting
            <input
             type="file"
             multiple
-             max={4}
+           max={4}
             accept="image/*"
             onChange={handleImageChange}
             className="w-full border-none p-2 rounded"
@@ -389,7 +390,7 @@ Companion planting
           </button>
         ) : (
           <button
-            onClick={handleSubmit}
+            onClick={()=>setShowConfirm(true)}
             className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto cursor-pointer"
           >
             Submit

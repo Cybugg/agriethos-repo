@@ -77,7 +77,7 @@ export default function Home() {
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, logout ,isLoginStatusLoading,farmerId} = useAuth();
+  const { address, logout ,isLoginStatusLoading,farmerId,newUser} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
   const { farm, setFarm } = useFarm();
@@ -86,6 +86,7 @@ export default function Home() {
   // Route protection
   useEffect(() => {
     if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+    if(address && newUser ==="true"){router.push('/onboard')}
   }, [address])
 
    useEffect(()=>{

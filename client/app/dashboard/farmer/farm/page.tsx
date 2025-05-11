@@ -14,13 +14,14 @@ import { useFarm } from '@/app/Context/FarmContext';
 function page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-        const { address, logout ,isLoginStatusLoading,farmerId} = useAuth();
+        const { address, logout ,isLoginStatusLoading,farmerId, newUser} = useAuth();
           const { farm, setFarm } = useFarm();
         const router = useRouter();
 
     // Route protection
     useEffect(() => {
     if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+    if(address && newUser ==="true"){router.push('/onboard')}
   }, [address])
 
       useEffect(()=>{

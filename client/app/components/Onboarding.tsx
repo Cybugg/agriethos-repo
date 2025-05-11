@@ -8,6 +8,7 @@ import { useAuth } from '../Context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Alert from './alert';
 import Confirm from './confirm';
+import Loader from './loader';
 
 interface FarmFormData {
     farmName: string,
@@ -27,7 +28,7 @@ interface FarmFormData {
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
-  const {farmerId} = useAuth();
+  const {farmerId,setNewUser} = useAuth();
   const [formData, setFormData] = useState<FarmFormData>({
     farmName: "",
     location: "",
@@ -44,6 +45,7 @@ export default function FarmOnboardingForm() {
   });
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [showConfirm,setShowConfirm] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -99,11 +101,13 @@ export default function FarmOnboardingForm() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     console.log('Submitting farm data:', formData);
    
-    if(!formData.companionPlanting||!formData.coverCrops ||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!formData.pesticideUsage||!formData.size||!formData.soilType||!formData.waterSource){
+    if(!boolToStr(formData.companionPlanting)||!boolToStr(formData.coverCrops)||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!boolToStr(formData.pesticideUsage)||!formData.size||!formData.soilType||!formData.waterSource){
       alert("Fill out all fields")
       console.log("Fill out all fields")
+      return;
     } if (formData.images.length !=4) {
       alert('You must upload 4 images');
       return;
@@ -139,6 +143,7 @@ export default function FarmOnboardingForm() {
       const result = await res.data;
       console.log('Upload result:', result);
       setSuccessSub(true);
+      setNewUser("false")
       router.replace("/dashboard/farmer");
     
     } catch (err) {
@@ -150,8 +155,8 @@ export default function FarmOnboardingForm() {
   const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
 
   return (
-    <div className="max-w-xl mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
-      {showConfirm &&<Confirm onCancel={()=>setShowConfirm(false)} onConfirm={handleSubmit} mainMsg=' Have you confirmed that every details you provided are correct?' subMsg='Submissions are subjected to review'/>}
+    <div className="max-w-xl max-h-screen mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
+      {showConfirm &&<Confirm loading={loading} onCancel={()=>setShowConfirm(false)} onConfirm={handleSubmit} mainMsg=' Have you confirmed that every details you provided are correct?' subMsg='Submissions are subjected to review'/>} 
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2">

@@ -16,7 +16,7 @@ const Alert: React.FC<AlertProps> = ({ message, duration = 3000, onClose }) => {
   }, [duration, onClose]);
 
   return (
-    <div className="bg-green-100 text-green-700 p-4 rounded-md shadow-md">
+    <div className="bg-green-100 text-green-700 p-4 rounded-md shadow-md z-50">
       {message}
     </div>
   );

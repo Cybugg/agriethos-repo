@@ -86,8 +86,10 @@ export default function Home() {
   // Route protection
   useEffect(() => {
     if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
-    if(address && newUser ==="true"){router.push('/onboard')}
-  }, [address])
+    if(!isLoginStatusLoading && address && farmerId && newUser ==="true"){router.push('/onboard');
+       console.log("new user ni") }
+       console.log(newUser)
+  }, [address,farmerId,isLoginStatusLoading])
 
    useEffect(()=>{
           setCurrentPage("home");

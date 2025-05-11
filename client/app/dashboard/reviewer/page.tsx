@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Button } from "@/app/components/button"
+import Link from "next/link"
 
 export default function Home() {
   return (
@@ -78,7 +79,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="w-[120px] mx-8 text-right">
+              <div className="w-[120px] mx-8 text-center">
                 <span className="font-medium text-black">Tomatoes</span>
               </div>
               <div className="flex items-center gap-4">
@@ -89,9 +90,11 @@ export default function Home() {
                 >
                   Skip
                 </Button>
-                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
-                  Review
-                </Button>
+                <Link href="/dashboard/reviewer/review/1">
+                  <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                    Review
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -112,7 +115,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Lagos, Nigeria</p>
                 </div>
               </div>
-              <div className="w-[120px] mx-8 text-right">
+              <div className="w-[120px] mx-8 text-center">
                 <span className="font-medium text-black">Lettuce</span>
               </div>
               <div className="flex items-center gap-4">
@@ -123,9 +126,11 @@ export default function Home() {
                 >
                   Skip
                 </Button>
-                <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
-                  Review
-                </Button>
+                <Link href="/dashboard/reviewer/review/2">
+                  <Button className="w-[121px] h-[43px] rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-3">
+                    Review
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -146,7 +151,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Pretoria, South Africa</p>
                 </div>
               </div>
-              <div className="w-[120px] mx-8 text-right">
+              <div className="w-[120px] mx-8 text-center">
                 <span className="font-medium text-black">Strawberry</span>
               </div>
               <div className="flex items-center gap-4">
@@ -180,7 +185,7 @@ export default function Home() {
                   <p className="text-sm text-[#898989]">Osun, Nigeria</p>
                 </div>
               </div>
-              <div className="w-[120px] mx-8 text-right">
+              <div className="w-[120px] mx-8 text-center">
                 <span className="font-medium text-black">Maize</span>
               </div>
               <div className="flex items-center gap-4">

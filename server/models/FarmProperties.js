@@ -6,6 +6,8 @@ const farmPropertySchema = new mongoose.Schema({
     ref: 'Farmer',
     required: true,
   },
+  latitude: { type: String,  },
+  longitude: { type: String,  },
   farmName: { type: String, required: true },
   location: { type: String, required: true },
   size: { type: String },

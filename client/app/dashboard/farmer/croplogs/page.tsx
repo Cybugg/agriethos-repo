@@ -78,6 +78,9 @@ function page() {
                       </div>
              </div>
               <div className='flex gap-2 items-center'>
+              <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=>router.refresh()}>
+        Reload
+       </div>
                                 <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                                                                                               
               <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>

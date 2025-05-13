@@ -66,7 +66,7 @@ Only sign this message if you trust AgriEthos.
    
       await user.save();
 
-      return res.json({ success: true, message: "Wallet verified", data:{address,farmerId:user._id,newUser:user.newUser} });
+      return res.json({ success: true, message: "Wallet verified", data:{address,farmerId:user._id,newUser:user.newUser,userPack:user} });
     } else {
       return res.status(401).json({ error: "Signature verification failed" });
     }

@@ -4,7 +4,13 @@ import Image from "next/image";
 import React, {ReactNode} from "react";
 
 
-const EditFarmMethod:React.FC = () => {
+
+interface props {
+    setEditOverview: (data:boolean) => void 
+    setEditMethod: (data:boolean) => void 
+}
+
+const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
     return (
         <div className="z-50 h-screen fixed flex items-center justify-center w-full bg-black bg-opacity-10 backdrop-blur-lg text-black p-8">
 
@@ -15,7 +21,7 @@ const EditFarmMethod:React.FC = () => {
      <div className="text-lg">
       Edit Farm Methods
      </div>
-    <div className="cursor-pointer">
+    <div className="cursor-pointer" onClick={()=>setEditMethod(false)}>
       <Image src="/icons/cancel.svg" alt="cancel" width={24} height={24} />
     </div>
     </div>    

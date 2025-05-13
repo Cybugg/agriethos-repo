@@ -15,6 +15,9 @@ const farmerSchema = new mongoose.Schema({
     type:String,
     required:true
   },
+  farmId:{
+    type:String,
+  },
   newUser:{
     type:String,
     required:true,

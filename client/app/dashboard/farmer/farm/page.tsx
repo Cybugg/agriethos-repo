@@ -13,6 +13,8 @@ import { useFarm } from '@/app/Context/FarmContext';
 
 function page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
+    const [editOverview, setEditOverview] = useState<boolean | null>(false);
+    const [editMethod, setEditMethod] = useState<boolean| null>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
         const { address, logout ,isLoginStatusLoading,farmerId, newUser} = useAuth();
           const { farm, setFarm } = useFarm();
@@ -37,7 +39,7 @@ function page() {
               if (!res.ok) throw new Error('Failed to fetch');
               const data = await res.json();
               console.log(data);
-              console.log(data[0]["images"][0])
+              console.log(data["images"][0])
               setFarm(data); // assuming  backend sends a valid farm object
             } catch (err) {
               console.error('Error fetching farm data:', err);
@@ -56,8 +58,8 @@ function page() {
     <div> 
         {/* Pop ups */}
       {/* Edit overview */}
-      {/* <EditOverview /> */}
-      {/* <EditFarmMethod /> */}
+   {( editOverview &&  <EditOverview setEditMethod={setEditMethod} setEditOverview={setEditOverview}  />)}
+     {editMethod && <EditFarmMethod setEditMethod={setEditMethod} setEditOverview={setEditOverview} />}
       {/* <EditFarmImage /> */}
  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
     
@@ -72,11 +74,14 @@ function page() {
            </div>
              <div className='flex gap-2 text-primary-700  font-bold'>
                   
-                       <PiPlant /> <div>{CFL(farm?farm[0].farmName:"N/A")}</div>
+                       <PiPlant /> <div>{CFL(farm?farm.farmName:"N/A")}</div>
                    
                    </div>
           </div>
              <div className='flex gap-2 items-center'>
+             <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=>router.refresh()}>
+        Reload
+       </div>
                                          <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                                                                
                                                              <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
@@ -107,7 +112,7 @@ function page() {
    </div>
    <div className='flex gap-2'>
  
-   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2'>
+   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2' onClick={()=>setEditOverview(true)}>
    <Image src={"/icons/edit.png"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Edit</span>
   </div>
    </div>
@@ -122,7 +127,7 @@ function page() {
    Location
    </div>
    <div>
-   {CFL(farm?farm[0].location:"N/A")}
+   {CFL(farm?farm.location:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -132,7 +137,7 @@ function page() {
    Size
    </div>
    <div>
-   {(farm?farm[0].size:"N/A")} acres
+   {(farm?farm.size:"N/A")} acres
    </div>
    </div>
    {/* Variable */}
@@ -142,7 +147,7 @@ function page() {
    farm Type
    </div>
    <div>
-   {CFL(farm?farm[0].farmType:"N/A")}
+   {CFL(farm?farm.farmType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -152,7 +157,7 @@ function page() {
    Soil Type
    </div>
    <div>
-{CFL(farm?farm[0].soilType:"N/A")}
+{CFL(farm?farm.soilType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -162,7 +167,7 @@ function page() {
    Water Source
    </div>
    <div>
-  {CFL(farm?farm[0].waterSource:"N/A")}
+  {CFL(farm?farm.waterSource:"N/A")}
    </div>
    </div>
    </div>
@@ -170,7 +175,7 @@ function page() {
        {/* //////////////////////////////////////////////////////////////////////////////////// */}
              {/* Farming Methods */}
              <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
-   <div className='flex items-center justify-between'>
+   <div className='flex items-center justify-between' onClick={()=>setEditMethod(true)}>
      {/* Title */}
    <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
    Farming Methods
@@ -192,7 +197,7 @@ function page() {
    Fertilizer type
    </div>
    <div>
-  {CFL(farm?farm[0].fertilizerType:"N/A")}
+  {CFL(farm?farm.fertilizerType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -202,7 +207,7 @@ function page() {
    Irrigation method
    </div>
    <div>
-  {CFL(farm?farm[0].irrigationType:"N/A")}
+  {CFL(farm?farm.irrigationType:"N/A")}
    </div>
    </div>
    {/* Variable */}
@@ -212,7 +217,7 @@ function page() {
    Pesticide usage
    </div>
    <div>
-  {farm&& farm[0].pesticdeUsage === "true"?CFL("used"):"N/A"}
+  {farm&& farm.pesticdeUsage === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -222,7 +227,7 @@ function page() {
    Cover crops 
    </div>
    <div>
-  {farm && farm[0].coverCrop === "true"?CFL("used"):"N/A"}
+  {farm && farm.coverCrop === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -232,7 +237,7 @@ function page() {
    Companion planting
    </div>
    <div>
-{farm&& farm[0].companionPlanting === "true"?CFL("used"):"N/A"}
+{farm&& farm.companionPlanting === "true"?CFL("used"):"N/A"}
    </div>
    </div>
    </div>
@@ -256,7 +261,7 @@ function page() {
            {/* Farm Images */}
            <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
             
-              {farm && farm[0]["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
+              {farm && farm["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
  )}
            
            </div>

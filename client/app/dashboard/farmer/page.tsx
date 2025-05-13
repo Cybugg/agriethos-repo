@@ -13,6 +13,7 @@ import { GiFarmer } from 'react-icons/gi';
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
 import axios from 'axios';
+import Weather from './components/weather';
 
 
 // Define the shape of the chart data
@@ -77,7 +78,7 @@ export default function Home() {
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, logout ,isLoginStatusLoading,farmerId,newUser} = useAuth();
+  const { address, logout ,isLoginStatusLoading,farmerId,newUser,user,setUser} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
   const { farm, setFarm } = useFarm();
@@ -96,6 +97,7 @@ export default function Home() {
           setMobileDisplay(false);
         },[])
   
+        // to fetch farm properties and set it to state
   useEffect(() => {
     if (!isLoginStatusLoading  ) {
       const fetchFarm = async () => {
@@ -103,7 +105,9 @@ export default function Home() {
           const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+farmerId);
           if (!res.ok) throw new Error('Failed to fetch');
           const data = await res.json();
-          setFarm(data); // assuming your backend sends a valid farm object
+          setFarm(data); 
+          console.log(data)
+          // assuming your backend sends a valid farm object
         } catch (err) {
           console.error('Error fetching farm data:', err);
         }
@@ -112,7 +116,7 @@ export default function Home() {
       fetchFarm();
     }
    
-  }, [setFarm,address,farm]);
+  }, [address]);
 
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
@@ -127,11 +131,14 @@ export default function Home() {
         </div>
         <div className='flex gap-2 text-primary-700  font-bold'>
        
-            <PiPlant /> <div>Jameo Farm</div>
+            <PiPlant /> <div>{farm?farm.farmName:"N/A"}</div>
         
         </div>
        </div>
        <div className='flex gap-2 items-center'>
+       <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=>router.refresh()}>
+        Reload
+       </div>
                     <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                       
                     <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
@@ -157,11 +164,11 @@ export default function Home() {
             Total Active Crops
           </div>
           <div className='text-success-500 '>
-             +20%
+             +%
           </div >
           </div>
           <div className=' text-2xl '>
-            4
+            {farm?farm.crops.length:"N/A"}
           </div>
         </div>
              {/* Item 2 */}
@@ -173,21 +180,21 @@ export default function Home() {
          
           </div>
           <div className='text-2xl '>
-            Osun, Nigeria
+            {farm? farm.location : "N/A"}
           </div>
         </div>
              {/* Item 3 */}
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
           <div className='flex items-center justify-between'>
            <div className='text-sm text-grey-400'>
-       Last Logged Activity
+       Farm Size
           </div>
           <div className='text-sm text-grey-400'>
-             2 Days ago
+            
           </div >
           </div>
           <div className='text-2xl '>
-          Corn/Pre-harvest
+          {farm?farm.size:"N/A"} Hectares
           </div>
         </div>
              {/* Item 4 */}
@@ -199,7 +206,7 @@ export default function Home() {
       
           </div>
           <div className='text-2xl '>
-            11
+            0
           </div>
         </div>
        </section>
@@ -255,97 +262,7 @@ Crop Growth
 </div>
 {/* lists of weather variables */}
 <div className='flex flex-col gap-4 lg:w-[416px]'>
-
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Location
-</div>
-<div>
-Osun, Nigeria
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Date
-</div>
-<div>
-3rd April, 2025
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Temperature(Min/Max)
-</div>
-<div>
-24°C/34°C
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Rainfall Forecast
-</div>
-<div>
-Light rain by afternoon
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Wind
-</div>
-<div>
-Moderate breeze
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Humidity 
-</div>
-<div>
-78%
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Sunlight Duration
-</div>
-<div>
-8 hours
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Dew Point
-</div>
-<div>
-20°C
-</div>
-</div>
-{/* Variable */}
-<div className='flex items-center justify-between'>
-  {/* Variable Name */}
-<div className='text-grey-600'>
-Extreme Weather Alert
-</div>
-<div>
-None
-</div>
-</div>
+<Weather />
 </div>
     </div>
       </section>

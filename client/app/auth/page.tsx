@@ -12,7 +12,7 @@ import Alert from '../components/alert';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser} = useAuth();
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -75,7 +75,7 @@ Only sign this message if you trust AgriEthos.
       body: JSON.stringify({ address: addr, signature }),
     }); 
     const loginData = await resLogin.json();
-    const {address,farmerId,newUser} = await loginData.data
+    const {address,farmerId,newUser,userPack} = await loginData.data
     if (loginData.success) {
       console.log("✅ Login successful!");
         setLoading(false);
@@ -84,6 +84,7 @@ Only sign this message if you trust AgriEthos.
         setFarmerId(farmerId);
         setNewUser(newUser);
         setSuccessSub(true);
+        setUser(userPack)
         console.log(address,farmerId)
       if(newUser === "false")  router.replace("/dashboard/farmer")
         else if (newUser === "true") router.replace("/onboard")

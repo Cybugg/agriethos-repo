@@ -11,9 +11,23 @@ interface AuthContextType {
   setAddress: (address: string | null) => void
   isLoginStatusLoading:boolean
   logout: () => void
+  user: User | null
+  setUser: (user: User | null) => void
 }
 
-const AuthContext = createContext<AuthContextType>({
+export interface User {
+  farmerId: string;
+  walletAddress: string;
+  email: string;
+  nounce:string;
+  newUser:string
+  role:string;
+  [key: string]: any;
+}
+
+const AuthContext = createContext<AuthContextType >({
+  user:  null,
+  setUser: () => {},
   newUser: null,
   setNewUser: () => {},
   address: null,
@@ -28,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null);
   const [farmerId, setFarmerId] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoginStatusLoading,setLoginStatusLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -40,6 +55,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (storedId) setFarmerId(storedId)
       const storedUserType = localStorage.getItem('newUser')
     if (storedUserType) setNewUser(storedUserType)
+      const storedUserPack = localStorage.getItem('userPack')
+    if (storedUserPack) setNewUser(JSON.parse(storedUserPack))
   }, [])
 
   // handle wallet address
@@ -75,8 +92,15 @@ const handleNewUser = ( newPerson: string | null) => {
   if (newPerson) localStorage.setItem('newUser', newPerson)
     else localStorage.removeItem('newUser')
 }
+   // handle user-pack 
+const handleUserPack = ( userPack: User | null) => {
  
-  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, farmerId, setFarmerId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser }}>
+  setUser(userPack);
+
+  if (userPack) localStorage.setItem('userPack', JSON.stringify(userPack))
+    else localStorage.removeItem('newUser')
+}
+  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, farmerId, setFarmerId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleUserPack }}>
       {children}
     </AuthContext.Provider>
   )

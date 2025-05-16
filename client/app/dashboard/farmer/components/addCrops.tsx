@@ -8,6 +8,7 @@ import React, {ReactNode, useState} from "react";
 
 interface props {
     setDisplayAddCrop:(boolVal:boolean)=>void
+    setAlertCreate:(boolVal:boolean)=>void
 }
 
 interface FarmFormData {
@@ -18,7 +19,7 @@ interface FarmFormData {
     preNotes:string
 }
 
-const AddCrop:React.FC<props> = ({setDisplayAddCrop}) => {
+const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate}) => {
       const [formData, setFormData] = useState<FarmFormData>({
         cropName:"",
         plantingDate:"",
@@ -69,6 +70,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop}) => {
       const result = await res.data;
       setDisplayAddCrop(false);
       router.refresh()
+      setAlertCreate(true);
       console.log('Upload result:', result);
     
     } catch (err) {

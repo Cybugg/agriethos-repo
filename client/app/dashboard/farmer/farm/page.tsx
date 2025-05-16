@@ -10,12 +10,14 @@ import { useAuth } from '@/app/Context/AuthContext';
 import { BsPerson } from 'react-icons/bs';
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
+import Alert from '@/app/components/alert';
 
 function page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
     const [editOverview, setEditOverview] = useState<boolean | null>(false);
     const [editMethod, setEditMethod] = useState<boolean| null>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
+      const [alertSub, setAlertSub] = useState<boolean>(false);
         const { address, logout ,isLoginStatusLoading,farmerId, newUser} = useAuth();
           const { farm, setFarm } = useFarm();
         const router = useRouter();
@@ -51,17 +53,24 @@ function page() {
         }
           , [farmerId,farm,setFarm]);
           // capitalize first character
-          function CFL(string:string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-          }
+          function CFL(string_: string | undefined | null) {
+  if (!string_) return ""; // Return empty string or fallback
+  return string_.charAt(0).toUpperCase() + string_.slice(1);
+}
+
+const str2Bool = (val:string)=>{
+  return val==="true"? true: val==="false"?false:undefined
+};
+
+
   return (
-    <div> 
+    <div className='relative'> 
         {/* Pop ups */}
       {/* Edit overview */}
    {( editOverview &&  <EditOverview setEditMethod={setEditMethod} setEditOverview={setEditOverview}  />)}
      {editMethod && <EditFarmMethod setEditMethod={setEditMethod} setEditOverview={setEditOverview} />}
       {/* <EditFarmImage /> */}
- <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+ <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black ">
     
            {/* Header and Descriptive Text */}
            <div className='flex items-start justify-between'>
@@ -79,7 +88,7 @@ function page() {
                    </div>
           </div>
              <div className='flex gap-2 items-center'>
-             <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=>router.refresh()}>
+             <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
                                          <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
@@ -137,7 +146,7 @@ function page() {
    Size
    </div>
    <div>
-   {(farm?farm.size:"N/A")} acres
+   {(farm?farm.size:"0")} acres
    </div>
    </div>
    {/* Variable */}
@@ -217,7 +226,7 @@ function page() {
    Pesticide usage
    </div>
    <div>
-  {farm&& farm.pesticdeUsage === "true"?CFL("used"):"N/A"}
+  {farm&&str2Bool(farm.pesticideUsage)?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -227,7 +236,7 @@ function page() {
    Cover crops 
    </div>
    <div>
-  {farm && farm.coverCrop === "true"?CFL("used"):"N/A"}
+  {farm && str2Bool(farm.coverCrops)?CFL("used"):"N/A"}
    </div>
    </div>
    {/* Variable */}
@@ -237,7 +246,7 @@ function page() {
    Companion planting
    </div>
    <div>
-{farm&& farm.companionPlanting === "true"?CFL("used"):"N/A"}
+{farm&& str2Bool(farm.companionPlanting)?CFL("used"):"N/A"}
    </div>
    </div>
    </div>
@@ -253,7 +262,7 @@ function page() {
    </div>
    <div className='flex gap-2'>
  
-   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2'>
+   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2' onClick={()=>setAlertSub(true)}>
    <Image src={"/icons/edit.png"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Edit Images</span>
   </div>
    </div>
@@ -261,12 +270,13 @@ function page() {
            {/* Farm Images */}
            <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
             
-              {farm && farm["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
+              {farm && farm.images && farm["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
  )}
            
            </div>
          </section>
          </div>
+         {alertSub && <Alert message='Sorry, you cannot make changes to your farm images at the moment...' onClose={()=> setAlertSub(false)} color='text-yellow-800'  background='bg-yellow-100' />}
     </div>
     
   )

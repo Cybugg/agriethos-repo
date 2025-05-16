@@ -4,7 +4,7 @@ import { useFarm } from "@/app/Context/FarmContext";
 import axios from "axios";
 import Image from "next/image";
 import React, {ReactNode, useEffect, useState} from "react";
-
+import { useRouter } from "next/navigation";
 
     interface props {
     setEditOverview: (data:boolean) => void 
@@ -33,8 +33,9 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
 
 
   const {isLoginStatusLoading} = useAuth();
-  const {farm} = useFarm();
+  const {farm,setFarm} = useFarm();
 
+  const fullUrl = window.location.href;
   useEffect(()=>{
  !isLoginStatusLoading &&farm && setFormData({
     farmName:farm.farmName,
@@ -44,7 +45,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
     waterSource: farm.waterSource,
     soilType:farm.soilType
   })
-  },[isLoginStatusLoading,farm]);
+  },[]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -56,6 +57,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         }));
       };
 
+      const router = useRouter();
 
 
       const handleSubmit = async () => {
@@ -67,6 +69,10 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
           console.log("Fill out all fields")
           return;
         } 
+        if(formData && !Number(formData.size)){
+            alert("Farm size is not number, try again")
+            return
+        }
         try {
           const data = new FormData();
           
@@ -79,19 +85,24 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
           data.append('soilType', formData.soilType);
          
          
-          // Append multiple images correctly
-       
-        
-        //   const res = await axios.post('http://localhost:5000/api/farm/farm-properties', data, {headers: {
-        //       'Content-Type': 'multipart/form-data',
-        //     }});
-        
          
-        
-        //   const result = await res.data;
-        //   console.log('Upload result:', result);
-         
+            console.log(data);
+        if(farm){
+             const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${farm._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+              });
+          const result = await res.json();
+          console.log(result)
+          console.log(result)
+          console.log(result)
+           setFarm(result);
+          console.log('Upload result:', result);
+          result && window.location.reload();
          setEditOverview(false);
+        }
+         
         
         } catch (err) {
           console.error('Upload failed:', err);
@@ -141,10 +152,26 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
 {/* item 2.5*/}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
+        Farm Name :
+        </div>
+<div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+<input type="text" value={formData.farmName??""} placeholder="Farm size in acres"  className="w-full outline-none" name="farmName" onChange={handleChange}/>
+</div></div>
+{/* item 2.5*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
+        Location:
+        </div>
+<div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+<input type="text" value={formData.location??""} placeholder="Farm size in acres" className="w-full outline-none" name="location" onChange={handleChange}/>
+</div></div>
+{/* item 2.5*/}
+<div className="flex flex-col gap-1">
+    <div className="text-grey-600 text-xs">
         Farm size {"(in acres)"}:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-<input type="text" placeholder="Farm size in acres" defaultValue={farm?farm.size:""} className="w-full outline-none" name="size" onChange={handleChange}/>
+<input type="text" value={formData.size??""} placeholder="Farm size in acres" className="w-full outline-none" name="size" onChange={handleChange}/>
 </div></div>
 {/* item 3*/}
 <div className="flex flex-col gap-1">
@@ -152,8 +179,8 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         Farm type:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="farmType" defaultValue={farm&&farm.farmType}  className="bg-white outline-none border-none text-black w-full" onChange={handleChange}>
-        <option value={""} disabled  className="bg-white text-black" >Farm type</option>
+    <select id="location" name="farmType"   className="bg-white outline-none border-none text-black w-full" value={formData.farmType??""} onChange={handleChange}>
+        <option value={""} disabled  className="bg-white text-black" >Select one</option>
         <option value={"organic"} >Organic farming</option>
         <option value={"conventional"} >Conventional farming</option>
         <option value={"hydroponic"} >Hydroponic farming</option>
@@ -168,8 +195,8 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         Soil type:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="soilType" defaultValue={farm&&farm.soilType} onChange={handleChange}className="bg-white outline-none border-none text-black w-full">
-        <option value={""} disabled  className="bg-white text-black" >Soil type</option>
+    <select id="location" name="soilType"  onChange={handleChange} value={formData.soilType??"N/A"} className="bg-white outline-none border-none text-black w-full">
+        <option value={""} disabled  className="bg-white text-black" >Select one</option>
         <option value={"sandy"} >Sandy soil</option>
         <option value={"clay"} >Clay soil</option>
         <option value={"loamy"} >Loamy soil</option>
@@ -184,8 +211,8 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         Water source:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="waterSource" defaultValue={farm&&farm.waterSource}  className="bg-white outline-none border-none text-black w-full" onChange={handleChange}>
-        <option value={""} disabled  className="bg-white text-black" >Water source</option>
+    <select id="location" name="waterSource" value={formData.waterSource??""}  className="bg-white outline-none border-none text-black w-full" onChange={handleChange}>
+        <option value={""} disabled  className="bg-white text-black" >Select one</option>
         <option value={"surface water"} className="bg-white text-black" >Surface water e.g rivers</option>
         <option value={"ground water"} className="bg-white text-black" >Ground water e.g wells, boreholes, etc</option>
         <option value={"rain water"} className="bg-white text-black" >Rain water</option>

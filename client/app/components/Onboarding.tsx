@@ -99,6 +99,9 @@ export default function FarmOnboardingForm() {
       }));
     }
   };
+  const str2Bool = (val:string)=>{
+    return val==="true"? true: val==="false"?false:undefined
+};
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -412,7 +415,7 @@ Companion planting
           </button>
         )}
       </div>
-      {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)}/>}
+      {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
     </div>
   );
 }

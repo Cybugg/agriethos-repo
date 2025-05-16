@@ -2,7 +2,7 @@
 import React from "react";
 
 type SwitchProps = {
-  isOn: boolean;
+  isOn: boolean | undefined;
   handleToggle: () => void;
   onColor?: string;
 };

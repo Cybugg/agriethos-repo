@@ -63,8 +63,11 @@ exports.createFarmProperty = async (req, res) => {
   
   exports.updateFarmProperty = async (req, res) => {
     try {
-      const { id } = req.params; // FarmProperty ID
-      const updateData = req.body; // The fields you want to update
+      const { id } = req.params;
+      const updateData = req.body;
+  
+      console.log('Updating farm with ID:', id);
+      console.log('Incoming update data:', updateData);
   
       const updatedFarm = await FarmProperty.findByIdAndUpdate(
         id,
@@ -82,6 +85,7 @@ exports.createFarmProperty = async (req, res) => {
       res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
   };
+  
 
 exports.getFarmByFarmer = async (req, res) => {
   try {

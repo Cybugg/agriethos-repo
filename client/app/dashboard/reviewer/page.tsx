@@ -58,14 +58,14 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
                 <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black">Tomatoes</span>
+                  <span className="font-medium text-black mr-[170px]">Tomatoes</span>
                 </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-4">
+                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
                   <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
                   <div className="flex gap-2 mt-2 md:mt-0">
                     <Button
                       variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3"
+                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 md:gap-24 mr-[30px]"
                     >
                       Skip
                     </Button>
@@ -98,14 +98,14 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
                 <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black">Lettuce</span>
+                  <span className="font-medium text-black mr-[170px]">Lettuce</span>
                 </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-4">
+                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
                   <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
                   <div className="flex gap-2 mt-2 md:mt-0">
                     <Button
                       variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3"
+                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
                     >
                       Skip
                     </Button>
@@ -138,14 +138,14 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
                 <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black">Strawberry</span>
+                  <span className="font-medium text-black mr-[170px]">Strawberry</span>
                 </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-4">
+                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
                   <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
                   <div className="flex gap-2 mt-2 md:mt-0">
                     <Button
                       variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3"
+                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
                     >
                       Skip
                     </Button>
@@ -176,14 +176,14 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
                 <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black">Maize</span>
+                  <span className="font-medium text-black mr-[170px]">Maize</span>
                 </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-4">
+                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
                   <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
                   <div className="flex gap-2 mt-2 md:mt-0">
                     <Button
                       variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3"
+                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
                     >
                       Skip
                     </Button>

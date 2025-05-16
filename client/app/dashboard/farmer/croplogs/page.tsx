@@ -46,13 +46,24 @@ interface crops {
   [key:string]:string
 }
 
+type cropData = {
+    cropName:string;
+    plantingDate:string;
+    expectedHarvestingDate:string;
+    growthStage:string;
+    preNotes:string;
+    [key:string]:string;
+}
+
 function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const { address, logout ,isLoginStatusLoading,newUser,farmerId} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
-      const [crops, setCrops] = useState<[crops]>();
+      const [alertErrorCreate, setAlertErrorCreate] = useState(false);
+      const [collaInd , setCollaInd] = useState<number|undefined>(undefined);
+      const [crops, setCrops] = useState<any[]>([]);
       const router = useRouter();
     
       useEffect(()=>{
@@ -86,7 +97,7 @@ function page() {
       
   return (
     <div>
-       {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} />}
+       {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
        
               {/* Header and Descriptive Text */}
@@ -129,7 +140,7 @@ function page() {
             <section className=' mt-6 '>
        {/* ////////////////////////////////////////////////////////////////////////////////////////////// */}
               {/* */}
-           <div className='w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-center items-start lg:max-h-[400px] overflow-y-scroll'>
+           <div className='w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col justify-start items-start  '>
       <div className='flex items-center justify-between w-full'>
         {/* Title */}
       <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
@@ -146,7 +157,7 @@ function page() {
        <div className='flex flex-col gap-4 w-full justify-between'>
       
       {/* Variable */}
-      <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b'>
+      <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
       <div  className='basis-1/5 flex items-center justify-center '>
  S/N
@@ -168,7 +179,8 @@ function page() {
       </div>
       </div>
        {/* Variable */}
-     { crops && crops.map((ele,ind)=> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center'>
+       <div className='flex flex-col gap-4 w-full justify-between  max-h-[300px] overflow-y-scroll'>
+             { crops && crops.map((ele,ind)=><div className='relative'> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1' key={ind*2*1020} onClick={()=>collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined)}>
            {/* s/n */}
            <div className='basis-1/5 flex items-center justify-center '>
           {ind+1}
@@ -183,7 +195,7 @@ function page() {
       </div>
 
       <div className=' basis-1/5 flex items-center justify-center  '>
-    {ele.createdAt.slice(0,10)}
+    {ele.createdAt&&ele.createdAt.slice(0,10)}
       </div>
       {/* Button arena */}
    {ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/5 flex items-center justify-center '>
@@ -213,8 +225,60 @@ function page() {
 <div className='text-xs'>Unkown</div>
 </button>
       </div>}
+      </div>
+   {collaInd === ind &&   <div className='p-5 w-full flex flex-col gap-1 bg-primary-100 font-bold'>
+<div>
+Created at: {ele.createdAt}
+</div>
+<div>
+Updated at: {ele.updatedAt}
+</div>
+<div>
+Crop name: {ele.cropName}
+</div>
+<div>
+Growth Stage: {ele.growthStage}
+</div>
+<div>
+Planting Date: {ele.plantingDate}
+</div>
+
+<div>
+Notes On Pre-harvest: {ele.growthStage}
+</div>
+<div>
+Verification Status: {ele.verificationStatus}
+</div>
+      </div>}
       </div>)
 }
+       </div>
+       {/* __v: 0
+​​
+_id: "6827b470490fb108f50add43"
+​​
+createdAt: "2025-05-16T21:56:00.011Z"
+​​
+cropName: "rfhbhsdbfsd"
+​​
+expectedHarvestingDate: "2025-05-31"
+​​
+farmPropertyId: Object { _id: "6820b769323b085dc0d7ac3a", farmerId: "6820b711323b085dc0d7ac34", farmName: "Collosal", … }
+​​
+farmerId: "6820b711323b085dc0d7ac34"
+​​
+growthStage: "pre-harvest"
+​​
+images: Array []
+​​
+plantingDate: "2025-05-17T00:00:00.000Z"
+​​
+preNotes: "sdfsdfsd"
+​​
+updatedAt: "2025-05-16T21:56:00.011Z"
+​​
+verificationStatus: "pending" */}
+
        {/* Variable */}
        {/* <div className='hover:bg-gray-100 text-center gap-24 flex items-center justify-between'> */}
            {/* s/n */}
@@ -452,6 +516,7 @@ Corn Post-harvest
             </section>
             </div>
             {alertCreate && <Alert message='Crop successfully submitted for review' onClose={()=> setAlertCreate(false)} color='text-green-800'  background='bg-green-100' />}
+            {alertErrorCreate && <Alert message='Something went wrong, try again...' onClose={()=> setAlertErrorCreate(false)} color='text-red-800'  background='bg-red-100' />}
     </div>
        
   )

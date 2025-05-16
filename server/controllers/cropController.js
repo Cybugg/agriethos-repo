@@ -195,20 +195,10 @@ exports.getCrop = async (req, res) => {
 };
 
 // Get pending crops by farmer ID
-exports.getPendingCropsByFarmer = async (req, res) => {
+exports.getAllPendingCrops = async (req, res) => {
   try {
-    const { farmerId } = req.params;
-    
-    // Validate farmerId
-    if (!farmerId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Farmer ID is required'
-      });
-    }
     
     const pendingCrops = await Crop.find({ 
-      farmerId, 
       verificationStatus: 'pending' 
     })
       .sort({ createdAt: -1 })

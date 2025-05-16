@@ -9,7 +9,9 @@ import React, {ReactNode, useState} from "react";
 interface props {
     setDisplayAddCrop:(boolVal:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
-}
+    setAlertErrorCreate:(boolVal:boolean)=>void
+    setCrops:React.Dispatch<React.SetStateAction<any[]>>}
+
 
 interface FarmFormData {
     cropName:string
@@ -17,9 +19,10 @@ interface FarmFormData {
     expectedHarvestingDate:string
     growthStage:string
     preNotes:string
+    [key:string]:string
 }
 
-const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate}) => {
+const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,setAlertErrorCreate}) => {
       const [formData, setFormData] = useState<FarmFormData>({
         cropName:"",
         plantingDate:"",
@@ -68,12 +71,14 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate}) => {
      
     
       const result = await res.data;
+      setCrops(pre => [result.data,...pre]);
       setDisplayAddCrop(false);
-      router.refresh()
-      setAlertCreate(true);
+      setAlertCreate(true)
       console.log('Upload result:', result);
     
+    
     } catch (err) {
+      setAlertErrorCreate(true)
       console.error('Upload failed:', err);
     }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bell, ChevronDown, Menu } from 'lucide-react';
+import { Bell, ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
 import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
@@ -29,8 +29,8 @@ export default function StatisticsPage() {
   ];
   
   const verificationData = [
-    { name: 'Verified', value: 22, color: '#96d645' },
-    { name: 'Rejected', value: 4, color: '#e30e0e' }
+    { name: 'Verified', value: 4, color: '#e30e0e' },
+    { name: 'Rejected', value: 20, color: '#149414' }
   ];
   
   const topFarmsData = [
@@ -80,11 +80,11 @@ export default function StatisticsPage() {
       />
       
       {/* Main content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div>
             <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Statistics</h1>
-            <p className="text-sm text-[#898989]">View your review performance and metrics</p>
+            <p className="text-lg text-[#898989]">View your review performance and metrics</p>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
@@ -99,16 +99,16 @@ export default function StatisticsPage() {
         {/* Main content */}
         <div className="p-4 md:p-6">
           {/* Summary Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-6 ">
+            <div className="bg-white border border-[#cfcfcf] p-4 md:p-6">
               <p className="text-[#898989] text-sm mb-2">Crops Approved</p>
               <h2 className="text-2xl md:text-3xl font-bold text-[#149414]">{summaryStats.cropsApproved}</h2>
             </div>
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6">
+            <div className="bg-white border border-[#cfcfcf] p-4 md:p-6">
               <p className="text-[#898989] text-sm mb-2">Crops Rejected</p>
               <h2 className="text-2xl md:text-3xl font-bold text-[#e30e0e]">{summaryStats.cropsRejected}</h2>
             </div>
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 sm:col-span-2 md:col-span-1">
+            <div className="bg-white border border-[#cfcfcf] p-4 md:p-6 sm:col-span-2 md:col-span-1">
               <p className="text-[#898989] text-sm mb-2">Total Crops Reviewed</p>
               <h2 className="text-2xl md:text-3xl font-bold text-[#003024]">{summaryStats.totalCropsReviewed}</h2>
             </div>
@@ -122,9 +122,9 @@ export default function StatisticsPage() {
                 <h3 className="text-base md:text-lg font-medium text-[#000000]">Review Activity</h3>
                 <button 
                   onClick={toggleTimeframe}
-                  className="flex items-center gap-1 border border-[#cfcfcf] rounded-lg px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm hover:bg-[#f6fded]"
+                  className="flex items-center gap-1 text-black border border-[#cfcfcf] rounded-lg px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm hover:bg-[#f6fded]"
                 >
-                  {timeframe} <ChevronDown size={16} />
+                  {timeframe} {timeframe === 'This Week' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
                 </button>
               </div>
               <div className="h-[180px] md:h-[250px]">
@@ -165,7 +165,7 @@ export default function StatisticsPage() {
 
             {/* Pie Chart */}
             <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6">
-              <h3 className="text-base md:text-lg font-medium text-[#000000] mb-4">Verification Results</h3>
+              <h3 className="text-base md:text-lg font-medium text-[#000000] mb-4">Verification Accuracy</h3>
               <div className="h-[180px] md:h-[250px] flex flex-col items-center justify-center">
                 <div className="h-[120px] w-[120px] md:h-[180px] md:w-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
@@ -175,9 +175,9 @@ export default function StatisticsPage() {
                         cx="50%"
                         cy="50%"
                         innerRadius={0}
-                        outerRadius="80%"
+                        outerRadius="90%"
                         dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                         labelLine={false}
                       >
                         {verificationData.map((entry, index) => (
@@ -197,7 +197,7 @@ export default function StatisticsPage() {
                 </div>
                 <div className="flex gap-6 mt-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#96d645]"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#149414]"></div>
                     <span className="text-xs md:text-sm text-[#898989]">Verified</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -232,10 +232,10 @@ export default function StatisticsPage() {
                 <tbody>
                   {topFarmsData.map((farm) => (
                     <tr key={farm.id} className="hover:bg-[#f6fded] border-t border-[#f0f0f0]">
-                      <td className="px-6 py-4 font-medium">{farm.name}</td>
-                      <td className="px-6 py-4">{farm.reviewed}</td>
-                      <td className="px-6 py-4 text-[#96d645]">{farm.successful}</td>
-                      <td className="px-6 py-4 text-[#e30e0e]">{farm.rejected}</td>
+                      <td className="px-6 py-4 font-medium text-black">{farm.name}</td>
+                      <td className="px-6 py-4 text-black">{farm.reviewed}</td>
+                      <td className="px-6 py-4 text-black">{farm.successful}</td>
+                      <td className="px-6 py-4 text-black">{farm.rejected}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -42,61 +42,17 @@ export default function CropReviewPage() {
         onClose={() => setMobileNavOpen(false)} 
         currentPage="review" 
       />
-      
-      {/* Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex md:w-[317px] border-r border-[#cfcfcf] flex-col">
-        {/* Sidebar content same as before */}
-        <div className="p-6">
-          <Image src="/icons/agriethos-logo-3-1-2.png" alt="Agriethos Logo" width={40} height={40} className="mb-8" />
-          Agriethos
-        </div>
-        <nav className="flex flex-col px-4 gap-2">
-          <Link href="/dashboard/reviewer" className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors">
-            <Image 
-              src="/icons/ph-house-line-fill.svg" 
-              alt="Home Icon" 
-              width={20} 
-              height={20} 
-            />
-            Home
-          </Link>
-          <Link
-            href="/dashboard/reviewer/history"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
-          >
-            <Image 
-              src="/icons/ph-clock-countdown-light.svg" 
-              alt="History Icon" 
-              width={20} 
-              height={20} 
-            />
-            History
-          </Link>
-          <Link
-            href="/dashboard/reviewer/statistics"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
-          >
-            <Image 
-              src="/icons/ph-chart-line-light.svg" 
-              alt="Statistics Icon" 
-              width={20} 
-              height={20} 
-            />
-            Statistics
-          </Link>
-        </nav>
-      </div>
 
       {/* Main content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div className="flex items-center gap-2">
-            <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded]">
-              <ArrowLeft size={20} />
+            <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
+              <ArrowLeft size={20} className='mr-[24]' />
             </Link>
             <div>
-              <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Review Crop</h1>
-              <p className="text-xs md:text-sm text-[#898989]">Reviewing submission #{id}</p>
+              <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Home</h1>
+              <p className="text-xs md:text-lg text-[#898989]">Manage all crop submission</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -114,51 +70,51 @@ export default function CropReviewPage() {
           <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Crop details card */}
             <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
-              <h2 className="text-lg font-semibold mb-4">Crop to Review</h2>
+              <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review</h2>
               
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Crop name</span>
-                  <span className="font-medium">{cropData.cropName}</span>
+                  <span className="font-medium text-black">{cropData.cropName}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Farm name</span>
-                  <span className="font-medium">{cropData.farmName}</span>
+                  <span className="font-medium text-black">{cropData.farmName}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Growth stage</span>
-                  <span className="font-medium">{cropData.growthStage}</span>
+                  <span className="font-medium text-black">{cropData.growthStage}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Fertilizer type</span>
-                  <span className="font-medium">{cropData.fertilizerType}</span>
+                  <span className="font-medium text-black">{cropData.fertilizerType}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Irrigation method</span>
-                  <span className="font-medium">{cropData.irrigationMethod}</span>
+                  <span className="font-medium text-black">{cropData.irrigationMethod}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Companion planting</span>
-                  <span className="font-medium">{cropData.companionPlanting}</span>
+                  <span className="font-medium text-black">{cropData.companionPlanting}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-[#898989]">Pesticide usage</span>
-                  <span className="font-medium">{cropData.pesticideUsage}</span>
+                  <span className="font-medium text-black">{cropData.pesticideUsage}</span>
                 </div>
               </div>
             </div>
             
             {/* Instructions card */}
             <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
-              <h2 className="text-lg font-semibold mb-4">Agent Instructions</h2>
+              <h2 className="text-lg font-semibold mb-4 text-black">Agent Instructions</h2>
               
-              <ol className="list-decimal pl-5 space-y-2 mb-6">
+              <ol className="list-decimal pl-5 space-y-2 mb-6 text-[#898989]">
                 <li>Check submitted logs, images, and farming methods.</li>
                 <li>Approve if the crop meets standards. Request updates if needed.</li>
                 <li>Confirm harvest details and final images.</li>
@@ -169,13 +125,13 @@ export default function CropReviewPage() {
               <div className="flex gap-4 mt-6">
                 <button 
                   onClick={handleReject}
-                  className="flex-1 py-3 border border-[#003024] rounded-lg text-center font-medium"
+                  className="flex-1 py-3 border border-[#003024] rounded-lg text-center font-medium text-black"
                 >
                   Reject
                 </button>
                 <button 
                   onClick={handleApprove}
-                  className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium hover:bg-[#96d645]"
+                  className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
                 >
                   Approve
                 </button>

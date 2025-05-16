@@ -180,7 +180,7 @@ function page() {
       </div>
        {/* Variable */}
        <div className='flex flex-col gap-4 w-full justify-between  max-h-[300px] overflow-y-scroll'>
-             { crops && crops.map((ele,ind)=><div className='relative'> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1' key={ind*2*1020} onClick={()=>collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined)}>
+             { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined)}>
            {/* s/n */}
            <div className='basis-1/5 flex items-center justify-center '>
           {ind+1}

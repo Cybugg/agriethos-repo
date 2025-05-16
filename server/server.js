@@ -6,7 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const farmProperties = require("./routes/farmPropertiesRoutes");
 const cropRoutes = require('./routes/cropRoutes');
 const axios = require('axios')
-
+const adminRoutes = require("./routes/adminRoutes")
 const app = express();
 dotenv.config();
 
@@ -19,6 +19,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
+app.use('/admin/crops', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/farm', farmProperties);
 app.use('/api/crops', cropRoutes);

@@ -72,50 +72,6 @@ export default function CropHistoryPage() {
         currentPage="history" 
       />
       
-      {/* Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex md:w-[317px] border-r border-[#cfcfcf] flex-col">
-        {/* Same sidebar content */}
-        <div className="p-6">
-          <Image src="/icons/agriethos-logo-3-1-2.png" alt="Agriethos Logo" width={40} height={40} className="mb-8" />
-          Agriethos
-        </div>
-        <nav className="flex flex-col px-4 gap-2">
-          <Link href="/dashboard/reviewer" className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors">
-            <Image 
-              src="/icons/ph-house-line-fill.svg" 
-              alt="Home Icon" 
-              width={20} 
-              height={20} 
-            />
-            Home
-          </Link>
-          <Link
-            href="/dashboard/reviewer/history"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#a5eb4c] text-[#003024] font-medium"
-          >
-            <Image 
-              src="/icons/ph-clock-countdown-light.svg" 
-              alt="History Icon" 
-              width={20} 
-              height={20} 
-            />
-            History
-          </Link>
-          <Link
-            href="/dashboard/reviewer/statistics"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
-          >
-            <Image 
-              src="/icons/ph-chart-line-light.svg" 
-              alt="Statistics Icon" 
-              width={20} 
-              height={20} 
-            />
-            Statistics
-          </Link>
-        </nav>
-      </div>
-
       {/* Main content */}
       <div className="flex-1 overflow-auto">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">

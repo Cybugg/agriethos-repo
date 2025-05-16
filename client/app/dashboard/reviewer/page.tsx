@@ -19,51 +19,8 @@ export default function Home() {
         currentPage="home" 
       />
 
-      {/* Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex md:w-[317px] border-r border-[#cfcfcf] flex-col">
-        <div className="p-6">
-          <Image src="/icons/agriethos-logo-3-1-2.png" alt="Agriethos Logo" width={40} height={40} className="mb-8" />
-          Agriethos
-        </div>
-        <nav className="flex flex-col px-4 gap-2">
-          <Link href="/dashboard/reviewer" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#a5eb4c] text-[#003024] font-medium">
-            <Image 
-              src="/icons/ph-house-line-fill.svg" 
-              alt="Home Icon" 
-              width={20} 
-              height={20} 
-            />
-            Home
-          </Link>
-          <Link
-            href="/dashboard/reviewer/history"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
-          >
-            <Image 
-              src="/icons/ph-clock-countdown-light.svg" 
-              alt="History Icon" 
-              width={20} 
-              height={20} 
-            />
-            History
-          </Link>
-          <Link
-            href="/dashboard/reviewer/statistics"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#898989] hover:bg-[#f6fded] transition-colors"
-          >
-            <Image 
-              src="/icons/ph-chart-line-light.svg" 
-              alt="Statistics Icon" 
-              width={20} 
-              height={20} 
-            />
-            Statistics
-          </Link>
-        </nav>
-      </div>
-
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div>
             <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Home</h1>
@@ -83,7 +40,7 @@ export default function Home() {
           <div className="space-y-4">
             {/* Farm entries - stack vertically on mobile */}
             {/* Farm Entry 1 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg border-[#cfcfcf]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
               <div className="flex items-center gap-4 mb-3 md:mb-0">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
                   <Image
@@ -123,7 +80,7 @@ export default function Home() {
             </div>
 
             {/* Farm Entry 2 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg border-[#cfcfcf]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
               <div className="flex items-center gap-4 mb-3 md:mb-0">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
                   <Image
@@ -163,7 +120,7 @@ export default function Home() {
             </div>
 
             {/* Farm Entry 3 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg border-[#cfcfcf]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
               <div className="flex items-center gap-4 mb-3 md:mb-0">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
                   <Image
@@ -201,7 +158,7 @@ export default function Home() {
             </div>
 
             {/* Farm Entry 4 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg border-[#cfcfcf]">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
               <div className="flex items-center gap-4 mb-3 md:mb-0">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
                   <Image

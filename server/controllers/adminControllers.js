@@ -1,5 +1,8 @@
 const Reviewer = require('../models/Reviewer');
 const Admin = require('../models/Admin');
+const Crop = require("../models/Crop");
+const Farmer = require('../models/Farmer');
+
 const {ethers} = require('ethers');
 
 const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
@@ -124,7 +127,18 @@ Only sign this message if you trust AgriEthos.
    
       await admin.save();
 
-      return res.json({ success: true, message: "Wallet verified", data:admin});
+      // let get some overview data 
+      const allfarmers = await Farmer.find([]);
+      const allCrops = await Crop.find([]);
+      const allAdmins = await Admin.find([]);
+      const allReviewers = await Reviewer.find([]);
+
+
+
+
+
+
+      return res.json({ success: true, message: "Wallet verified", data:{admin}});
     } else {
       return res.status(401).json({ error: "Signature verification failed" });
     }
@@ -146,3 +160,20 @@ exports.getReviewersByAdmin = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 };
+
+
+
+exports.getAdminOverview = async(req,res)=>{
+  try{
+   // let get some overview data 
+   const allfarmers = await Farmer.find();
+   const allCrops = await Crop.find();
+   const allAdmins = await Admin.find();
+   const allReviewers = await Reviewer.find();
+
+   res.status(201).json({data:{farmersNo:allfarmers.length,cropsNo:allCrops.length,adminsNo:allAdmins.length,reviewersNo:allReviewers.length}})
+  }
+  catch(err){
+    res.status(404).json({message:err.message})
+  }
+}

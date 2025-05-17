@@ -3,8 +3,8 @@ import { useRouter } from 'next/navigation';
 import React, {createContext, useContext, useState, useEffect, ReactNode, Children} from "react";
 
 interface AuthContextType {
-  newUser: string | null
-  setNewUser: (person: string | null) => void
+ 
+
   adminId: string | null
   setAdminId: (adminId: string | null) => void
   address: string | null
@@ -20,7 +20,7 @@ export interface User {
   walletAddress: string;
   email: string;
   nounce:string;
-  newUser:string
+ 
   role:string;
   [key: string]: any;
 }
@@ -28,8 +28,8 @@ export interface User {
 const AuthContext = createContext<AuthContextType >({
   user:  null,
   setUser: () => {},
-  newUser: null,
-  setNewUser: () => {},
+
+
   address: null,
   setAddress: () => {},
   adminId: null,
@@ -41,7 +41,6 @@ const AuthContext = createContext<AuthContextType >({
 export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null);
   const [adminId, setAdminId] = useState<string | null>(null);
-  const [newUser, setNewUser] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoginStatusLoading,setLoginStatusLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -52,11 +51,9 @@ export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) =
     setLoginStatusLoading(false);
     if (storedAddr) setAddress(storedAddr)
       const storedId = localStorage.getItem('adminId')
-    if (storedId) setAdminId(storedId)
-      const storedUserType = localStorage.getItem('newUser')
-    if (storedUserType) setNewUser(storedUserType)
+  
       const storedAdminPack = localStorage.getItem('AdminPack')
-    if (storedAdminPack) setNewUser(JSON.parse(storedAdminPack))
+    if (storedAdminPack) setUser(JSON.parse(storedAdminPack))
   }, [])
 
   // handle wallet address
@@ -85,14 +82,7 @@ const handleSetId = ( id: string | null) => {
     localStorage.removeItem("AdminPack")
     router.replace('/auth');
   };
-  // handle Admin ID
-const handleNewUser = ( newPerson: string | null) => {
- 
-  setNewUser(newPerson);
 
-  if (newPerson) localStorage.setItem('newUser', newPerson)
-    else localStorage.removeItem('newUser')
-}
    // handle user-pack 
 const handleAdminPack = ( AdminPack: User | null) => {
  
@@ -101,7 +91,7 @@ const handleAdminPack = ( AdminPack: User | null) => {
   if (AdminPack) localStorage.setItem('AdminPack', JSON.stringify(AdminPack))
     else localStorage.removeItem('newUser')
 }
-  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, adminId, setAdminId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleAdminPack }}>
+  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, adminId, setAdminId:handleSetId, logout, isLoginStatusLoading,user, setUser:handleAdminPack }}>
       {children}
     </AuthContext.Provider>
   )

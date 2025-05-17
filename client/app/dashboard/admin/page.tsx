@@ -2,17 +2,45 @@
 
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavContext } from "./NavContext";
+import { useAdminAuth } from "@/app/Context/AdminAuthContext";
+import { BsPerson } from "react-icons/bs";
 
 
+
+interface overview {
+  [key:string]:string
+}
 
 
 export default function Home() {
 
   const {setCurrentPage,setMobileDisplay} = useNavContext();
+  const {address, logout} = useAdminAuth()
+  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
+  const [overview, setOverview] = useState<overview|undefined>(undefined);
 
 
+
+
+  useEffect(
+    ()=>{
+   const fetchOverview = async ()=>{
+    try{
+      const result = await fetch("http://localhost:5000/api/admin/overview");
+      const {data} = await result.json();
+      console.log(data)
+      setOverview(data);
+    }
+    catch(err){
+      console.log(err)
+    }
+
+   }
+   fetchOverview();
+    },[]
+  )
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
@@ -40,7 +68,13 @@ export default function Home() {
                     <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                       
             
-                       
+                           <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                           <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                              { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                                                 Disconnect
+                                               </div>}
+                                           </div>
+                                           </div> 
                        </button>
         
                    </div>
@@ -58,7 +92,7 @@ export default function Home() {
          
           </div>
           <div className='text-2xl '>
-            123
+            {overview?overview.farmersNo:"N/A"}
           </div>
         </div>
              {/* Item 3 */}

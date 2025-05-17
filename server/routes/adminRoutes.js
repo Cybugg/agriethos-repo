@@ -1,6 +1,6 @@
 const express = require("express");
 
-const {createAdmin, createReviewer,adminLogin, getReviewersByAdmin,verifySignature} = require("../controllers/adminControllers");
+const {createAdmin, createReviewer,adminLogin, getReviewersByAdmin,verifySignature,getAdminOverview} = require("../controllers/adminControllers");
 
 const router = express.Router();
 
@@ -11,5 +11,7 @@ router.get('/by-admin/:adminId', getReviewersByAdmin);
 // POST route for wallet-based login
 router.post("/request-nonce", adminLogin);
 router.post("/wallet-login", verifySignature);
+// Overview
+router.get("/overview",getAdminOverview);
 
 module.exports = router;

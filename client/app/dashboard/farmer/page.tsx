@@ -143,7 +143,7 @@ export default function Home() {
                       
                     <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
                     <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-                       { displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                       { displayLogout && address &&<div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
                           Disconnect
                         </div>}
                     </div>

@@ -91,7 +91,7 @@ export default function Home() {
             Admins
         </div>
          <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2' onClick={()=>""}>
-              <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Admins</span> 
+              <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Admin</span> 
              </div>
         </div>
         

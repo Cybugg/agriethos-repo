@@ -79,7 +79,7 @@ export default function Home() {
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]'>
           <div className='flex'>
            <div className='text-sm text-grey-400'>
-          Total Crops Reviewed
+          Total Admins
           </div>
       
           </div>

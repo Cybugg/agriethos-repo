@@ -2,7 +2,7 @@
 import React, {createContext, useContext, useState, ReactNode, Children} from "react";
 
 // Variants for our pages
-type Page = "home" | "farm" | "logs";
+type Page = "home" | "farm" | "logs" | "explore" | "origin";
 type Bool = true | false;
 
 //  create the shape of the context state

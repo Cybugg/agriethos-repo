@@ -4,8 +4,8 @@ const {createAdmin, createReviewer,adminLogin, getReviewersByAdmin} = require(".
 
 const router = express.Router();
 
-router.post("create/admin",createAdmin);
-router.post("create/reviewer",createReviewer);
+router.post("/create/admin",createAdmin);
+router.post("/create/reviewer",createReviewer);
 router.post('/login', adminLogin);
 router.get('/by-admin/:adminId', getReviewersByAdmin);
 

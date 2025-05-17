@@ -3,7 +3,8 @@
 "use client"
 
 import { useEffect } from "react";
-import { useNavContext } from "./NavContext";
+import { useNavContext } from "../NavContext";
+import Image from "next/image";
 
 
 
@@ -14,7 +15,7 @@ export default function Home() {
 
 
    useEffect(()=>{
-          setCurrentPage("home");
+          setCurrentPage("manage");
           setMobileDisplay(false);
         },[])
   
@@ -27,11 +28,9 @@ export default function Home() {
         <div className='flex items-start justify-between'>
      <div className='flex flex-col gap-2'>
         <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
-          Home
+          Manage users
         </div>
-        <div className='text-grey-600'>
-         An Overview of Agriethos
-        </div>
+      
    </div>
        <div className='flex gap-2 items-center'>
        <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
@@ -47,53 +46,18 @@ export default function Home() {
         </div>
        {/* Section One */}
        {/* Overview Stats */}
-       <section className='flex flex-col lg:flex-row mt-[32px] w-full border-[0.75px] border-grey-200 rounded-lg'>
-        
-             {/* Item 2 */}
-             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
-          <div className='flex'>
-           <div className='text-sm text-grey-400'>
-          Farmers's registered
-          </div>
-         
-          </div>
-          <div className='text-2xl '>
-            123
-          </div>
-        </div>
-             {/* Item 3 */}
-             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
-          <div className='flex items-center justify-between'>
-           <div className='text-sm text-grey-400'>
-       Active Reviewers
-          </div>
-          <div className='text-sm text-grey-400'>
-            
-          </div >
-          </div>
-          <div className='text-2xl '>
-      4
-          </div>
-        </div>
-             {/* Item 4 */}
-             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]'>
-          <div className='flex'>
-           <div className='text-sm text-grey-400'>
-          Total Crops Reviewed
-          </div>
-      
-          </div>
-          <div className='text-2xl '>
-            0
-          </div>
-        </div>
-       </section>
 {/* ########################################################################################################### */}
      <section>
         {/* Header */}
-        <div className="mt-12 text-xl px-2 py-1">
+        <div className="flex items-center justify-between">
+<div className="mt-12 text-xl px-2 py-1">
             Reviewers
         </div>
+         <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2' onClick={()=>""}>
+              <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add </span> 
+             </div>
+        </div>
+        
 
         <div className="flex flex-col gap-2">
             {/* Title */}

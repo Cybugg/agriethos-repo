@@ -56,7 +56,7 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
         <NavItem icon={"/icons/tree-palm.svg"} label="My Farm" active={currentPage === "farm"} address="/farm" />
         <NavItem icon={"/icons/notepad.svg"} label="Crop Logs" active={currentPage === "logs"} address="/croplogs"/>
         <NavItem icon={"/icons/explore.svg"} label="Explore" active={currentPage === "explore"} address="/explore"/>
-        <NavItem icon={"/icons/origin.svg"} label="Food origin" active={currentPage === "origin"} address="/croplogs"/>
+        <NavItem icon={"/icons/origin.svg"} label="Food origin" active={currentPage === "origin"} address="/origin"/>
       </div> 
     </div>
 
@@ -79,7 +79,7 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
 <NavItemMobile  label="My Farm" active={currentPage === "farm"} address="/farm"  />
 <NavItemMobile  label="Crop Logs" active={currentPage === "logs"} address="/croplogs" />
 <NavItemMobile label="Explore" active={currentPage === "explore"} address="/explore"/>
-<NavItemMobile label="Food origin" active={currentPage === "origin"} address="/croplogs"/>
+<NavItemMobile label="Food origin" active={currentPage === "origin"} address="/origin"/>
 </div>
  </div>
     </div>

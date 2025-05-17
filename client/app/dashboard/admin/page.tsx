@@ -87,6 +87,18 @@ export default function Home() {
             0
           </div>
         </div>
+             {/* Item 4 */}
+             <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px]'>
+          <div className='flex'>
+           <div className='text-sm text-grey-400'>
+          Total Crops Submitted
+          </div>
+      
+          </div>
+          <div className='text-2xl '>
+            17
+          </div>
+        </div>
        </section>
 {/* ########################################################################################################### */}
      <section>

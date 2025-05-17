@@ -1,12 +1,12 @@
 'use client';
 
-import { useAuth } from '../Context/AuthContext';
+import { useAuth } from '../../Context/AuthContext';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Image from 'next/image';
-import Loader from '../components/loader';
+import Loader from '../../components/loader';
 import {useRouter} from "next/navigation";
-import Alert from '../components/alert';
+import Alert from '../../components/alert';
 
 
 
@@ -21,12 +21,12 @@ export default function Page() {
 
 
 
-  useEffect(()=>
-    {
-      if (address && farmerId){router.replace("/dashboard/farmer/")}
+//   useEffect(()=>
+//     {
+//       if (address && farmerId){router.replace("/dashboard/farmer/")}
      
-    },[address,farmerId]
-  )
+//     },[address,farmerId]
+//   )
 
   // onConnect getNonce -> 
   const connectWallet = async () => {
@@ -106,7 +106,7 @@ Only sign this message if you trust AgriEthos.
       {/* Display Element */}
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
     <Image src={"/icons/logo.svg"} alt="logo" width={46} height={61.5} />
-    <h2 className="text-3xl">Welcome to Agriethos</h2>
+    <h2 className="text-3xl">Admin</h2>
     <div className='italic'>Sign in to grow trust with every harvest.</div>
     <button
       onClick={connectWallet}
@@ -115,7 +115,7 @@ Only sign this message if you trust AgriEthos.
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><div>Connect with Metamask</div><Image src={"/icons/metamask.png"} alt="metamask" width={18} height={14} /></div>}
     </button>
       </div> 
-    {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
+    {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)} color='text-green-800' background='bg-green-100'/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
   </div>
     </div>

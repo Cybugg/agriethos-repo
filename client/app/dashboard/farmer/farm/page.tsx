@@ -18,7 +18,7 @@ function page() {
     const [editMethod, setEditMethod] = useState<boolean| null>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const [alertSub, setAlertSub] = useState<boolean>(false);
-        const { address, logout ,isLoginStatusLoading,farmerId, newUser} = useAuth();
+        const { address, logout ,isLoginStatusLoading,farmerId, newUser, user} = useAuth();
           const { farm, setFarm } = useFarm();
         const router = useRouter();
 
@@ -34,10 +34,10 @@ function page() {
       },[])
       
       useEffect(() => {
-        if(!farm && !isLoginStatusLoading){
+        if(!farm && user && !isLoginStatusLoading){
           const fetchFarm = async () => {
             try {
-              const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+farmerId);
+              const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+user._id);
               if (!res.ok) throw new Error('Failed to fetch');
               const data = await res.json();
               console.log(data);
@@ -88,7 +88,7 @@ const str2Bool = (val:string)=>{
                    </div>
           </div>
              <div className='flex gap-2 items-center'>
-             <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+             <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
                                          <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>

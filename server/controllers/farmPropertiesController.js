@@ -88,10 +88,27 @@ exports.createFarmProperty = async (req, res) => {
   
 
 exports.getFarmByFarmer = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const farms = await FarmProperty.findOne({ farmer: req.params.farmerId }).populate('farmerId');
-    res.status(200).json(farms);
+    const farmer = await Farmer.findById(id);
+    if (!farmer) {
+      return res.status(404).json({ success: false, message: "Farmer not found" });
+    }
+
+    const farm = await FarmProperty.findOne({ farmerId: farmer._id })
+      .populate('farmerId')
+      .populate('crops');
+
+    if (!farm) {
+      return res.status(404).json({ success: false, message: "Farm not found for this farmer" });
+    }
+
+    res.status(200).json(farm);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
+
+
+

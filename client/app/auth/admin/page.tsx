@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '../../Context/AuthContext';
+import { useAdminAuth } from '../../Context/AdminAuthContext';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ import Alert from '../../components/alert';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
+  const { setAddress ,setAdminId,setNewUser, adminId , address,newUser,user,setUser} = useAdminAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -23,9 +23,9 @@ export default function Page() {
 
 //   useEffect(()=>
 //     {
-//       if (address && farmerId){router.replace("/dashboard/farmer/")}
+//       if (address && adminId){router.replace("/dashboard/admin/")}
      
-//     },[address,farmerId]
+//     },[address,adminId]
 //   )
 
   // onConnect getNonce -> 
@@ -45,10 +45,10 @@ export default function Page() {
     
 
     // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+    const resNonce = await fetch("http://localhost:5000/api/admin/request-nonce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr }),
+      body: JSON.stringify({ walletAddress: addr }),
     });
    // Parse Nonce data
     const { nonce, timestamp } = await resNonce.json();
@@ -69,25 +69,25 @@ Only sign this message if you trust AgriEthos.
   console.log(addr,nonce,timestamp)
     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+    const resLogin = await fetch("http://localhost:5000/api/admin/wallet-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr, signature }),
     }); 
     const loginData = await resLogin.json();
-    const {address,farmerId,newUser,userPack} = await loginData.data
+    const {address,userPack} = await loginData.data
     if (loginData.success) {
       console.log("✅ Login successful!");
         setLoading(false);
         setSuccess("sucess")
         setAddress(address);
-        setFarmerId(farmerId);
+        
         setNewUser(newUser);
         setSuccessSub(true);
         setUser(userPack)
-        console.log(address,farmerId)
-      if(newUser === "false")  router.replace("/dashboard/farmer")
-        else if (newUser === "true") router.replace("/onboard")
+        console.log(address,userPack)
+      router.replace("/dashboard/admin")
+        
     } else {
       setMsg(loginData.error || "Login failed.");
       setLoading(false);

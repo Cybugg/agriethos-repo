@@ -33,7 +33,7 @@ export default function Home() {
       
    </div>
        <div className='flex gap-2 items-center'>
-       <div className='px-2 py-1 border border-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+       <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
                     <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
@@ -51,10 +51,10 @@ export default function Home() {
         {/* Header */}
         <div className="flex items-center justify-between">
 <div className="mt-12 text-xl px-2 py-1">
-            Reviewers
+            Agents
         </div>
          <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2' onClick={()=>""}>
-              <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add Reviwer</span> 
+              <Image src={"/icons/plus.svg"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Add agents</span> 
              </div>
         </div>
         

@@ -5,8 +5,8 @@ import React, {createContext, useContext, useState, useEffect, ReactNode, Childr
 interface AuthContextType {
   newUser: string | null
   setNewUser: (person: string | null) => void
-  farmerId: string | null
-  setFarmerId: (farmerId: string | null) => void
+  adminId: string | null
+  setAdminId: (adminId: string | null) => void
   address: string | null
   setAddress: (address: string | null) => void
   isLoginStatusLoading:boolean
@@ -16,7 +16,7 @@ interface AuthContextType {
 }
 
 export interface User {
-  farmerId: string;
+  adminId: string;
   walletAddress: string;
   email: string;
   nounce:string;
@@ -32,15 +32,15 @@ const AuthContext = createContext<AuthContextType >({
   setNewUser: () => {},
   address: null,
   setAddress: () => {},
-  farmerId: null,
-  setFarmerId: () => {},
+  adminId: null,
+  setAdminId: () => {},
   logout: () => {},
   isLoginStatusLoading: true, 
 })
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null);
-  const [farmerId, setFarmerId] = useState<string | null>(null);
+  const [adminId, setAdminId] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoginStatusLoading,setLoginStatusLoading] = useState<boolean>(true);
@@ -48,46 +48,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   //  Get stored address if stored in local storage
   useEffect(() => {
-    const storedAddr = localStorage.getItem('walletAddress')
+    const storedAddr = localStorage.getItem('adminAddress')
     setLoginStatusLoading(false);
     if (storedAddr) setAddress(storedAddr)
-      const storedId = localStorage.getItem('farmerId')
-    if (storedId) setFarmerId(storedId)
+      const storedId = localStorage.getItem('adminId')
+    if (storedId) setAdminId(storedId)
       const storedUserType = localStorage.getItem('newUser')
     if (storedUserType) setNewUser(storedUserType)
-      const storedUserPack = localStorage.getItem('userPack')
-    if (storedUserPack) setUser(JSON.parse(storedUserPack))
+      const storedAdminPack = localStorage.getItem('AdminPack')
+    if (storedAdminPack) setNewUser(JSON.parse(storedAdminPack))
   }, [])
 
   // handle wallet address
   const handleSetAddress = (addr: string | null) => {
     setAddress(addr);
   
-    if (addr) localStorage.setItem('walletAddress', addr)
-    else localStorage.removeItem('walletAddress')
+    if (addr) localStorage.setItem('adminAddress', addr)
+    else localStorage.removeItem('adminAddress')
 
   }
 
-// handle farmer ID
+// handle Admin ID
 const handleSetId = ( id: string | null) => {
  
-  setFarmerId(id);
+  setAdminId(id);
 
-  if (id) localStorage.setItem('farmerId', id)
-    else localStorage.removeItem('farmerId')
+  if (id) localStorage.setItem('adminId', id)
+    else localStorage.removeItem('adminId')
 }
   const logout = () => {
     setAddress(null);
-    setFarmerId(null);
-    setNewUser(null);
-    setUser(null);
-    localStorage.removeItem("farmerId")
-    localStorage.removeItem("walletAddress")
+    setAdminId(null);
+    localStorage.removeItem("adminId")
+    localStorage.removeItem("adminAddress")
     localStorage.removeItem("newUser")
-    localStorage.removeItem("userPack")
+    localStorage.removeItem("AdminPack")
     router.replace('/auth');
   };
-  // handle farmer ID
+  // handle Admin ID
 const handleNewUser = ( newPerson: string | null) => {
  
   setNewUser(newPerson);
@@ -96,17 +94,17 @@ const handleNewUser = ( newPerson: string | null) => {
     else localStorage.removeItem('newUser')
 }
    // handle user-pack 
-const handleUserPack = ( userPack: User | null) => {
+const handleAdminPack = ( AdminPack: User | null) => {
  
-  setUser(userPack);
+  setUser(AdminPack);
 
-  if (userPack) localStorage.setItem('userPack', JSON.stringify(userPack))
+  if (AdminPack) localStorage.setItem('AdminPack', JSON.stringify(AdminPack))
     else localStorage.removeItem('newUser')
 }
-  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, farmerId, setFarmerId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleUserPack }}>
+  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, adminId, setAdminId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleAdminPack }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAdminAuth = () => useContext(AuthContext)

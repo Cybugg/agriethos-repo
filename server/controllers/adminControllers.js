@@ -1,5 +1,9 @@
 const Reviewer = require('../models/Reviewer');
 const Admin = require('../models/Admin');
+const {ethers} = require('ethers');
+
+const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
+
 
 
 exports.createAdmin = async (req, res) => {
@@ -47,24 +51,86 @@ exports.createReviewer = async (req, res) => {
 };
 
 exports.adminLogin = async (req, res) => {
+
   const { walletAddress } = req.body;
 
   if (!walletAddress) {
     return res.status(400).json({ success: false, message: 'Wallet address is required' });
   }
+  const timestamp = new Date().toISOString();
 
   try {
     let admin = await Admin.findOne({ walletAddress });
 
     if (!admin) {
-      // Optional: Auto-create admin if not exists
-      admin = await Admin.create({ walletAddress });
+      return res.status(401).json("UNAUTHURIZED ACCESS")
     }
+    else {
+      admin.nonce = generateNonce(); // refresh nonce each time
+    }
+  admin.last_transaction_stamp = timestamp;
+  
+    console.log(timestamp);
+  await admin.save();
 
-    return res.status(200).json({ success: true, data: admin });
+    return res.status(200).json({ success: true, data: admin,nonce: admin.nonce ,timestamp:timestamp});
   } catch (error) {
     console.error('Admin login error:', error);
     return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
+exports.verifySignature = async (req, res) => {
+
+  // Get address and signature from the client
+  const { address, signature } = req.body;
+
+  // If any of the request field is missing -> return a bad request status
+  if (!address || !signature) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  // Fetch user from the database 
+  const admin = await Admin.findOne({ walletAddress: address.toLowerCase() });
+  
+  // If admin is not on the database -> Return 404 cannot find status
+  if (!admin) return res.status(400).json({ error: "admin not found" });
+
+  // Mesage (Must align with the client's message)
+  const message = `Welcome to AgriEthos 🌱
+
+Sign this message to verify you own this wallet and authenticate securely.
+
+Wallet Address: ${address}
+Nonce: ${admin.nonce}
+Timestamp: ${admin.last_transaction_stamp}
+
+This request will not trigger a blockchain transaction or cost any gas.
+
+Only sign this message if you trust AgriEthos.
+  `;
+
+  console.log(address,admin.nonce,admin.last_transaction_stamp);
+
+
+  try {
+    // verify the message
+    const recovered = ethers.verifyMessage(message, signature);
+    // If the the parsed address is same as the recovered
+    if (recovered.toLowerCase() === address.toLowerCase()) {
+
+      // Reset nonce to prevent reuse
+      Admin.nonce = generateNonce();
+   
+      await admin.save();
+
+      return res.json({ success: true, message: "Wallet verified", data:admin});
+    } else {
+      return res.status(401).json({ error: "Signature verification failed" });
+    }
+  } catch (err) {
+    console.error("Signature verification error:", err);
+    return res.status(500).json({ error: "Server error" });
   }
 };
 

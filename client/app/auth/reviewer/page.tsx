@@ -106,7 +106,7 @@ Only sign this message if you trust AgriEthos.
       {/* Display Element */}
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
     <Image src={"/icons/logo.svg"} alt="logo" width={46} height={61.5} />
-    <h2 className="text-3xl">Reviewr</h2>
+    <h2 className="text-3xl">Agent</h2>
     <div className='italic'>Sign in to be a guardian of the harvest.</div>
     <button
       onClick={connectWallet}

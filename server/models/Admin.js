@@ -1,5 +1,7 @@
 // models/Admin.js
 const mongoose = require('mongoose');
+const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
+
 
 const adminSchema = new mongoose.Schema({
   walletAddress: {
@@ -12,7 +14,17 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
+  nonce:{
+    type:String,
+    required:true,
+    default:generateNonce()
+  },
+  last_transaction_stamp:{
+    type:String,
+    required: true,
+    default:'farmer'
+   },
+    role: {
     type: String,
     enum: ['admin'],
     default: 'admin',

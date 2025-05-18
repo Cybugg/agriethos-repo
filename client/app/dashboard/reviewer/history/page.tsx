@@ -1,24 +1,47 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Bell, Check, X, Menu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, Check, X, Menu, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
 import MobileNav from "../components/MobileNav";
+import axios from 'axios';
 
 export default function CropHistoryPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [cropHistory, setCropHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Sample data for crop history
-  const cropHistory = [
-    { id: 1, cropName: 'Lettuce', farm: 'God\'s Grace Farms', growthStage: 'Pre-harvest', status: 'Success' },
-    { id: 2, cropName: 'Maize', farm: 'Active Farms', growthStage: 'Post-harvest', status: 'Success' },
-    { id: 3, cropName: 'Cabbage', farm: 'Farms bros', growthStage: 'Pre-harvest', status: 'Success' },
-    { id: 4, cropName: 'Avocado', farm: 'Farms bros', growthStage: 'Post-harvest', status: 'Rejected' },
-    { id: 5, cropName: 'Onions', farm: 'Active Farms', growthStage: 'Post-harvest', status: 'Success' },
-    { id: 6, cropName: 'Oranges', farm: 'Fruta', growthStage: 'Pre-harvest', status: 'Success' },
-    { id: 7, cropName: 'Grapes', farm: 'Fruta', growthStage: 'Post-harvest', status: 'Success' },
-  ];
+  // Fetch crops from API
+  useEffect(() => {
+    const fetchReviewedCrops = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:5000/api/crops/reviewed');
+        if (response.data.success) {
+          // Map the API response to match the existing cropHistory structure
+          const formattedData = response.data.data.map(crop => ({
+            id: crop._id,
+            cropName: crop.cropName,
+            farm: crop.farmPropertyId?.farmName || 'N/A',
+            growthStage: crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest',
+            status: crop.verificationStatus === 'rejected' ? 'Rejected' : 'Success'
+          }));
+          setCropHistory(formattedData);
+        } else {
+          setError('Failed to load data');
+        }
+      } catch (err) {
+        console.error('Error fetching crops:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviewedCrops();
+  }, []);
 
   const StatusBadge = ({ status }) => {
     if (status === 'Success') {
@@ -63,6 +86,28 @@ export default function CropHistoryPage() {
     </div>
   );
 
+  // Refresh function
+  const handleRefresh = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:5000/api/crops/reviewed');
+      if (response.data.success) {
+        const formattedData = response.data.data.map(crop => ({
+          id: crop._id,
+          cropName: crop.cropName,
+          farm: crop.farmPropertyId?.farmName || 'N/A',
+          growthStage: crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest',
+          status: crop.verificationStatus === 'rejected' ? 'Rejected' : 'Success'
+        }));
+        setCropHistory(formattedData);
+      }
+    } catch (err) {
+      console.error('Error refreshing data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-white">
       {/* Mobile Nav */}
@@ -73,13 +118,16 @@ export default function CropHistoryPage() {
       />
       
       {/* Main content */}
-      <div className="flex-1 overflow-auto mt-[55]">
+      <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div>
             <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">History</h1>
             <p className="text-lg text-[#898989]">View past crop submissions</p>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={handleRefresh} className="p-2 rounded-full hover:bg-[#f6fded]">
+              <RefreshCw size={24} />
+            </button>
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
             </button>
@@ -91,38 +139,50 @@ export default function CropHistoryPage() {
 
         {/* Main content */}
         <div className="p-4 md:p-6">
-          {/* Card view for mobile */}
-          <MobileCardView />
-          
-          {/* Table view for desktop */}
-          <div className="hidden md:block overflow-x-auto bg-white rounded-lg">
-            <table className="min-w-full table-fixed">
-              <thead>
-                <tr className="text-left">
-                  <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Crop Name</th>
-                  <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Farm</th>
-                  <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Growth Stage</th>
-                  <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cropHistory.map((crop) => (
-                  <tr key={crop.id} className="hover:bg-[#f6fded]">
-                    <td className="px-12 py-4 font-medium text-black">{crop.cropName}</td>
-                    <td className="px-12 py-4 text-black">{crop.farm}</td>
-                    <td className="px-12 py-4">
-                      <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">
-                        {crop.growthStage}
-                      </span>
-                    </td>
-                    <td className="px-12 py-4">
-                      <StatusBadge className='text-black' status={crop.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading...</p>
+            </div>
+          ) : error ? (
+            <div className="text-red-500 text-center p-8">
+              {error}
+            </div>
+          ) : (
+            <>
+              {/* Card view for mobile */}
+              <MobileCardView />
+              
+              {/* Table view for desktop */}
+              <div className="hidden md:block overflow-x-auto bg-white rounded-lg">
+                <table className="min-w-full table-fixed">
+                  <thead>
+                    <tr className="text-left">
+                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Crop Name</th>
+                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Farm</th>
+                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Growth Stage</th>
+                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cropHistory.map((crop) => (
+                      <tr key={crop.id} className="hover:bg-[#f6fded]">
+                        <td className="px-12 py-4 font-medium text-black">{crop.cropName}</td>
+                        <td className="px-12 py-4 text-black">{crop.farm}</td>
+                        <td className="px-12 py-4">
+                          <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">
+                            {crop.growthStage}
+                          </span>
+                        </td>
+                        <td className="px-12 py-4">
+                          <StatusBadge className='text-black' status={crop.status} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

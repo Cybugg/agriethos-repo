@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Menu } from 'lucide-react';
+import { ArrowLeft, Menu, Bell, RefreshCw } from 'lucide-react'; // Import RefreshCw
 import Link from 'next/link';
 import Image from "next/image";
 import { useParams, useRouter } from 'next/navigation';
@@ -72,6 +72,11 @@ export default function CropReviewPage() {
       // Allow time for fade-out animation before executing callback
       setTimeout(callback, 500);
     }
+  };
+
+  const handleReload = () => {
+    router.refresh(); // Soft refresh, re-runs server components and fetches new data
+    // For a hard refresh, you could use: window.location.reload();
   };
 
   const handleApprove = async () => {
@@ -173,8 +178,15 @@ export default function CropReviewPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <button 
+                onClick={handleReload}
+                className="p-2 rounded-full hover:bg-[#f6fded]"
+                title="Reload page"
+              >
+                <RefreshCw size={24} />
+              </button>
               <button className="p-2 rounded-full hover:bg-[#f6fded]">
-                <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
+                <Bell size={24} /> {/* Replaced Image with Bell icon for consistency */}
               </button>
               <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
                 <Menu size={24} />

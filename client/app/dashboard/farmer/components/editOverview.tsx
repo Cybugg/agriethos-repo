@@ -64,50 +64,48 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         setLoading(true);
         console.log('Submitting farm data:', formData);
        
-        if(!formData.farmType||!formData.location||!formData.size||!formData.soilType||!formData.waterSource||!formData.farmName){
-          alert("Fill out all fields")
-          console.log("Fill out all fields")
+        // Validate required fields
+        if(!formData.farmType || !formData.location || !formData.size || 
+           !formData.soilType || !formData.waterSource || !formData.farmName) {
+          alert("Fill out all fields");
+          setLoading(false);
           return;
         } 
-        if(formData && !Number(formData.size)){
-            alert("Farm size is not number, try again")
-            return
-        }
-        try {
-          const data = new FormData();
-          
-          // Append text fields
-          data.append("farmName",formData.farmName)
-          data.append('location', formData.location);
-          data.append('size', formData.size);
-          data.append('farmType', formData.farmType);
-          data.append('waterSource', formData.waterSource);
-          data.append('soilType', formData.soilType);
-         
-         
-         
-            console.log(data);
-        if(farm){
-             const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${farm._id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-              });
-          const result = await res.json();
-          console.log(result)
-          console.log(result)
-          console.log(result)
-           setFarm(result);
-          console.log('Upload result:', result);
-          result && window.location.reload();
-         setEditOverview(false);
-        }
-         
         
+        if(formData.size && !Number(formData.size)) {
+          alert("Farm size must be a number");
+          setLoading(false);
+          return;
+        }
+        
+        try {
+          console.log('Sending data to server:', JSON.stringify(formData, null, 2));
+          
+          if(farm) {
+            const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${farm._id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData),
+            });
+            
+            if (!res.ok) {
+              const errorText = await res.text();
+              throw new Error(`Server responded with ${res.status}: ${errorText}`);
+            }
+            
+            const result = await res.json();
+            console.log('Upload result:', result);
+            
+            setFarm(result.data || result);
+            setEditOverview(false);
+            window.location.reload();
+          }
         } catch (err) {
           console.error('Upload failed:', err);
-        } 
-    
+          alert(`Failed to update: ${err.message}`);
+        } finally {
+          setLoading(false);
+        }
       };
 
     return (

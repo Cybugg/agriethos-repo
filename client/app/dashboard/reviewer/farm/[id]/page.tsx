@@ -8,51 +8,57 @@ import { ArrowLeft } from 'lucide-react'
 import axios from 'axios'
 
 function Page() {
-  const [farm, setFarm] = useState(null)
+  const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const params = useParams()
-  const id = params.id
+  const id = params.id as string // This 'id' is the farmPropertyId from the URL
 
-  // Fetch farm data based on ID from URL params
   useEffect(() => {
-    const fetchFarm = async () => {
-      try {
-        setLoading(true)
-        // Since the crop data includes farmPropertyId populated data
-        // Let's try to get it via the crop endpoint
-        const response = await axios.get(`http://localhost:5000/api/crops/${id}`)
-        
-        if (response.data && response.data.data && response.data.data.farmPropertyId) {
-          // If we get crop data with farmPropertyId, use that to fetch farm details
-          const farmId = response.data.data.farmPropertyId._id || response.data.data.farmPropertyId
-          const farmResponse = await axios.get(`http://localhost:5000/api/farm/farm-properties/${farmId}`)
-          setFarm(farmResponse.data)
-        } else {
-          setError('Could not retrieve farm information from crop data')
-        }
-        setLoading(false)
-      } catch (err) {
-        console.error('Error fetching farm data:', err)
-        setError('Failed to load farm data')
-        setLoading(false)
+    const fetchFarmDetails = async () => {
+      if (!id) {
+        setError("Farm ID is missing.");
+        setLoading(false);
+        return;
       }
-    }
+      try {
+        setLoading(true);
+        // Use the new backend endpoint to fetch farm by its property ID
+        const response = await axios.get(`http://localhost:5000/api/farm/farm-properties/property/${id}`);
+        
+        // The backend directly returns the farm object on success
+        if (response.data) {
+          setFarm(response.data);
+        } else {
+          // This case might not be hit if axios throws for non-2xx responses
+          setError('Failed to load farm details: No data received');
+        }
+      } catch (err: any) {
+        console.error('Error fetching farm details:', err);
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('Farm not found.');
+        } else {
+          setError('Failed to load farm details. Please check the console.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (id) {
-      fetchFarm()
-    }
-  }, [id])
+    fetchFarmDetails();
+  }, [id]);
 
   // Capitalize first character helper
-  function CFL(string_) {
+  function CFL(string_?: string): string {
     if (!string_) return "" 
     return string_.charAt(0).toUpperCase() + string_.slice(1)
   }
 
   // Convert string to boolean helper
-  const str2Bool = (val) => {
-    return val === "true" ? true : val === "false" ? false : undefined
+  const str2Bool = (val?: string): boolean | undefined => {
+    if (val === "true") return true;
+    if (val === "false") return false;
+    return undefined;
   }
 
   if (loading) {
@@ -61,6 +67,10 @@ function Page() {
 
   if (error) {
     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>
+  }
+
+  if (!farm) {
+    return <div className="flex justify-center items-center h-screen">No farm data available.</div>;
   }
 
   return (
@@ -79,8 +89,8 @@ function Page() {
           <div className='text-grey-600'>
             View farm information
           </div>
-          <div className='flex gap-2 text-primary-700 font-bold'>
-            <PiPlant /> <div>{CFL(farm ? farm.farmName : "N/A")}</div>
+          <div className='flex gap-2 text-primary-700 font-bold mt-2'>
+            <PiPlant /> <div>{CFL(farm.farmName)}</div>
           </div>
         </div>
       </div>
@@ -94,27 +104,26 @@ function Page() {
               Farm Overview
             </div>
           </div>
-          {/* lists of farm variables */}
           <div className='flex flex-col gap-4 w-full justify-between'>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Location</div>
-              <div>{CFL(farm ? farm.location : "N/A")}</div>
+              <div>{CFL(farm.location)}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Size</div>
-              <div>{(farm ? farm.size : "0")} acres</div>
+              <div>{farm.size || "0"} acres</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Farm Type</div>
-              <div>{CFL(farm ? farm.farmType : "N/A")}</div>
+              <div>{CFL(farm.farmType)}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Soil Type</div>
-              <div>{CFL(farm ? farm.soilType : "N/A")}</div>
+              <div>{CFL(farm.soilType)}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Water Source</div>
-              <div>{CFL(farm ? farm.waterSource : "N/A")}</div>
+              <div>{CFL(farm.waterSource)}</div>
             </div>
           </div>
         </div>
@@ -126,49 +135,49 @@ function Page() {
               Farming Methods
             </div>
           </div>
-          {/* lists of farm variables */}
           <div className='flex flex-col gap-4 w-full justify-between'>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Fertilizer type</div>
-              <div>{CFL(farm ? farm.fertilizerType : "N/A")}</div>
+              <div>{CFL(farm.fertilizerType)}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Irrigation method</div>
-              <div>{CFL(farm ? farm.irrigationType : "N/A")}</div>
+              <div>{CFL(farm.irrigationType)}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Pesticide usage</div>
-              <div>{farm && str2Bool(farm.pesticideUsage) ? CFL("used") : "N/A"}</div>
+              <div>{str2Bool(farm.pesticideUsage) ? "Used" : "Not Used"}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Cover crops</div>
-              <div>{farm && str2Bool(farm.coverCrops) ? CFL("used") : "N/A"}</div>
+              <div>{str2Bool(farm.coverCrops) ? "Used" : "Not Used"}</div>
             </div>
             <div className='flex items-center justify-between'>
               <div className='text-grey-600'>Companion planting</div>
-              <div>{farm && str2Bool(farm.companionPlanting) ? CFL("used") : "N/A"}</div>
+              <div>{str2Bool(farm.companionPlanting) ? "Used" : "Not Used"}</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Section two - Farm Images */}
-      {farm && farm.images && farm.images.length > 0 && (
+      {farm.images && farm.images.length > 0 && (
         <section className='mt-6 rounded-lg border-[0.75px] border-grey-200 p-4 flex flex-col gap-6'>
           <div className='flex items-center justify-between'>
             <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
               Farm Images
             </div>
           </div>
-          <div className='w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
-            {farm.images.map((url, ind) => (
-              <div className='w-50' key={ind}>
+          <div className='w-full gap-6 grid grid-cols-1 md:grid-cols-2'>
+            {farm.images.map((url: string, ind: number) => (
+              <div className='w-full' key={ind}>
                 <Image 
                   src={url} 
-                  alt={`Farm image ${ind+1}`} 
-                  className='w-full h-96 bg-grey-500 object-cover rounded-lg' 
+                  alt={`Farm image ${ind + 1}`} 
+                  className='w-full h-64 md:h-96 bg-grey-500 object-cover rounded-lg' 
                   width={500} 
                   height={400}
+                  priority={ind < 2} // Prioritize loading for above-the-fold images
                 />
               </div>
             ))}

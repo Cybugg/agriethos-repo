@@ -5,7 +5,8 @@ const {
   updateCrop,
   deleteCrop,
   getCrop,
-  getAllPendingCrops
+  getAllPendingCrops,
+  getAllReviewedCrops // Add this
 } = require('../controllers/cropController');
 const upload = require('../middlewares/upload');
 
@@ -17,6 +18,7 @@ router.post('/', upload.array('images', 4), createCrop);
 // Get all crops for a farmer
 router.get('/farmer/:farmerId', getCropsByFarmer);
 router.get('/pending', getAllPendingCrops);
+router.get('/reviewed', getAllReviewedCrops); // New route for reviewed crops
 
 // Get, update, delete specific crop
 router.get('/:id', getCrop);

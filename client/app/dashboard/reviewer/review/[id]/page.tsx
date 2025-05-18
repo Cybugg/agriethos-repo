@@ -1,37 +1,77 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import MobileNav from "../../components/MobileNav";
+import axios from 'axios';
 
 export default function CropReviewPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [cropData, setCropData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const params = useParams();
+  const router = useRouter();
   const id = params.id;
 
-  // In a real app, you'd fetch the data based on the ID
-  const cropData = {
-    cropName: 'Tomato',
-    farmName: 'Active Farms',
-    growthStage: 'Pre-harvest',
-    fertilizerType: 'Organic',
-    irrigationMethod: 'Drip',
-    companionPlanting: 'No',
-    pesticideUsage: 'No'
+  // Fetch crop data from backend
+  useEffect(() => {
+    const fetchCropData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:5000/api/crops/${id}`);
+        
+        if (response.data.success) {
+          setCropData(response.data.data);
+        } else {
+          setError('Failed to load crop data');
+        }
+      } catch (err) {
+        console.error('Error fetching crop data:', err);
+        setError('Error loading crop data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchCropData();
+    }
+  }, [id]);
+
+  const handleApprove = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
+        verificationStatus: 'verified'
+      });
+      
+      if (response.data.success) {
+        alert('Crop successfully approved');
+        router.push('/dashboard/reviewer');
+      }
+    } catch (err) {
+      console.error('Error approving crop:', err);
+      alert('Failed to approve crop');
+    }
   };
 
-  const handleApprove = () => {
-    // Handle approval logic
-    console.log('Crop approved');
-    // Generate harvest code and QR code logic would go here
-  };
-
-  const handleReject = () => {
-    // Handle rejection logic
-    console.log('Crop rejected');
+  const handleReject = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
+        verificationStatus: 'rejected'
+      });
+      
+      if (response.data.success) {
+        alert('Crop rejected');
+        router.push('/dashboard/reviewer');
+      }
+    } catch (err) {
+      console.error('Error rejecting crop:', err);
+      alert('Failed to reject crop');
+    }
   };
 
   return (
@@ -67,77 +107,95 @@ export default function CropReviewPage() {
 
         {/* Main content */}
         <div className="p-4 md:p-6">
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-            {/* Crop details card */}
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
-              <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review</h2>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading crop data...</p>
+            </div>
+          ) : error ? (
+            <div className="text-red-500 text-center p-8">
+              {error}
+            </div>
+          ) : cropData ? (
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+              {/* Crop details card */}
+              <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
+                <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review</h2>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Crop name</span>
+                    <span className="font-medium text-black">{cropData.cropName}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Farm name</span>
+                    <span className="font-medium text-black">{cropData.farmPropertyId?.farmName || 'N/A'}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Growth stage</span>
+                    <span className="font-medium text-black">{cropData.growthStage}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Farm location</span>
+                    <span className="font-medium text-black">{cropData.farmPropertyId?.location || 'N/A'}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Planting date</span>
+                    <span className="font-medium text-black">
+                      {new Date(cropData.plantingDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-[#898989]">Expected harvest date</span>
+                    <span className="font-medium text-black">{cropData.expectedHarvestingDate}</span>
+                  </div>
+                  
+                  <div className="flex flex-col">
+                    <span className="text-[#898989] mb-2">Notes</span>
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium text-black">{cropData.preNotes || 'No notes provided'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Crop name</span>
-                  <span className="font-medium text-black">{cropData.cropName}</span>
-                </div>
+              {/* Instructions card */}
+              <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
+                <h2 className="text-lg font-semibold mb-4 text-black">Agent Instructions</h2>
                 
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Farm name</span>
-                  <span className="font-medium text-black">{cropData.farmName}</span>
-                </div>
+                <ol className="list-decimal pl-5 space-y-2 mb-6 text-[#898989]">
+                  <li>Check submitted logs, images, and farming methods.</li>
+                  <li>Approve if the crop meets standards. Request updates if needed.</li>
+                  <li>Confirm harvest details and final images.</li>
+                  <li>Once approved, generate a unique harvest code and QR code.</li>
+                  <li>Crops move through statuses: In Progress → Verified / Rejected.</li>
+                </ol>
                 
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Growth stage</span>
-                  <span className="font-medium text-black">{cropData.growthStage}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Fertilizer type</span>
-                  <span className="font-medium text-black">{cropData.fertilizerType}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Irrigation method</span>
-                  <span className="font-medium text-black">{cropData.irrigationMethod}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Companion planting</span>
-                  <span className="font-medium text-black">{cropData.companionPlanting}</span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-[#898989]">Pesticide usage</span>
-                  <span className="font-medium text-black">{cropData.pesticideUsage}</span>
+                <div className="flex gap-4 mt-6">
+                  <button 
+                    onClick={handleReject}
+                    className="flex-1 py-3 border border-[#003024] rounded-lg text-center font-medium text-black"
+                  >
+                    Reject
+                  </button>
+                  <button 
+                    onClick={handleApprove}
+                    className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
+                  >
+                    Approve
+                  </button>
                 </div>
               </div>
             </div>
-            
-            {/* Instructions card */}
-            <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
-              <h2 className="text-lg font-semibold mb-4 text-black">Agent Instructions</h2>
-              
-              <ol className="list-decimal pl-5 space-y-2 mb-6 text-[#898989]">
-                <li>Check submitted logs, images, and farming methods.</li>
-                <li>Approve if the crop meets standards. Request updates if needed.</li>
-                <li>Confirm harvest details and final images.</li>
-                <li>Once approved, generate a unique harvest code and QR code.</li>
-                <li>Crops move through statuses: In Progress → Verified / Rejected.</li>
-              </ol>
-              
-              <div className="flex gap-4 mt-6">
-                <button 
-                  onClick={handleReject}
-                  className="flex-1 py-3 border border-[#003024] rounded-lg text-center font-medium text-black"
-                >
-                  Reject
-                </button>
-                <button 
-                  onClick={handleApprove}
-                  className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
-                >
-                  Approve
-                </button>
-              </div>
+          ) : (
+            <div className="text-center p-8">
+              <p>No crop data found</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

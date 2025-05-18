@@ -92,7 +92,7 @@ export default function Home() {
          
           </div>
           <div className='text-2xl '>
-            {overview?overview.farmersNo:"N/A"}
+            {overview?overview.farmersNo:<div className="bg-gray-100 w-8 h-8"></div>}
           </div>
         </div>
              {/* Item 3 */}
@@ -106,7 +106,7 @@ export default function Home() {
           </div >
           </div>
           <div className='text-2xl '>
-      4
+   {overview?overview.reviewersNo:<div className="bg-gray-100 w-8 h-8"></div>}
           </div>
         </div>
              {/* Item 4 */}
@@ -118,7 +118,7 @@ export default function Home() {
       
           </div>
           <div className='text-2xl '>
-            0
+           {overview?overview.adminsNo:<div className="bg-gray-100 w-8 h-8"></div>}
           </div>
         </div>
              {/* Item 4 */}
@@ -130,7 +130,7 @@ export default function Home() {
       
           </div>
           <div className='text-2xl '>
-            17
+           {overview?overview.cropsNo:<div className="bg-gray-100 w-8 h-8"></div>}
           </div>
         </div>
        </section>
@@ -162,10 +162,47 @@ export default function Home() {
 
       </div>
       {/* Body */}
+<div className="h-96  bg-gray-100  overflow-y-scroll w-full">
 
+</div>
         </div>
      </section>
 {/* ############################################################################################### */}
+{/* ########################################################################################################### */}
+     <section>
+        {/* Header */}
+        <div className="mt-12 text-xl px-2 py-1">
+            Admins
+        </div>
+
+        <div className="flex flex-col gap-2">
+            {/* Title */}
+      <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
+          {/* S/N */}
+      <div  className='basis-1/5 flex items-center justify-center '>
+ S/N
+      </div>
+        {/* Variable Name */}
+      <div className='text-grey-900 basis-1/5 '>
+    Address
+      </div>
+    
+      <div className='text-grey-900 basis-1/5 '>
+      Name
+      </div>
+      <div className='text-grey-900 basis-1/5 '>
+      Date Created
+      </div>
+
+      </div>
+      {/* Body */}
+<div className="h-96 bg-gray-100 overflow-y-scroll w-full">
+
+</div>
+        </div>
+     </section>
+{/* ############################################################################################### */}
+
 
 </div>
     );

@@ -11,8 +11,12 @@ const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
 
 exports.createAdmin = async (req, res) => {
     try {
-      const { name, walletAddress } = req.body;
-  
+      const { name, walletAddress, adminId } = req.body;
+  console.log(adminId);
+      // Check if the one making the request is an admin
+      const validAdmin = await Admin.findOne({_id:adminId});
+      if(!validAdmin)return res.status(401).json({mesage:"UNAUTHURIZED ACCEESS"});
+
       // Ensure wallet address is not already registered
       const existing = await Admin.findOne({ walletAddress: walletAddress.toLowerCase() });
       if (existing) {
@@ -127,14 +131,6 @@ Only sign this message if you trust AgriEthos.
    
       await admin.save();
 
-      // let get some overview data 
-      const allfarmers = await Farmer.find([]);
-      const allCrops = await Crop.find([]);
-      const allAdmins = await Admin.find([]);
-      const allReviewers = await Reviewer.find([]);
-
-
-
 
 
 
@@ -176,4 +172,26 @@ exports.getAdminOverview = async(req,res)=>{
   catch(err){
     res.status(404).json({message:err.message})
   }
+}
+
+
+exports.getAllAdmins = async (req,res)=> {
+  const {adminId} = req.params;
+  try{
+     // verify if the admin exists
+  const admin = await Admin.findOne({_id:adminId});
+  if(!admin){
+    return res.status(401).json({message:"UNAUTHURIZED"});
+  }
+  // Let's proceed if we verify the admin
+  const admins = await Admin.find();
+  if(!admins){
+    return res.status(404).json({message:"Cannot find admins"})
+  }
+  return res.status(201).json({data:admins})
+  }
+
+ catch(err){
+console.log(err)
+ }
 }

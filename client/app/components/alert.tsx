@@ -18,7 +18,7 @@ const Alert: React.FC<AlertProps> = ({ message, duration = 3000, onClose,color =
   }, [duration, onClose]);
 
   return (
-    <div className={background + " " + color +" p-4 rounded-md shadow-md z-50 absolute top-0 mx-96 mt-5"}>
+    <div className={background + " " + color +" p-4 rounded-md shadow-md z-50  top-0 mx-96 mt-5 fixed"}>
       {message}
     </div>
   );

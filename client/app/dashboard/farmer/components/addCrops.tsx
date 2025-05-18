@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, {ReactNode, useState} from "react";
 
+
 interface props {
     setDisplayAddCrop:(boolVal:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
@@ -106,7 +107,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
         Crop name:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-   <input type="text" placeholder="Crop name"name="cropName" className="w-full outline-none"  onChange={handleChange}  />
+   <input type="text" placeholder="Crop name" name="cropName" className="w-full outline-none"   onChange={handleChange}  />
 </div></div>
 
 {/* item 2*/}

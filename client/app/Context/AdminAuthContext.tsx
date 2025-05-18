@@ -51,7 +51,7 @@ export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) =
     setLoginStatusLoading(false);
     if (storedAddr) setAddress(storedAddr)
       const storedId = localStorage.getItem('adminId')
-  
+      if(storedId) setAdminId(storedId)
       const storedAdminPack = localStorage.getItem('AdminPack')
     if (storedAdminPack) setUser(JSON.parse(storedAdminPack))
   }, [])

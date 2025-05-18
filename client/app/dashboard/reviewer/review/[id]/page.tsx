@@ -10,16 +10,20 @@ import axios from 'axios';
 
 export default function CropReviewPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [cropData, setCropData] = useState(null);
+  const [cropData, setCropData] = useState<any>(null); // Consider defining a specific type for cropData
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const params = useParams();
   const router = useRouter();
-  const id = params.id;
+  const id = params.id as string;
 
-  // Fetch crop data from backend
   useEffect(() => {
     const fetchCropData = async () => {
+      if (!id) {
+        setError("Crop ID is missing.");
+        setLoading(false);
+        return;
+      }
       try {
         setLoading(true);
         const response = await axios.get(`http://localhost:5000/api/crops/${id}`);
@@ -27,34 +31,61 @@ export default function CropReviewPage() {
         if (response.data.success) {
           setCropData(response.data.data);
         } else {
-          setError('Failed to load crop data');
+          setError('Failed to load crop data: ' + (response.data.message || 'Unknown error'));
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching crop data:', err);
-        setError('Error loading crop data');
+        if (axios.isAxiosError(err) && err.response) {
+          setError(`Error loading crop data: ${err.response.status} - ${err.response.data.message || err.message}`);
+        } else {
+          setError('Error loading crop data. Please check the console.');
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      fetchCropData();
-    }
+    fetchCropData();
   }, [id]);
 
   const handleApprove = async () => {
+    if (!cropData) {
+      alert('Crop data not loaded yet.');
+      return;
+    }
+
+    let newStatus = '';
+    let alertMessage = '';
+
+    if (cropData.growthStage === 'pre-harvest') {
+      newStatus = 'toUpgrade';
+      alertMessage = 'Crop pre-harvest stage approved. Farmer will be notified to update for post-harvest.';
+    } else if (cropData.growthStage === 'post-harvest') {
+      newStatus = 'verified';
+      alertMessage = 'Crop post-harvest stage approved successfully!';
+    } else {
+      alert('Unknown crop growth stage.');
+      return;
+    }
+
     try {
       const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
-        verificationStatus: 'verified'
+        verificationStatus: newStatus
       });
       
       if (response.data.success) {
-        alert('Crop successfully approved');
+        alert(alertMessage);
         router.push('/dashboard/reviewer');
+      } else {
+        alert('Failed to approve crop: ' + (response.data.message || 'Unknown error'));
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error approving crop:', err);
-      alert('Failed to approve crop');
+      if (axios.isAxiosError(err) && err.response) {
+        alert(`Failed to approve crop: ${err.response.status} - ${err.response.data.message || err.message}`);
+      } else {
+        alert('Failed to approve crop. Please check the console.');
+      }
     }
   };
 
@@ -65,12 +96,14 @@ export default function CropReviewPage() {
       });
       
       if (response.data.success) {
-        alert('Crop rejected');
+        alert('Crop rejected successfully.');
         router.push('/dashboard/reviewer');
+      } else {
+        alert('Failed to reject crop: ' + (response.data.message || 'Unknown error'));
       }
     } catch (err) {
       console.error('Error rejecting crop:', err);
-      alert('Failed to reject crop');
+      alert('Failed to reject crop. Please check the console.');
     }
   };
 

@@ -218,3 +218,27 @@ exports.getAllPendingCrops = async (req, res) => {
     });
   }
 };
+
+// Get all reviewed crops (not pending)
+exports.getAllReviewedCrops = async (req, res) => {
+  try {
+    const reviewedCrops = await Crop.find({ 
+      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] } 
+    })
+    .sort({ updatedAt: -1 }) // Sort by last updated
+    .populate('farmPropertyId', 'farmName location'); // Populate farm details
+    
+    res.status(200).json({
+      success: true,
+      count: reviewedCrops.length,
+      data: reviewedCrops
+    });
+  } catch (error) {
+    console.error('Error fetching reviewed crops:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};

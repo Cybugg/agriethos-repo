@@ -127,9 +127,19 @@ export default function CropReviewPage() {
                     <span className="font-medium text-black">{cropData.cropName}</span>
                   </div>
                   
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-[#898989]">Farm name</span>
-                    <span className="font-medium text-black">{cropData.farmPropertyId?.farmName || 'N/A'}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-black">{cropData.farmPropertyId?.farmName || 'N/A'}</span>
+                      {cropData.farmPropertyId?._id && (
+                        <Link 
+                          href={`/dashboard/reviewer/farm/${cropData.farmPropertyId._id}`}
+                          className="px-3 py-1 bg-[#f6fded] text-[#003024] rounded-md text-sm hover:bg-[#e9f8d5]"
+                        >
+                          View Farm
+                        </Link>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex justify-between">

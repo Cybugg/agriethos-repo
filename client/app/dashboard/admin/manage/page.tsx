@@ -31,7 +31,7 @@ export default function Home() {
           setMobileDisplay(false);
         },[])
   
-        // to fetch farm properties and set it to state
+        // to fetch admin properties and set it to state
         useEffect(
           ()=>{
             const fetchAdmins = async()=>{
@@ -116,8 +116,8 @@ export default function Home() {
    
       {/* Body */}
       <div className="max-h-96 min-h-24   overflow-y-scroll w-full">
-        <div className="flex items-center justify-center w-full ">
-        No Reviewer yet
+        <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+        No Reviewer added yet
         </div>
 
 </div>
@@ -179,6 +179,9 @@ export default function Home() {
 
       </div>
   ))}
+  {!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+        No Admin added yet
+        </div>}
 
 </div>
 

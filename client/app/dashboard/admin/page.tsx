@@ -12,15 +12,19 @@ import { BsPerson } from "react-icons/bs";
 interface overview {
   [key:string]:string
 }
+interface admin{
+  name : string;
+  [key:string]:string
+}
 
 
 export default function Home() {
-
+  const [admins,setAdmins] = useState<admin[]>([]);
   const {setCurrentPage,setMobileDisplay} = useNavContext();
   const {address, logout} = useAdminAuth()
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [overview, setOverview] = useState<overview|undefined>(undefined);
-
+  const {user} = useAdminAuth();
 
 
 
@@ -41,6 +45,25 @@ export default function Home() {
    fetchOverview();
     },[]
   )
+       // to fetch admin properties and set it to state
+          useEffect(
+            ()=>{
+              const fetchAdmins = async()=>{
+                  try{
+                    if(user){
+                       const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
+                       const {data} = await result.json();
+                       setAdmins(data);
+                    }
+                   
+                  }
+                  catch(err){
+                    console.log(err);
+                  }
+              };
+              fetchAdmins();
+            },[user]);
+
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
@@ -196,7 +219,31 @@ export default function Home() {
 
       </div>
       {/* Body */}
-<div className="h-96 bg-gray-100 overflow-y-scroll w-full">
+      <div className="max-h-96 min-h-24   overflow-y-scroll w-full">
+
+{admins && admins.map((ele,ind)=>(
+  <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
+        {/* S/N */}
+    <div  className='basis-1/4 flex items-start justify-center '>
+   {ind+1}
+    </div>
+      {/* Variable Name */}
+    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    {ele && ele.walletAddress} 
+    </div>
+  
+    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    {ele && ele.name}
+    </div>
+    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    {ele && ele.createdAt}
+    </div>
+
+    </div>
+))}
+{!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+      No Admin added yet
+      </div>}
 
 </div>
         </div>

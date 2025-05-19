@@ -6,13 +6,21 @@ import Link from 'next/link';
 import Image from "next/image";
 import MobileNav from "../components/MobileNav";
 import axios from 'axios';
+
+interface Crop {
+  id: string;
+  cropName: string;
+  farm: string;
+  growthStage: string;
+  status: 'Success' | 'Rejected';
+}
 import { useNavContext } from '../NavContext';
 
 export default function CropHistoryPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [cropHistory, setCropHistory] = useState([]);
+  const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
      const {setCurrentPage,setMobileDisplay} = useNavContext();
   
@@ -32,7 +40,7 @@ export default function CropHistoryPage() {
         const response = await axios.get('http://localhost:5000/api/crops/reviewed');
         if (response.data.success) {
           // Map the API response to match the existing cropHistory structure
-          const formattedData = response.data.data.map(crop => ({
+          const formattedData = response.data.data.map((crop: { _id: any; cropName: any; farmPropertyId: { farmName: any; }; growthStage: string; verificationStatus: string; }) => ({
             id: crop._id,
             cropName: crop.cropName,
             farm: crop.farmPropertyId?.farmName || 'N/A',
@@ -54,17 +62,17 @@ export default function CropHistoryPage() {
     fetchReviewedCrops();
   }, []);
 
-  const StatusBadge = ({ status }) => {
+  const StatusBadge = ({ status, className }: { status: 'Success' | 'Rejected', className?: string }) => {
     if (status === 'Success') {
       return (
-        <div className="border border-[#149414] border-solid inline-flex items-center px-3 py-1 rounded-full bg-[#f6fded] text-[#149414] text-sm whitespace-nowrap">
+        <div className={`border border-[#149414] border-solid inline-flex items-center px-3 py-1 rounded-full bg-[#f6fded] text-[#149414] text-sm whitespace-nowrap ${className || ''}`}>
           <Check size={16} className="mr-1 border border-[#149414] border-solid rounded-[18px] p-[1px]" />
           <span>Success</span>
         </div>
       );
     } else {
       return (
-        <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FFF1F1] text-[#e30e0e] text-sm border border-[#e30e0e] whitespace-nowrap">
+        <div className={`inline-flex items-center px-3 py-1 rounded-full bg-[#FFF1F1] text-[#e30e0e] text-sm border border-[#e30e0e] whitespace-nowrap ${className || ''}`}>
           <X size={16} className="mr-1 border border-[#e30e0e] border-solid rounded-[18px] p-[1px]" />
           <span>Rejected</span>
         </div>
@@ -103,7 +111,7 @@ export default function CropHistoryPage() {
       setLoading(true);
       const response = await axios.get('http://localhost:5000/api/crops/reviewed');
       if (response.data.success) {
-        const formattedData = response.data.data.map(crop => ({
+        const formattedData = response.data.data.map((crop: { _id: any; cropName: any; farmPropertyId: { farmName: any; }; growthStage: string; verificationStatus: string; }) => ({
           id: crop._id,
           cropName: crop.cropName,
           farm: crop.farmPropertyId?.farmName || 'N/A',

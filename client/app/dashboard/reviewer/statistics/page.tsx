@@ -12,7 +12,7 @@ export default function StatisticsPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [timeframe, setTimeframe] = useState('This Week');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   
   // State for statistics data
   const [summaryStats, setSummaryStats] = useState({
@@ -21,9 +21,9 @@ export default function StatisticsPage() {
     totalCropsReviewed: 0
   });
   
-  const [weeklyActivityData, setWeeklyActivityData] = useState([]);
-  const [verificationData, setVerificationData] = useState([]);
-  const [topFarmsData, setTopFarmsData] = useState([]);
+  const [weeklyActivityData, setWeeklyActivityData] = useState<Array<{name: string; value: number}>>([]);
+  const [verificationData, setVerificationData] = useState<Array<{name: string; value: number; color: string}>>([]);
+  const [topFarmsData, setTopFarmsData] = useState<Array<{id: string; name: string; reviewed: number; successful: number; rejected: number}>>([]);
 
   // Fetch statistics data from the backend
   useEffect(() => {
@@ -38,9 +38,9 @@ export default function StatisticsPage() {
           const reviewedCrops = reviewedResponse.data.data;
           
           // Calculate summary stats
-          const verified = reviewedCrops.filter(crop => crop.verificationStatus === 'verified').length;
-          const rejected = reviewedCrops.filter(crop => crop.verificationStatus === 'rejected').length;
-          const toUpgrade = reviewedCrops.filter(crop => crop.verificationStatus === 'toUpgrade').length;
+          const verified = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'verified').length;
+          const rejected = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'rejected').length;
+          const toUpgrade = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'toUpgrade').length;
           const total = reviewedCrops.length;
           
           setSummaryStats({
@@ -72,21 +72,21 @@ export default function StatisticsPage() {
           
           // Filter by current week if timeframe is 'This Week'
           const currentWeekCrops = timeframe === 'This Week' 
-            ? reviewedCrops.filter(crop => {
+            ? reviewedCrops.filter((crop: { updatedAt: string | number | Date; }) => {
                 const cropDate = new Date(crop.updatedAt);
                 return cropDate >= startOfWeek;
               })
             : reviewedCrops; // Otherwise use all crops (for 'This Month')
           
           // Count crops by day
-          currentWeekCrops.forEach(crop => {
+          currentWeekCrops.forEach((crop: { updatedAt: string | number | Date; }) => {
             const cropDate = new Date(crop.updatedAt);
             const dayName = dayNames[cropDate.getDay()];
             activityMap.set(dayName, activityMap.get(dayName) + 1);
           });
           
           // Convert to array format needed for chart
-          const activityData = [];
+          const activityData: ((prevState: never[]) => never[]) | { name: string; value: any; }[] = [];
           dayNames.forEach(day => {
             activityData.push({ name: day, value: activityMap.get(day) });
           });
@@ -97,7 +97,7 @@ export default function StatisticsPage() {
           // Group crops by farm
           const farmMap = new Map();
           
-          reviewedCrops.forEach(crop => {
+          reviewedCrops.forEach((crop: { farmPropertyId: { farmName: any; _id: any; }; verificationStatus: string; }) => {
             if (crop.farmPropertyId && crop.farmPropertyId.farmName) {
               const farmName = crop.farmPropertyId.farmName;
               const farmId = crop.farmPropertyId._id;

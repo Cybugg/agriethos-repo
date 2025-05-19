@@ -110,5 +110,21 @@ exports.getFarmByFarmer = async (req, res) => {
   }
 };
 
+// New controller function to get a farm property by its own ID
+exports.getFarmByPropertyId = async (req, res) => {
+  try {
+    const { farmPropertyId } = req.params;
+    const farm = await FarmProperty.findById(farmPropertyId).populate('crops'); // Optionally populate other refs if needed
+
+    if (!farm) {
+      return res.status(404).json({ success: false, message: "Farm property not found" });
+    }
+    res.status(200).json(farm); // Send the full farm property object
+  } catch (err) {
+    console.error('Error fetching farm property by ID:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 
 

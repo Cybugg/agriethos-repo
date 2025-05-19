@@ -1,14 +1,61 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import { Button } from "@/app/components/button";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import MobileNav from "./components/MobileNav";
+import axios from 'axios';
+
+// Define interfaces for type safety
+interface FarmProperty {
+  _id: string;
+  farmName: string;
+  location: string;
+}
+
+interface Farmer {
+  _id: string;
+  walletAddress: string;
+}
+
+interface PendingCrop {
+  _id: string;
+  cropName: string;
+  farmerId: Farmer;
+  farmPropertyId: FarmProperty;
+  growthStage: string;
+  plantingDate: string;
+  expectedHarvestingDate: string;
+  preNotes: string;
+  verificationStatus: string;
+  createdAt: string;
+}
 
 export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [pendingCrops, setPendingCrops] = useState<PendingCrop[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Fetch pending crops when component mounts
+  useEffect(() => {
+    const fetchPendingCrops = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:5000/api/crops/pending');
+        setPendingCrops(response.data.data);
+      } catch (err) {
+        console.error('Error fetching pending crops:', err);
+        setError('Failed to load pending crops');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPendingCrops();
+  }, []);
 
   return (
     <div className="flex h-screen bg-white">
@@ -37,164 +84,65 @@ export default function Home() {
         </header>
 
         <main className="p-4 md:p-6">
-          <div className="space-y-4">
-            {/* Farm entries - stack vertically on mobile */}
-            {/* Farm Entry 1 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-3 md:mb-0">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  <Image
-                    src="/icons/rectangle-20.svg"
-                    alt="Active Farms"
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-medium text-black">Active Farms</h3>
-                  <p className="text-sm text-[#898989]">Osun, Nigeria</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
-                <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black mr-[170px]">Tomatoes</span>
-                </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                  <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Button
-                      variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 md:gap-24 mr-[30px]"
-                    >
-                      Skip
-                    </Button>
-                    <Link href="/dashboard/reviewer/review/1">
-                      <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
-                        Review
-                      </Button>
-                    </Link>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading pending crops...</p>
+            </div>
+          ) : error ? (
+            <div className="text-red-500 text-center">
+              {error}
+            </div>
+          ) : pendingCrops.length === 0 ? (
+            <div className="text-center p-8">
+              <p>No pending crops to review at this time.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Map through pending crops */}
+              {pendingCrops.map((crop) => (
+                <div key={crop._id} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
+                  <div className="flex items-center gap-4 mb-3 md:mb-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden">
+                      <Image
+                        src="/icons/rectangle-20.svg" // Default farm image
+                        alt={crop.farmPropertyId?.farmName || "Farm"}
+                        width={48}
+                        height={48}
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-black">{crop.farmPropertyId?.farmName || "Unknown Farm"}</h3>
+                      <p className="text-sm text-[#898989]">{crop.farmPropertyId?.location || "Unknown Location"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
+                    <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
+                      <span className="font-medium text-black mr-[170px]">{crop.cropName}</span>
+                    </div>
+                    <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
+                      <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">
+                        {crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest'}
+                      </span>
+                      <div className="flex gap-2 mt-2 md:mt-0">
+                        <Button
+                          variant="outline"
+                          className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 md:gap-24 mr-[30px]"
+                        >
+                          Skip
+                        </Button>
+                        <Link href={`/dashboard/reviewer/review/${crop._id}`}>
+                          <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
+                            Review
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Farm Entry 2 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-3 md:mb-0">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  <Image
-                    src="/static/farm1.png"
-                    alt="God's Grace Farms"
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-medium text-black">God's Grace Farms</h3>
-                  <p className="text-sm text-[#898989]">Lagos, Nigeria</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
-                <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black mr-[170px]">Lettuce</span>
-                </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                  <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">Pre-harvest</span>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Button
-                      variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
-                    >
-                      Skip
-                    </Button>
-                    <Link href="/dashboard/reviewer/review/2">
-                      <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
-                        Review
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Farm Entry 3 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-3 md:mb-0">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  <Image
-                    src="/icons/rectangle-20-2.svg"
-                    alt="Greenland Farm"
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-medium text-black">Greenland Farm</h3>
-                  <p className="text-sm text-[#898989]">Pretoria, South Africa</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
-                <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black mr-[170px]">Strawberry</span>
-                </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                  <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Button
-                      variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
-                    >
-                      Skip
-                    </Button>
-                    <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
-                      Review
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Farm Entry 4 */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-3 md:mb-0">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  <Image
-                    src="/icons/rectangle-20.svg"
-                    alt="Active Farms"
-                    width={48}
-                    height={48}
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-medium text-black">Active Farms</h3>
-                  <p className="text-sm text-[#898989]">Osun, Nigeria</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
-                <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
-                  <span className="font-medium text-black mr-[170px]">Maize</span>
-                </div>
-                <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                  <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">Post-harvest</span>
-                  <div className="flex gap-2 mt-2 md:mt-0">
-                    <Button
-                      variant="outline"
-                      className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 mr-[30px]"
-                    >
-                      Skip
-                    </Button>
-                    <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
-                      Review
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </main>
       </div>
     </div>

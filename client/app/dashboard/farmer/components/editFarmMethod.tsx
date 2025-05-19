@@ -171,12 +171,18 @@ const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
         Fertilizer type:
         </div>
     <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-    <select id="location" name="fertilizerType" value={formData.fertilizerType} defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
-    <option value={""} disabled  className="bg-white text-black" >Select one</option>
-        <option value={"organic"} className="bg-white text-black" >Organic</option>
-        <option value={"synthetic"} className="bg-white text-black" >synthetic</option>
-        <option value={"none"} className="bg-white text-black" >None</option>
-    </select>
+    <select 
+  id="location" 
+  name="fertilizerType" 
+  value={formData.fertilizerType || ""} 
+  className="bg-white outline-none border-none text-gray-600 w-full"
+  onChange={handleChange}
+>
+  <option value="" disabled className="bg-white text-black">Select one</option>
+  <option value="organic" className="bg-white text-black">Organic</option>
+  <option value="synthetic" className="bg-white text-black">synthetic</option>
+  <option value="none" className="bg-white text-black">None</option>
+</select>
 </div></div>
 
       <div className="space-y-4">

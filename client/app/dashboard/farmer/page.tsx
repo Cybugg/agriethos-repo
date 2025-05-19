@@ -99,24 +99,28 @@ export default function Home() {
   
         // to fetch farm properties and set it to state
   useEffect(() => {
-    if (!isLoginStatusLoading  && user) {
+    if (!isLoginStatusLoading && user) {
       const fetchFarm = async () => {
         try {
-          const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+user._id);
-          if (!res.ok) throw new Error('Failed to fetch');
+          console.log('Fetching farm data for user ID:', user._id);
+          const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${user._id}`);
+          
+          if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Failed to fetch: ${res.status} ${errorText}`);
+          }
+          
           const data = await res.json();
-          setFarm(data); 
-          console.log(data)
-          // assuming your backend sends a valid farm object
+          console.log('Farm data received:', data);
+          setFarm(data);
         } catch (err) {
           console.error('Error fetching farm data:', err);
         }
       };
-  
+
       fetchFarm();
     }
-   
-  }, [address]);
+  }, [user, isLoginStatusLoading]);
 
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
@@ -463,4 +467,3 @@ Corn Post-harvest
       </div>
     );
   }
-  

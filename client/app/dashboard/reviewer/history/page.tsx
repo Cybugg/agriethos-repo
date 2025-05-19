@@ -157,7 +157,7 @@ export default function CropHistoryPage() {
         </header>
 
         {/* Main content */}
-        <div className="p-4 md:p-6">
+        <div className="py-4 md:p-6">
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <p>Loading...</p>
@@ -184,7 +184,7 @@ export default function CropHistoryPage() {
                   </thead>
                   <tbody>
                     {cropHistory.map((crop) => (
-                      <tr key={crop.id} className="hover:bg-gray-100">
+                      <tr key={crop.id} className="">
                         <td className="px-12 py-4 font-medium text-black">{crop.cropName}</td>
                         <td className="px-12 py-4 text-black">{crop.farm}</td>
                         <td className="px-12 py-4">

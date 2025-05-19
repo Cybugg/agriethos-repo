@@ -44,6 +44,12 @@ const cropSchema = new mongoose.Schema({
   postNotes: {
     type: String
   },
+  quantityHarvested: {
+    type: String
+  },
+  unit: {
+    type: String
+  },
   storageMethod: {
     type: String
   },

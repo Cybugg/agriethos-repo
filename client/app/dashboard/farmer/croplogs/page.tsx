@@ -18,6 +18,8 @@ import { PiPlant } from 'react-icons/pi';
 import { GrUpdate } from "react-icons/gr";
 import Alert from '@/app/components/alert';
 import { useFarm } from '@/app/Context/FarmContext';
+import Loader from '@/app/components/loader';
+import UpgradeCrop from '../components/upgradeCrop';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -41,7 +43,7 @@ const sampleData = [
 ];
 
 
-interface crops {
+interface crop {
   cropName:string
   [key:string]:string
 }
@@ -58,6 +60,7 @@ type cropData = {
 function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
+      const [displayUpgradeCrop,setDisplayUpgradeCrop] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const { address, logout ,isLoginStatusLoading,newUser,farmerId} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
@@ -65,7 +68,9 @@ function page() {
       const [collaInd , setCollaInd] = useState<number|undefined>(undefined);
       const [crops, setCrops] = useState<any[]>([]);
       const router = useRouter();
-    
+      const [loadingCrop, setLoadingData]=useState<boolean>(true);
+      const [selectedCrop, setSelectedCrop] = useState<crop>();
+
       useEffect(()=>{
         setCurrentPage("logs");
         setMobileDisplay(false);
@@ -80,6 +85,7 @@ function page() {
               const {data} = await res.json();
               setCrops(data);
               console.log(data)
+              data && res.ok && setLoadingData(false)
             }
             catch(err){
               console.log(err)
@@ -98,6 +104,8 @@ function page() {
   return (
     <div>
        {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
+       {displayUpgradeCrop && <UpgradeCrop setDisplayUpgradeCrop={setDisplayUpgradeCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} selectedCrop={selectedCrop} setSelectedCrop={setSelectedCrop} />}
+
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
        
               {/* Header and Descriptive Text */}
@@ -179,8 +187,9 @@ function page() {
       </div>
       </div>
        {/* Variable */}
-       <div className='flex flex-col gap-4 w-full justify-between  max-h-[300px] overflow-y-scroll'>
-             { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined)}>
+       <div className='flex flex-col gap-4 w-full justify-between  max-h-96 overflow-y-scroll min-h-56'>
+        {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
+             { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>
            {/* s/n */}
            <div className='basis-1/5 flex items-center justify-center '>
           {ind+1}
@@ -199,18 +208,18 @@ function page() {
       </div>
       {/* Button arena */}
    {ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/5 flex items-center justify-center '>
-           <button className='bg-white  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] hover:bg-[#1494140c]'>
+           <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
            <div className="w-4 h-4"><GrUpdate /></div>
            <div className='text-xs'>Upgrade</div>
 </button>
       </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/5 flex items-center justify-center  text-error-500'>
       
-      <button className='bg-[#FFF1F1] px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
+      <button className=' px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
 </button>
       </div>:ele.verificationStatus === "verified"? <div className='basis-1/5   flex items-center justify-center'>
-      <button className='bg-[#F2FEF2]  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+      <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>
 </button>
@@ -226,7 +235,12 @@ function page() {
 </button>
       </div>}
       </div>
-   {collaInd === ind &&   <div className='p-5 w-full flex flex-col gap-1 bg-primary-100 font-bold'>
+
+   {collaInd === ind &&   <div className='p-5 w-full flex flex-col gap-1 bg-gray-100
+   font-bold'>
+    <div className='font-bold text-md underline'>
+      Pre-harvest Data
+    </div>
 <div>
 Created at: {ele.createdAt}
 </div>
@@ -236,18 +250,56 @@ Updated at: {ele.updatedAt}
 <div>
 Crop name: {ele.cropName}
 </div>
-<div>
+{/* <div>
 Growth Stage: {ele.growthStage}
+</div> */}
+<div>
+Planting Date: {ele.plantingDate.slice(0,10)}
 </div>
 <div>
-Planting Date: {ele.plantingDate}
+  Expected Harvesting Date: {ele.expectedHarvestingDate}
+</div>
+<div>
+Notes On Pre-harvest: {`"${ele.preNotes}"`}
 </div>
 
+{ele.growthStage ==="post-harvest"&&<div><div className='font-bold text-md underline'>
+      Post-harvest Data
+    </div>
 <div>
-Notes On Pre-harvest: {ele.growthStage}
+Harvesting Date: {ele.harvestingDate}
 </div>
 <div>
-Verification Status: {ele.verificationStatus}
+Storage Method: {ele.storageMethod}
+</div>
+<div>
+Quantity Harvested: {ele.quantityHarvested}
+</div>
+<div>
+unit: {ele.unit}
+</div>
+<div>
+Notes on Post-harvest: {`"${ele.postNotes}"`}
+</div>
+  </div>
+}
+<div>
+Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with post-harvest data":ele.verificationStatus}
+</div>
+<div className='flex gap-1 mt-2'>
+  <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setCollaInd(undefined)}>
+Close
+  </button>
+{ ele && ele.verificationStatus === "toUpgrade" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setDisplayUpgradeCrop(true)}>
+Upgrade
+</button>}
+{/* <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
+View on Explorer
+</button> */}
+{/* <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
+View QR Code
+</button> */}
+
 </div>
       </div>}
       </div>)

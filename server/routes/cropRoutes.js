@@ -6,7 +6,8 @@ const {
   deleteCrop,
   getCrop,
   getAllPendingCrops,
-  getAllReviewedCrops // Add this
+  getAllReviewedCrops, // Add this
+  upgradeCrop
 } = require('../controllers/cropController');
 const upload = require('../middlewares/upload');
 
@@ -23,6 +24,7 @@ router.get('/reviewed', getAllReviewedCrops); // New route for reviewed crops
 // Get, update, delete specific crop
 router.get('/:id', getCrop);
 router.put('/:id', upload.array('images', 4), updateCrop);
+router.put('/upgrade/:id', upload.array('images', 4), upgradeCrop);
 router.delete('/:id', deleteCrop);
 
 module.exports = router;

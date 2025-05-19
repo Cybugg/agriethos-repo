@@ -104,7 +104,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
 {/* Crop name */}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
-        Crop name:
+        Crop name <span className="text-error-500">*</span> :
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
    <input type="text" placeholder="Crop name" name="cropName" className="w-full outline-none"   onChange={handleChange}  />
@@ -124,7 +124,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
 {/* Harvesting date */}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
-       Expected Harvesting date:
+       Expected Harvesting date <span className="text-error-500">*</span> :
         </div>
    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
 <input type="date" placeholder="Expected harvesting date" name="expectedHarvestingDate" className="w-full outline-none"  onChange={handleChange}   />
@@ -136,7 +136,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
 {/* Growth Stage */}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
-        Crop growth stage:
+        Crop growth stage <span className="text-error-500">*</span> :
         </div>
 <div className="p-3 rounded-lg w-full flex justify-between items-center border-[0.75px] border-[#CFCFCF]">
   <select id={"growthStage"} name="growthStage" onChange={handleChange} className="bg-white outline-none border-none text-black w-full "  defaultValue={""} >
@@ -149,7 +149,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
 {/* Growth Stage */}
 <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
-        Notes {"(Brief description)"}:
+        Notes {"(Brief description)"} <span className="text-error-500">*</span> :
         </div>
 <div className="p-3 rounded-lg w-full flex justify-between items-center border-[0.75px] border-[#CFCFCF]">
   <textarea id={"preNotes"} name="preNotes" onChange={handleChange} className="bg-white outline-none border-none text-black w-full border"   defaultValue={""} >

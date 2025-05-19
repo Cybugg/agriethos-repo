@@ -1,5 +1,6 @@
 const Crop = require('../models/Crop');
 const FarmProperty = require('../models/FarmProperties');
+const farmer = require("../models/Farmer")
 
 // Create a new crop
 exports.createCrop = async (req, res) => {
@@ -111,6 +112,73 @@ exports.updateCrop = async (req, res) => {
     const updatedCrop = await Crop.findByIdAndUpdate(
       id,
       updateData,
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedCrop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: updatedCrop
+    });
+  } catch (error) {
+    console.error('Error updating crop:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+// Update crop details
+exports.upgradeCrop = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      farmerId, 
+      harvestingDate,
+      storageMethod,
+      postNotes,
+      growthStage,
+      quantityHarvested,
+      unit} = req.body;
+
+      console.log(farmerId);
+      // Let's validate that the farmer exists and owner of the crops
+      const crop =  await Crop.findOne({_id:id});
+      if(!crop){
+        return res.status(404).json({message:"Cannot find crop"});
+      }
+      console.log(crop.farmerId ," : ",farmerId)
+      if(crop.farmerId.toString() !== farmerId){
+        return res.status(401).json({message:"UNAUTHORIZED"});
+      }
+    let images;
+    // If there are new images to add
+    if (req.files && req.files.length > 0) {
+       images = req.files.map(file => file.path);
+    }
+
+    // Update the timestamp
+    const updatedAt = Date.now();
+    
+    const updatedCrop = await Crop.findByIdAndUpdate(
+      id,
+      {harvestingDate,
+        storageMethod,
+        postNotes,
+        growthStage,
+        quantityHarvested,
+        unit,
+        images,
+        updatedAt,
+        verificationStatus:"pending",
+      },
       { new: true, runValidators: true }
     );
     

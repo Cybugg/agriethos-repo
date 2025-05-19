@@ -21,7 +21,7 @@ export default function CropHistoryPage() {
         const response = await axios.get('http://localhost:5000/api/crops/reviewed');
         if (response.data.success) {
           // Map the API response to match the existing cropHistory structure
-          const formattedData = response.data.data.map(crop => ({
+          const formattedData = response.data.data.map((crop: { _id: any; cropName: any; farmPropertyId: { farmName: any; }; growthStage: string; verificationStatus: string; }) => ({
             id: crop._id,
             cropName: crop.cropName,
             farm: crop.farmPropertyId?.farmName || 'N/A',

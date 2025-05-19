@@ -156,7 +156,7 @@ export default function CropHistoryPage() {
           </div>
         </header>
 
-        {/* Main content */}md:px-8
+        {/* Main content */}
         <div className="p-4 md:p-6">
           {loading ? (
             <div className="flex justify-center items-center h-64">

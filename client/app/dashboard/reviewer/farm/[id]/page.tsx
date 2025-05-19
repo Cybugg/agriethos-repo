@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { PiPlant } from 'react-icons/pi'
 import { ArrowLeft } from 'lucide-react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 function Page() {
   const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
@@ -13,7 +14,7 @@ function Page() {
   const [error, setError] = useState<string | null>(null)
   const params = useParams()
   const id = params.id as string // This 'id' is the farmPropertyId from the URL
-
+  const router = useRouter();
   useEffect(() => {
     const fetchFarmDetails = async () => {
       if (!id) {
@@ -79,9 +80,9 @@ function Page() {
       <div className='flex items-start justify-between'>
         <div className='flex flex-col gap-2'>
           <div className='flex items-center gap-3'>
-            <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
+            <button onClick={()=>router.back()} className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
               <ArrowLeft size={20} />
-            </Link>
+            </button>
             <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
               Farm Details
             </div>

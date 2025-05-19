@@ -52,8 +52,8 @@ const {currentPage, mobileDisplay, setMobileDisplay} = useNavContext();
       {/* Side Bar Nav */}
       <div className="flex flex-col w-full gap-[16px] text-black">
         <NavItem icon={"/icons/house.svg"} label="Home" active={currentPage === "home"} address="/" />
-        <NavItem icon={"/icons/clock-countdown.svg"} label="History" active={currentPage === "history"} address="/history" />
-        <NavItem icon={"/icons/chart-line.svg"} label="Statistics" active={currentPage === "statistics"} address="/statistics"/>
+        <NavItem icon={"/icons/history.svg"} label="History" active={currentPage === "history"} address="/history" />
+        <NavItem icon={"/icons/statistics.svg"} label="Statistics" active={currentPage === "statistics"} address="/statistics"/>
       </div> 
     </div>
 

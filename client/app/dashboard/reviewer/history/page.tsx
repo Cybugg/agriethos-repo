@@ -6,12 +6,23 @@ import Link from 'next/link';
 import Image from "next/image";
 import MobileNav from "../components/MobileNav";
 import axios from 'axios';
+import { useNavContext } from '../NavContext';
 
 export default function CropHistoryPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [cropHistory, setCropHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+     const {setCurrentPage,setMobileDisplay} = useNavContext();
+  
+  
+     //Navbar default settings
+     useEffect(()=>{
+              setCurrentPage("history");
+              setMobileDisplay(false);
+            },[])
+  
   
   // Fetch crops from API
   useEffect(() => {
@@ -119,10 +130,10 @@ export default function CropHistoryPage() {
       
       {/* Main content */}
       <div className="flex-1 overflow-auto mt-[55px]">
-        <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
+        <header className="flex justify-between items-center p-4 md:px-6  ">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">History</h1>
-            <p className="text-lg text-[#898989]">View past crop submissions</p>
+            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">History</h1>
+            <p className="text-sm md:text-base text-[#898989]">View past crop submissions</p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={handleRefresh} className="p-2 rounded-full hover:bg-[#f6fded]">
@@ -137,7 +148,7 @@ export default function CropHistoryPage() {
           </div>
         </header>
 
-        {/* Main content */}
+        {/* Main content */}md:px-8
         <div className="p-4 md:p-6">
           {loading ? (
             <div className="flex justify-center items-center h-64">
@@ -165,11 +176,11 @@ export default function CropHistoryPage() {
                   </thead>
                   <tbody>
                     {cropHistory.map((crop) => (
-                      <tr key={crop.id} className="hover:bg-[#f6fded]">
+                      <tr key={crop.id} className="hover:bg-gray-100">
                         <td className="px-12 py-4 font-medium text-black">{crop.cropName}</td>
                         <td className="px-12 py-4 text-black">{crop.farm}</td>
                         <td className="px-12 py-4">
-                          <span className="px-3 py-1 text-sm rounded-full bg-[#f0f4f3] text-[#898989]">
+                          <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]">
                             {crop.growthStage}
                           </span>
                         </td>

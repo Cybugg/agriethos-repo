@@ -16,7 +16,7 @@ export default function Home() {
                 
              <div className=''>
                 <div className=' border-2 w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
-                  <input type="Search" placeholder="search" className="outline-none  w-full "/> <BiSearch className="text-[24px] text-grey-500" />
+                  <input type="search" placeholder="Search" className="outline-none  w-full "/> <BiSearch className="text-[24px] text-grey-500" />
                 </div>
              
            </div>
@@ -39,11 +39,20 @@ export default function Home() {
                 {/* item */}
                 <div className="flex flex-col p-4 border rounded-lg cursor-pointer">
                   <div className="flex justify-between py-3">
-                  <div className="text-primary-700 gap-2 font-bold flex items-center justify-center">
+                  <div className=" gap-2 font-bold flex items-center justify-center">
                     <div className="rounded-full w-8 h-8 bg-blue-500 overflow-hidden">
                       <Image src={"/static/farm2.png"}alt={"pfp"} width={50} height={50} className="w-full h-full object-cover" loading="lazy"/>
                     </div>
-                  <div>Jameo Farm</div>  
+                    <div className="flex flex-col gap-1">
+                       <div className="text-primary-700">Jameo Farm</div>
+                      <div className="text-xs text-grey-900">
+                      {/* location */}
+                    <div className=" font-thin">
+                      Osun, Nigeria
+                    </div>
+                      </div>
+                    </div>
+                   
                   </div>
                   <div className="text-gray-600">
                   15 mins ago
@@ -58,10 +67,7 @@ export default function Home() {
                     {/* Crop name */}
                     <div className="text-lg ">Strawberry</div>
                     <div className="justify-between flex item-center">
-                    {/* location */}
-                    <div className=" font-thin">
-                      Osun, Nigeria
-                    </div>
+                   
                     {/* Farm Type */}
                     <div className="text-grey-600">
                       Hydroponics Farm
@@ -103,7 +109,7 @@ export default function Home() {
                   </div>
                 </div>
                    {/* item */}
-                   <div className="flex flex-col p-4 border rounded-lg cursor-pointer">
+                <div className="flex flex-col p-4 border rounded-lg cursor-pointer">
                   <div className="flex justify-between py-3">
                   <div className="text-primary-700 gap-2 font-bold flex items-center justify-center">
                     <div className="rounded-full w-8 h-8 bg-blue-500 overflow-hidden">

@@ -202,7 +202,7 @@ exports.getAllPendingCrops = async (req, res) => {
       verificationStatus: 'pending' 
     })
       .sort({ createdAt: -1 })
-      .populate('farmPropertyId', 'farmName location');
+      .populate('farmPropertyId', 'farmName location images');
     
     res.status(200).json({
       success: true,

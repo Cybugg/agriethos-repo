@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bell, ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
 import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import MobileNav from "../components/MobileNav";
+import { useNavContext } from '../NavContext';
 
 export default function StatisticsPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [timeframe, setTimeframe] = useState('This Week');
+
+     const {setCurrentPage,setMobileDisplay} = useNavContext();
+  
+  
+     //Navbar default settings
+     useEffect(()=>{
+              setCurrentPage("statistics");
+              setMobileDisplay(false);
+            },[])
+  
   
   // Sample data for charts and stats
   const summaryStats = {

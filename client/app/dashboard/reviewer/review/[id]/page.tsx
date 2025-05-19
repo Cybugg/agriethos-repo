@@ -167,14 +167,14 @@ export default function CropReviewPage() {
 
         {/* Main content */}
         <div className="flex-1 overflow-auto mt-[55px]">
-          <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
+          <header className="flex justify-between items-center p-4 md:px-6 border-b border-[#cfcfcf]">
             <div className="flex items-center gap-2">
               <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
                 <ArrowLeft size={20} className='mr-[24]' />
               </Link>
               <div>
-                <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Home</h1>
-                <p className="text-xs md:text-lg text-[#898989]">Manage all crop submission</p>
+                <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Review Submission</h1>
+               
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -208,9 +208,16 @@ export default function CropReviewPage() {
               <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 {/* Crop details card */}
                 <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
-                  <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review</h2>
-                  
-                  <div className="space-y-4">
+                  <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review {`(${cropData.growthStage})`}</h2>
+                  {cropData.farmPropertyId?._id && (
+                          <Link 
+                            href={`/dashboard/reviewer/farm/${cropData.farmPropertyId._id}`}
+                            className="px-3 py-1 bg-[#f6fded] text-[#003024] rounded-md text-sm  border border-[#003024] "
+                          >
+                            View Farm Here
+                          </Link>
+                        )}
+                  <div className="space-y-4 mt-5">
                     <div className="flex justify-between">
                       <span className="text-[#898989]">Crop name</span>
                       <span className="font-medium text-black">{cropData.cropName}</span>
@@ -220,20 +227,13 @@ export default function CropReviewPage() {
                       <span className="text-[#898989]">Farm name</span>
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-black">{cropData.farmPropertyId?.farmName || 'N/A'}</span>
-                        {cropData.farmPropertyId?._id && (
-                          <Link 
-                            href={`/dashboard/reviewer/farm/${cropData.farmPropertyId._id}`}
-                            className="px-3 py-1 bg-[#f6fded] text-[#003024] rounded-md text-sm hover:bg-[#e9f8d5]"
-                          >
-                            View Farm
-                          </Link>
-                        )}
+                        
                       </div>
                     </div>
                     
                     <div className="flex justify-between">
                       <span className="text-[#898989]">Growth stage</span>
-                      <span className="font-medium text-black">{cropData.growthStage}</span>
+                      <span className="font-medium text-black ">{cropData.growthStage}</span>
                     </div>
                     
                     <div className="flex justify-between">
@@ -254,7 +254,7 @@ export default function CropReviewPage() {
                     </div>
                     
                     <div className="flex flex-col">
-                      <span className="text-[#898989] mb-2">Notes</span>
+                      <span className="text-[#898989] mb-2">Pre-harvest notes</span>
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <span className="font-medium text-black">{cropData.preNotes || 'No notes provided'}</span>
                       </div>

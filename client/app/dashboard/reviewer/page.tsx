@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import MobileNav from "./components/MobileNav";
 import axios from 'axios';
+import { useNavContext } from './NavContext';
 
 // Define interfaces for type safety
 interface FarmProperty {
@@ -31,6 +32,7 @@ interface PendingCrop {
   preNotes: string;
   verificationStatus: string;
   createdAt: string;
+  [key:string]:any;
 }
 
 export default function Home() {
@@ -38,7 +40,15 @@ export default function Home() {
   const [pendingCrops, setPendingCrops] = useState<PendingCrop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+   const {setCurrentPage,setMobileDisplay} = useNavContext();
+
+
+   //Navbar default settings
+   useEffect(()=>{
+            setCurrentPage("home");
+            setMobileDisplay(false);
+          },[])
+
   // Fetch pending crops when component mounts
   useEffect(() => {
     const fetchPendingCrops = async () => {
@@ -68,9 +78,9 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto mt-[55px]">
-        <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
+        <header className="flex justify-between items-center p-4 md:px-6  ">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Home</h1>
+            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Home</h1>
             <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>
           </div>
           <div className="flex items-center gap-2">
@@ -85,8 +95,8 @@ export default function Home() {
 
         <main className="p-4 md:p-6">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <p>Loading pending crops...</p>
+            <div className="flex text-grey-600 justify-center items-center h-64">
+              <p>Loading pending submissions...</p>
             </div>
           ) : error ? (
             <div className="text-red-500 text-center">
@@ -100,15 +110,16 @@ export default function Home() {
             <div className="space-y-4">
               {/* Map through pending crops */}
               {pendingCrops.map((crop) => (
-                <div key={crop._id} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg">
-                  <div className="flex items-center gap-4 mb-3 md:mb-0">
+                <div key={crop._id} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg px-4 hover:bg-gray-100">
+                  <div className="flex basis-1/4 items-center gap-4 mb-3 md:mb-0">
                     <div className="w-12 h-12 rounded-full overflow-hidden">
                       <Image
-                        src="/icons/rectangle-20.svg" // Default farm image
+                        src={crop?crop.farmPropertyId.images[0]:""} // Default farm image
                         alt={crop.farmPropertyId?.farmName || "Farm"}
                         width={48}
                         height={48}
-                        className="object-cover"
+                        className="object-cover w-full h-full"
+                        loading='lazy'
                       />
                     </div>
                     <div>
@@ -116,23 +127,23 @@ export default function Home() {
                       <p className="text-sm text-[#898989]">{crop.farmPropertyId?.location || "Unknown Location"}</p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between md:justify-end w-full md:w-auto">
-                    <div className="md:w-[120px] md:mx-8 text-center my-3 md:my-0">
+                  <div className="flex items-center justify-between md:justify-end w-full ">
+                    <div className="w-full basis-1/3 md:mx-8 text-start my-3 md:my-0">
                       <span className="font-medium text-black mr-[170px]">{crop.cropName}</span>
                     </div>
                     <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                      <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] text-[#96d645]">
+                      <span className={"px-3 basis-1/3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]"}>
                         {crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest'}
                       </span>
-                      <div className="flex gap-2 mt-2 md:mt-0">
-                        <Button
+                      <div className="flex basis-1/3 w-full gap-2 mt-2 md:mt-0">
+                        {/* <Button
                           variant="outline"
                           className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 md:gap-24 mr-[30px]"
                         >
                           Skip
-                        </Button>
+                        </Button> */}
                         <Link href={`/dashboard/reviewer/review/${crop._id}`}>
-                          <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] hover:bg-[#96d645] px-2 py-2 md:py-3">
+                          <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024]  px-2 py-2 md:py-3 ">
                             Review
                           </Button>
                         </Link>

@@ -78,7 +78,7 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto mt-[55px]">
-        <header className="flex justify-between items-center p-4 md:px-6  ">
+        <header className="flex justify-between items-center p-4 md:px-8  ">
           <div>
             <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Home</h1>
             <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>

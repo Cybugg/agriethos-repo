@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useNavContext } from "./NavContext";
 import { useAdminAuth } from "@/app/Context/AdminAuthContext";
 import { BsPerson } from "react-icons/bs";
+import Loader from "@/app/components/loader";
+import { useRouter } from "next/navigation";
 
 
 
@@ -20,20 +22,35 @@ interface admin{
 
 export default function Home() {
   const [admins,setAdmins] = useState<admin[]>([]);
+  const [agents,setAgents] = useState<admin[]>([]);
+  
   const {setCurrentPage,setMobileDisplay} = useNavContext();
   const {address, logout} = useAdminAuth()
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [overview, setOverview] = useState<overview|undefined>(undefined);
-  const {user} = useAdminAuth();
+  const {user,isLoginStatusLoading} = useAdminAuth();
+  const [ loadingAgents,setLoadingAgents] = useState<boolean>(true);
+  const [ loadingAdmins,setLoadingAdmins] = useState<boolean>(true);
 
-
+  const router = useRouter();
+  // Route protection
+  useEffect(
+    ()=> {
+      if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "admin")){
+        router.replace("/auth/admin")
+      }
+    },[user,address]
+  )
 
   useEffect(
     ()=>{
    const fetchOverview = async ()=>{
     try{
-      const result = await fetch("http://localhost:5000/api/admin/overview");
+      const result = await fetch("http://localhost:5000/api/admin/overview"+(user && user._id));
       const {data} = await result.json();
+      if(!result.ok){
+        console.log("Error:Cannot fetch overview")
+      }
       console.log(data)
       setOverview(data);
     }
@@ -45,7 +62,7 @@ export default function Home() {
    fetchOverview();
     },[]
   )
-       // to fetch admin properties and set it to state
+       // to fetch admins properties and set it to state
           useEffect(
             ()=>{
               const fetchAdmins = async()=>{
@@ -54,6 +71,7 @@ export default function Home() {
                        const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
                        const {data} = await result.json();
                        setAdmins(data);
+                       data && setLoadingAdmins(false);
                     }
                    
                   }
@@ -63,6 +81,25 @@ export default function Home() {
               };
               fetchAdmins();
             },[user]);
+             // to fetch agents properties and set it to state
+             useEffect(
+              ()=>{
+                const fetchAgents = async()=>{
+                    try{
+                      if(user){
+                         const result = await fetch("http://localhost:5000/api/admin/agents/"+user._id);
+                         const {data} = await result.json();
+                         setAgents(data);
+                         data && setLoadingAgents(false);
+                      }
+                     
+                    }
+                    catch(err){
+                      console.log(err);
+                    }
+                };
+                fetchAgents();
+              },[user]);
 
    useEffect(()=>{
           setCurrentPage("home");
@@ -81,7 +118,7 @@ export default function Home() {
           Home
         </div>
         <div className='text-grey-600'>
-         An Overview of Agriethos
+        <span className="text-primary-700">{user? user.name:"user"}</span>, welcome to overview of Agriethos
         </div>
    </div>
        <div className='flex gap-2 items-center'>
@@ -185,8 +222,39 @@ export default function Home() {
 
       </div>
       {/* Body */}
-<div className="h-96  bg-gray-100  overflow-y-scroll w-full">
+      <div className="max-h-96 min-h-24   overflow-y-scroll w-full">
+      {agents[0] && agents.map((ele,ind)=>(
+    <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
+          {/* S/N */}
+      <div  className='basis-1/4 flex items-start justify-center '>
+     {ind+1}
+      </div>
+        {/* Variable Name */}
+      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      {ele && ele.walletAddress} 
+      </div>
+    
+      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      {ele && ele.name}
+      </div>
+      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      {ele && ele.createdAt}
+      </div>
 
+      </div>
+  ))}
+  {!agents && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+        No Agents added yet
+        </div>}
+        {!agents && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+                No Agents added yet
+                </div>}
+                {loadingAgents && <div className="flex flex-col gap-2 items-center p-12 text-gray-600 justify-center w-full h-full ">
+              <Loader />
+              <div>
+                Loading data...
+                </div>
+                </div>}
 </div>
         </div>
      </section>
@@ -233,7 +301,7 @@ export default function Home() {
     </div>
   
     <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
-    {ele && ele.name}
+    {ele && ele.name} {user &&user._id === ele._id && "(You)"}
     </div>
     <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
     {ele && ele.createdAt}
@@ -244,6 +312,15 @@ export default function Home() {
 {!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
       No Admin added yet
       </div>}
+       {!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
+              No Admin added yet
+              </div>}
+              {loadingAdmins && <div className="flex flex-col items-center p-12 text-gray-600 justify-center w-full h-full ">
+            <Loader />
+            <div>
+              Loading data...
+              </div>
+              </div>}
 
 </div>
         </div>

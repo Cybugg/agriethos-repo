@@ -4,8 +4,8 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 
 interface props {
-    setAdmins:React.Dispatch<React.SetStateAction<any[]>>
-    setDisplayAddAdminModal:(bool:boolean)=>void
+    setAgents:React.Dispatch<React.SetStateAction<any[]>>
+    setDisplayAddAgentModal:(bool:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
     setAlertErrorCreate:(boolVal:boolean)=>void
 }
@@ -15,7 +15,7 @@ interface FarmFormData {
     walletAddress:string
 }
 
-const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate, setAlertErrorCreate,setAdmins}) => {
+const AddAgentModal:React.FC<props> = ({setDisplayAddAgentModal, setAlertCreate, setAlertErrorCreate,setAgents}) => {
      const [formData, setFormData] = useState<FarmFormData>({
         name:"",
         walletAddress:"" })
@@ -47,13 +47,12 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
         
           console.log('Submitting farm data*****:', data);
     
-          const res = await fetch('http://localhost:5000/api/admin/create/admin', {
+          const res = await fetch('http://localhost:5000/api/admin/create/agent', {
             method: "POST",
             body: data, 
           });
      
           const result = await res.json();
-          console.log(result.data)
           if (!res.ok || result.error) {
             setAlertErrorCreate(true);
             console.error('Backend error:', result.error || result.message);
@@ -61,10 +60,9 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
           }
            
           setAlertCreate(true);
-          setAdmins((pre) => [result.data, ...pre]);
+          setAgents((pre) => [result.data, ...pre]);
          console.log('Upload result:', result);
-        setDisplayAddAdminModal(false);
-        
+        setDisplayAddAgentModal(false);
         } catch (err) {
           setAlertErrorCreate(true)
           console.error('Upload failed:', err);
@@ -79,9 +77,9 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
        {/* Title */}
        <div className="flex w-full h-full justify-between items-center">
         <div className="text-lg">
-         Add Admin
+         Add Agent
         </div>
-       <div className="cursor-pointer" onClick={()=>setDisplayAddAdminModal(false)}>
+       <div className="cursor-pointer" onClick={()=>setDisplayAddAgentModal(false)}>
          <Image src="/icons/cancel.svg" alt="cancel" width={24} height={24} />
        </div>
        </div>    
@@ -124,4 +122,4 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
   )
 }
 
-export default AddAdminModal
+export default AddAgentModal;

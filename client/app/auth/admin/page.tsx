@@ -21,12 +21,12 @@ export default function Page() {
 
 
 
-//   useEffect(()=>
-//     {
-//       if (address && adminId){router.replace("/dashboard/admin/")}
+  useEffect(()=>
+    {
+      if (address  && user && user.role ==="admin"){router.replace("/dashboard/admin/")}
      
-//     },[address,adminId]
-//   )
+    },[address,user]
+  )
 
   // onConnect getNonce -> 
   const connectWallet = async () => {
@@ -76,7 +76,13 @@ Only sign this message if you trust AgriEthos.
     }); 
     const loginData = await resLogin.json();
     const {admin} = await loginData.data
-    if (loginData.success) {
+    if(!resLogin.ok || loginData.error){
+      setMsg(loginData.error || "Login failed... try again");
+      console.error('Backend error:', loginData.error || loginData.message);
+      setLoading(false);
+      return;
+    }
+    if (loginData.success && admin.role === "admin") {
       console.log("✅ Login successful!");
         setLoading(false);
         setSuccess("sucess")
@@ -89,7 +95,7 @@ Only sign this message if you trust AgriEthos.
       router.replace("/dashboard/admin")
         
     } else {
-      setMsg(loginData.error || "Login failed.");
+      setMsg(loginData.error || "Login failed... try again");
       setLoading(false);
     }
   };

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from "next/image";
 import MobileNav from "../components/MobileNav";
 import axios from 'axios';
+import { useNavContext } from "../NavContext";
 
 interface Crop {
   id: string;
@@ -20,6 +21,13 @@ export default function CropHistoryPage() {
   const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { setCurrentPage, setMobileDisplay } = useNavContext();
+  
+  // Set the current page when component mounts
+  useEffect(() => {
+    setCurrentPage("history");
+    setMobileDisplay(false);
+  }, []);
   
   // Fetch crops from API
   useEffect(() => {

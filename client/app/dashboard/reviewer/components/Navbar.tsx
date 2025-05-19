@@ -6,7 +6,8 @@ import { useNavContext } from "../NavContext";
 import Link from "next/link";
 
 type NavItemProps = {
-  icon: string;
+  activeIcon: string;  // Added activeIcon prop
+  inactiveIcon: string; // Added inactiveIcon prop
   label: string;
   active: boolean;
   address: string;
@@ -18,9 +19,16 @@ type NavItemPropsMobile = {
   address: string;
 };
 
-const NavItem: React.FC<NavItemProps> = ({ icon, label, active, address}) => (
+const NavItem: React.FC<NavItemProps> = ({ activeIcon, inactiveIcon, label, active, address}) => (
   <Link href={`/dashboard/reviewer${address}`} className={`group relative flex items-center text-black justify-start w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px]  ${active && "bg-primary-500"}`}>
-   <span><Image src={icon} alt="logo" width={24} height={24} className=""></Image>
+   <span>
+     <Image 
+       src={active ? activeIcon : inactiveIcon} 
+       alt={`${label} icon`} 
+       width={24} 
+       height={24} 
+       className=""
+     />
    </span> 
    <div>
    {label}  
@@ -51,14 +59,32 @@ const {currentPage, mobileDisplay, setMobileDisplay} = useNavContext();
 
       {/* Side Bar Nav */}
       <div className="flex flex-col w-full gap-[16px] text-black">
-        <NavItem icon={"/icons/house.svg"} label="Home" active={currentPage === "home"} address="/" />
-        <NavItem icon={"/icons/clock-countdown.svg"} label="History" active={currentPage === "history"} address="/history" />
-        <NavItem icon={"/icons/chart-line.svg"} label="Statistics" active={currentPage === "statistics"} address="/statistics"/>
+        <NavItem 
+          activeIcon="/icons/house.svg" 
+          inactiveIcon="/icons/house.svg" 
+          label="Home" 
+          active={currentPage === "home"} 
+          address="/" 
+        />
+        <NavItem 
+          activeIcon="/icons/ph_clock-countdown-fill.svg" 
+          inactiveIcon="/icons/ph_clock-countdown-light.svg" 
+          label="History" 
+          active={currentPage === "history"} 
+          address="/history" 
+        />
+        <NavItem 
+          activeIcon="/icons/ph_chart-line-fill.svg" 
+          inactiveIcon="/icons/ph_chart-line-light.svg" 
+          label="Statistics" 
+          active={currentPage === "statistics"} 
+          address="/statistics"
+        />
       </div> 
     </div>
 
     {/* Mobile mode */}
- <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-[80px] px-[32px]` }>
+ <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-[80px] px-[32px] text-black` }>
   {/* Header */}
   <div className="flex justify-between items-center">
 {/* Logo */}

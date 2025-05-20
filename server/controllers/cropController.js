@@ -313,16 +313,23 @@ exports.getAllReviewedCrops = async (req, res) => {
 
 exports.getAllVerifiedCrops = async (req, res) => {
   try {
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const regex = new RegExp(search, 'i'); // Case-insensitive
     const verifiedCrops = await Crop.find({ 
-      verificationStatus: { $in: ['verified'] } 
+      verificationStatus: { $in: ['verified'] } ,cropName: regex
     })
-    .sort({ updatedAt: -1 }) // Sort by last updated
+    .skip((page - 1) * limit)
+    .limit(Number(limit))
+    .sort({ plantingDate: -1 })
     .populate('farmPropertyId', 'farmName farmType location images'); // Populate farm details
     
+    const total = await Crop.countDocuments({ cropName: regex });
     res.status(200).json({
       success: true,
       count: verifiedCrops.length,
-      data: verifiedCrops
+      data: verifiedCrops,
+      total,
+      hasMore: (page * limit) < total
     });
   } catch (error) {
     console.error('Error fetching verified crops:', error);

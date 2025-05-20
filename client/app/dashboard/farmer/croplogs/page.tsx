@@ -74,7 +74,7 @@ function page() {
       const [selectedCrop, setSelectedCrop] = useState<crop>();
       const [isViewerOpen, setIsViewerOpen] = useState(false);
       const [currentIndex, setCurrentIndex] = useState(0);
-    
+      const {farmName} = useFarm();
       const openViewer = (index: number) => {
         setCurrentIndex(index);
         setIsViewerOpen(true);
@@ -130,7 +130,7 @@ function page() {
               </div>
                 <div className='flex gap-2 text-primary-700 text-xs font-bold'>
                      
-                          <PiPlant /> <div>Jameo Farm</div>
+                          <PiPlant /> <div>{farmName&&farmName}</div>
                       
                       </div>
              </div>

@@ -29,7 +29,8 @@ interface FarmFormData {
 }
 interface crop {
     cropName:string;
-    [key:string]:any;
+    images:string[];
+    [key:string]:string | string[];
 }
 const UpgradeCrop:React.FC<props> = ({setDisplayUpgradeCrop, setAlertCreate,setCrops,setAlertErrorCreate, selectedCrop, setSelectedCrop}) => {
       const [formData, setFormData] = useState<FarmFormData>({

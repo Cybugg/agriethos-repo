@@ -20,6 +20,7 @@ import Alert from '@/app/components/alert';
 import { useFarm } from '@/app/Context/FarmContext';
 import Loader from '@/app/components/loader';
 import UpgradeCrop from '../components/upgradeCrop';
+import ImageViewer from '@/app/components/imageViewer';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -44,8 +45,9 @@ const sampleData = [
 
 
 interface crop {
-  cropName:string
-  [key:string]:string
+  cropName:string;
+  images:string[]
+  [key: string]: string | string[];
 }
 
 type cropData = {
@@ -70,7 +72,16 @@ function page() {
       const router = useRouter();
       const [loadingCrop, setLoadingData]=useState<boolean>(true);
       const [selectedCrop, setSelectedCrop] = useState<crop>();
-
+      const [isViewerOpen, setIsViewerOpen] = useState(false);
+      const [currentIndex, setCurrentIndex] = useState(0);
+    
+      const openViewer = (index: number) => {
+        setCurrentIndex(index);
+        setIsViewerOpen(true);
+      };
+    
+      const next = () =>selectedCrop && selectedCrop.images && setCurrentIndex((prev) => (prev + 1) % selectedCrop.images.length);
+      const prev = () =>selectedCrop && selectedCrop.images && setCurrentIndex((prev) => (prev - 1 + selectedCrop.images .length) % selectedCrop.images .length);
       useEffect(()=>{
         setCurrentPage("logs");
         setMobileDisplay(false);
@@ -286,6 +297,28 @@ Notes on Post-harvest: {`"${ele.postNotes}"`}
 <div>
 Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with post-harvest data":ele.verificationStatus}
 </div>
+{ ele.images && "Images:" }
+<div className="flex gap-4">
+      {ele && ele.images[0] && ele.images.map((img:string, idx:number) => (
+        <img
+          key={idx}
+          src={img}
+          alt={`thumb-${idx}`}
+          className="w-24 h-24 object-cover rounded cursor-pointer"
+          onClick={() => openViewer(idx)}
+        />
+      ))}
+
+      {isViewerOpen && (
+        <ImageViewer
+          images={ele && ele.images}
+          currentIndex={currentIndex}
+          onClose={() => setIsViewerOpen(false)}
+          onNext={next}
+          onPrev={prev}
+        />
+      )}
+    </div>
 <div className='flex gap-1 mt-2'>
   <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setCollaInd(undefined)}>
 Close

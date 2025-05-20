@@ -317,7 +317,7 @@ exports.getAllVerifiedCrops = async (req, res) => {
       verificationStatus: { $in: ['verified'] } 
     })
     .sort({ updatedAt: -1 }) // Sort by last updated
-    .populate('farmPropertyId', 'farmName location images'); // Populate farm details
+    .populate('farmPropertyId', 'farmName farmType location images'); // Populate farm details
     
     res.status(200).json({
       success: true,

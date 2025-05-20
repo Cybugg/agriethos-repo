@@ -1,11 +1,35 @@
 "use client"
 import Image from "next/image";
 import IndexNavbar from "./components/indexNavbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 
+
+
 export default function Home() {
-  const [mobileDisplay,setMobileDisplay] = useState(false)
+  const [mobileDisplay,setMobileDisplay] = useState(false);
+  const [crops, setCrops] = useState<any[]>([]);
+
+  useEffect(
+    ()=>{
+
+      const getCrops = async ()=> {
+        try{
+             const result = await fetch("http://localhost:5000/api/crops/verified");
+        const data = await result.json();
+        if(!result.ok || data.error){
+          console.log(data.message);
+          return;
+        }
+        setCrops(data.data);
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
+      getCrops();
+    },[]
+  )
   return (
     <div className="bg-white h-screen flex w-full">
         <div className="flex bg-white w-full">
@@ -37,14 +61,14 @@ export default function Home() {
                <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  mt-8 w-full gap-5 '>
                 
                 {/* item */}
-                <div className="flex flex-col p-4 border rounded-lg cursor-pointer">
+               {crops && crops.map((ele,idx)=>(<div className="flex flex-col p-4 border rounded-lg cursor-pointer" key={idx}>
                   <div className="flex justify-between py-3">
                   <div className=" gap-2 font-bold flex items-center justify-center">
                     <div className="rounded-full w-8 h-8 bg-blue-500 overflow-hidden">
                       <Image src={"/static/farm2.png"}alt={"pfp"} width={50} height={50} className="w-full h-full object-cover" loading="lazy"/>
                     </div>
                     <div className="flex flex-col gap-1">
-                       <div className="text-primary-700">Jameo Farm</div>
+                       <div className="text-primary-700">{ele.farmPropertyId.farmName}</div>
                       <div className="text-xs text-grey-900">
                       {/* location */}
                     <div className=" font-thin">
@@ -60,21 +84,21 @@ export default function Home() {
                   </div>
                 
                   <div>
-                    <Image src={"/static/strawberry.png"} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
+                    <Image src={ele.images[0]} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
                   </div>
                   {/* Propertie */}
                   <div className="flex flex-col mt-4 justify-center">
                     {/* Crop name */}
-                    <div className="text-lg ">Strawberry</div>
+                    <div className="text-lg ">{ele.cropName}</div>
                     <div className="justify-between flex item-center">
                    
                     {/* Farm Type */}
                     <div className="text-grey-600">
-                      Hydroponics Farm
+                   {ele.farmPropertyId.farmType}
                     </div>
                     </div>
                   </div>
-                </div>
+                </div>)) }
                    {/* item */}
                    <div className="flex flex-col p-4 border rounded-lg cursor-pointer">
                   <div className="flex justify-between py-3">

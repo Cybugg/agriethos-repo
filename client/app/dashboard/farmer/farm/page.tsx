@@ -70,7 +70,7 @@ const str2Bool = (val:string)=>{
    {( editOverview &&  <EditOverview setEditMethod={setEditMethod} setEditOverview={setEditOverview}  />)}
      {editMethod && <EditFarmMethod setEditMethod={setEditMethod} setEditOverview={setEditOverview} />}
       {/* <EditFarmImage /> */}
- <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black ">
+ <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black ml-[]">
     
            {/* Header and Descriptive Text */}
            <div className='flex items-start justify-between'>

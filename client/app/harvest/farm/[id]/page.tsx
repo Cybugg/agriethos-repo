@@ -7,8 +7,11 @@ import { PiPlant } from 'react-icons/pi'
 import { ArrowLeft } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import IndexNavbar from '@/app/components/indexNavbar'
+import { IoMdArrowRoundBack } from 'react-icons/io'
 
 function Page() {
+const [mobileDisplay,setMobileDisplay] = useState(false);
   const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -75,18 +78,17 @@ function Page() {
   }
 
   return (
+    <div className="bg-white h-screen flex w-full">
+    <div className="flex bg-white w-full">
+    <IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
+    <main className="lg:ml-[352px] w-full flex-1 bg-white ">
     <div className="text-sm md:text-lg min-h-screen px-[32px] py-[80px] bg-white text-black">
       {/* Header and Descriptive Text */}
       <div className='flex items-start justify-between'>
         <div className='flex flex-col gap-2'>
-          <div className='flex items-center gap-3'>
-            <button onClick={()=>router.back()} className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
-              <ArrowLeft size={20} />
-            </button>
-            <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
-              Farm Details
-            </div>
-          </div>
+            <div className='text-xl font-semibold lg:font-normal lg:text-2xl flex gap-5 items-center'>
+                     <div className="border p-2 rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>  <div>farm details</div> 
+                      </div>
           <div className='text-grey-600'>
             View farm information
           </div>
@@ -186,6 +188,9 @@ function Page() {
         </section>
       )}
     </div>
+    </main>
+</div>
+</div>
   )
 }
 

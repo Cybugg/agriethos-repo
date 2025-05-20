@@ -7,6 +7,7 @@ import { BiSearch } from "react-icons/bi";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Loader from "./components/loader";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 // capitalize first character
@@ -113,8 +114,9 @@ export default function Home() {
        {crops[0] && crops.map((ele:any,idx)=>{
         const isLast = idx === crops.length - 1;
         return(<div className="flex flex-col p-4 border rounded-lg cursor-pointer"  key={idx}
-      ref={isLast ? lastItemRef : null}>
-          <div className="flex justify-between py-3">
+      ref={isLast ? lastItemRef : null}  >
+        <Link href={"/harvest/"+ele?._id}>
+                 <div className="flex justify-between py-3">
           <div className=" gap-2 font-bold flex items-center justify-center">
             <div className="rounded-full w-8 h-8 bg-blue-500 overflow-hidden">
               <Image src={ele && ele.farmPropertyId.images[0]}alt={"pfp"} width={50} height={50} className="w-full h-full object-cover" loading="lazy"/>
@@ -137,8 +139,7 @@ export default function Home() {
         
           <div>
             <Image src={ele && ele.images[0]} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
-          </div>
-          {/* Propertie */}
+          </div>     {/* Propertie */}
           <div className="flex flex-col mt-4 justify-center">
             {/* Crop name */}
             <div className="text-lg ">{ele.cropName}</div>
@@ -150,6 +151,9 @@ export default function Home() {
             </div>
             </div>
           </div>
+        </Link>
+   
+     
         </div>)}) }
            
             
@@ -162,7 +166,7 @@ export default function Home() {
      </section>
 {/* ############################################################################################### */}
 
-{loading && <div className="text-center  w-full h-full flex items-center justify-center mt-12"><Loader /></div>}
+{loading && <div className="text-center  w-full h-full flex items-center justify-center mt-56"><Loader /></div>}
         {!hasMore && !loading && <p className="text-center mt-4 text-gray-500"></p>}
 </div>
 

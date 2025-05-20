@@ -199,6 +199,7 @@ function page() {
       </div>
        {/* Variable */}
        <div className='flex flex-col gap-4 w-full justify-between  max-h-96 overflow-y-scroll min-h-56'>
+        {!crops[0]&& !loadingCrop && <div className='w-full h-56 flex items-center justify-center'>No crops has been added yet...</div>}
         {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
              { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>
            {/* s/n */}
@@ -274,7 +275,7 @@ Planting Date: {ele.plantingDate.slice(0,10)}
 Notes On Pre-harvest: {`"${ele.preNotes}"`}
 </div>
 
-{ele.growthStage ==="post-harvest"&&<div><div className='font-bold text-md underline'>
+{ele.growthStage ==="post-harvest"&&<div><div className='font-bold text-md underline mt-5'>
       Post-harvest Data
     </div>
 <div>
@@ -326,13 +327,13 @@ Close
 { ele && ele.verificationStatus === "toUpgrade" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setDisplayUpgradeCrop(true)}>
 Upgrade
 </button>}
-{/* <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
+{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
 View on Explorer
-</button> */}
-{/* <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
-View QR Code
-</button> */}
-
+</button>}
+{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
+Generate QR Code
+</button>
+}
 </div>
       </div>}
       </div>)
@@ -458,8 +459,9 @@ verificationStatus: "pending" */}
 <div className='text-grey-600  w-full'>
 Crop Name
 </div>
-<div className='text-grey-600  w-full'>
-<span className='hidden lg:block'>Verification</span> Status
+<div className='text-grey-600 flex  w-full'>
+<span className='hidden lg:block w-full'>Verification Status</span> 
+<span className=' lg:hidden w-full'>Status</span> 
 </div>
 <div className='text-grey-600 w-full'>
 </div>

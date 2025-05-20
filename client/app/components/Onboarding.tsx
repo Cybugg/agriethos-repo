@@ -24,7 +24,13 @@ interface FarmFormData {
     companionPlanting:boolean,
     images: File[];
 }
-
+const NIGERIAN_STATES = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
+  "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe",
+  "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
+  "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
+  "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
+];
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
@@ -200,26 +206,44 @@ export default function FarmOnboardingForm() {
     <div className="text-grey-600 text-xs">
         Location:
         </div>
-          <input
-            type="text"
-            name="location"
-            placeholder="e.g Ile-ife, Osun, Nigeria"
-            value={formData.location}
-            onChange={handleChange}
-            className="w-full border p-2 rounded outline-none"
-          /></div>
+        <div className='border-[0.75px] text-grey-700 border-[#CFCFCF] p-2 rounded  w-full'> <select
+        id="location"
+        name="location"
+        value={formData.location}
+        onChange={handleChange}
+        className="bg-white rounded  w-full"
+      >
+        <option value="">Select a Location</option>
+        {NIGERIAN_STATES.map((state) => (
+          <option key={state} value={`${state}, Nigeria`}>
+            {state}, Nigeria
+          </option>
+        ))}
+      </select></div>
+       </div>
                     <div className="flex flex-col gap-1">
     <div className="text-grey-600 text-xs">
     Farm size {"(in acres)"}:
         </div>
-          <input
-            type="text"
-            name="size"
-            placeholder="e.g 5"
-            value={formData.size}
-            onChange={handleChange}
-            className="w-full border p-2 rounded outline-none"
-          /></div>
+        <div className='border-[0.75px] text-grey-700 border-[#CFCFCF] p-2 rounded  w-full'>    <select
+  id="size"
+  name="size"
+  value={formData.size}
+  onChange={handleChange}
+ className="w-full bg-white "
+>
+<option value="">Select size (hectares)</option>
+  {Array.from({ length: 200 }, (_, i) => {
+    const value = (i + 1) * 0.5;
+    return (
+      <option key={value} value={value}>
+        {value}
+      </option>
+    );
+  })}
+</select></div>
+      
+          </div>
                     <div className="">
     <span className="text-grey-600 text-xs">
         Farm type:
@@ -353,16 +377,16 @@ Companion planting
           <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
           
       <div className='text-3xl py-12 text-center'>
-         Share 4 images of your farm
+   Share 4  Images of Farm
                 </div>
-          <button className="border  p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
+          <button className="border border-black border-dashed  p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
            <input
             type="file"
             multiple
            max={4}
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full h-56 border-none p-2 rounded"
+            className="w-96 h-48 border-none p-2 rounded"
           />
           </button>
           <div className="text-lg text-grey-500">
@@ -394,7 +418,7 @@ Companion planting
         {currentStep > 0 && (
           <button
             onClick={handleBack}
-            className="border mr-5   text-black px-4 py-2 rounded hover:bg-primary-400"
+            className="border  mr-5   text-black px-4 py-2 rounded hover:bg-primary-400"
           >
             Back
           </button>

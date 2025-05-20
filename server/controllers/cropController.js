@@ -310,3 +310,28 @@ exports.getAllReviewedCrops = async (req, res) => {
     });
   }
 };
+
+exports.getAllVerifiedCrops = async (req, res) => {
+  try {
+    const verifiedCrops = await Crop.find({ 
+      verificationStatus: { $in: ['verified'] } 
+    })
+    .sort({ updatedAt: -1 }) // Sort by last updated
+    .populate('farmPropertyId', 'farmName location images'); // Populate farm details
+    
+    res.status(200).json({
+      success: true,
+      count: verifiedCrops.length,
+      data: verifiedCrops
+    });
+  } catch (error) {
+    console.error('Error fetching verified crops:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+

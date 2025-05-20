@@ -19,6 +19,14 @@ import { useRouter } from "next/navigation";
     soilType: string,
     [key:string]:any
 }
+
+const NIGERIAN_STATES = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
+  "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe",
+  "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
+  "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
+  "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
+];
 const EditOverview:React.FC<props> = ({setEditOverview}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FarmFormData>({
@@ -102,7 +110,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
           }
         } catch (err) {
           console.error('Upload failed:', err);
-          alert(`Failed to update: ${err.message}`);
+          alert(`Failed to update: ${err}`);
         } finally {
           setLoading(false);
         }
@@ -161,7 +169,20 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         Location:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-<input type="text" value={formData.location??""} placeholder="Farm size in acres" className="w-full outline-none" name="location" onChange={handleChange}/>
+<select
+        id="location"
+        name="location"
+        value={formData.location}
+        onChange={handleChange}
+        className="bg-white rounded px-3 py-2 w-full"
+      >
+        <option value="">Select a Location</option>
+        {NIGERIAN_STATES.map((state) => (
+          <option key={state} value={`${state}, Nigeria`}>
+            {state}, Nigeria
+          </option>
+        ))}
+      </select>
 </div></div>
 {/* item 2.5*/}
 <div className="flex flex-col gap-1">
@@ -169,7 +190,24 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         Farm size {"(in acres)"}:
         </div>
 <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
-<input type="text" value={formData.size??""} placeholder="Farm size in acres" className="w-full outline-none" name="size" onChange={handleChange}/>
+<select
+  id="size"
+  name="size"
+  value={formData.size}
+  onChange={handleChange}
+ className="w-full bg-white "
+>
+<option value="">Select size (hectares)</option>
+  {Array.from({ length: 200 }, (_, i) => {
+    const value = (i + 1) * 0.5;
+    return (
+      <option key={value} value={value}>
+        {value}
+      </option>
+    );
+  })}
+
+</select>
 </div></div>
 {/* item 3*/}
 <div className="flex flex-col gap-1">

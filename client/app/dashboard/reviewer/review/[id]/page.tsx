@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import MobileNav from "../../components/MobileNav";
 import axios from 'axios';
 import AnimatedPopup from '@/app/components/AnimatedPopup'; // Import the new component
+import ImageViewer from '@/app/components/imageViewer';
 
 // Define a type for the popup configuration
 interface PopupConfig {
@@ -26,10 +27,26 @@ export default function CropReviewPage() {
     message: '',
     type: 'info',
   });
-
+const [selectedImages, setSelectedImages] = useState<string[]>([""]);
+const [isViewerOpen, setIsViewerOpen] = useState(false);
+      const [currentIndex, setCurrentIndex] = useState(0);
+    
+      const openViewer = (index: number) => {
+        setCurrentIndex(index);
+        setIsViewerOpen(true);
+      };
+    
+      const next = () =>selectedImages && selectedImages && setCurrentIndex((prev) => (prev + 1) % selectedImages.length);
+      const prev = () =>selectedImages && selectedImages && setCurrentIndex((prev) => (prev - 1 + selectedImages.length) % selectedImages.length);
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+
+  useEffect(
+    ()=>{
+      cropData && setSelectedImages(cropData.images);
+    },[cropData]
+  )
 
   useEffect(() => {
     const fetchCropData = async () => {
@@ -197,7 +214,7 @@ export default function CropReviewPage() {
           {/* Main content */}
           <div className="p-4 md:p-6">
             {loading ? (
-              <div className="flex justify-center items-center h-64">
+              <div className="flex justify-center text-grey-600 items-center h-64">
                 <p>Loading crop data...</p>
               </div>
             ) : error ? (
@@ -259,6 +276,63 @@ export default function CropReviewPage() {
                         <span className="font-medium text-black">{cropData.preNotes || 'No notes provided'}</span>
                       </div>
                     </div>
+
+                    {cropData.growthStage ==="post-harvest" && <div className='space-y-4'>
+                      <div className="flex justify-between">
+                      <span className="text-[#898989]">Harvesting Date</span>
+                      <div className="  rounded-lg">
+                        <span className="font-medium text-black">{cropData.harvestingDate.slice(0,10) || 'No harvest date provided'}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#898989]">Storage Method</span>
+                      <div className="  rounded-lg">
+                        <span className="font-medium text-black">{cropData.storageMethod || 'No storage method provided'}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#898989]">Quantity Harvested</span>
+                      <div className="  rounded-lg">
+                        <span className="font-medium text-black">{cropData.quantityHarvested || 'No quantity provided'}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#898989]">Unit</span>
+                      <div className="  rounded-lg">
+                        <span className="font-medium text-black">{cropData.unit || 'No notes provided'}</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[#898989] mb-2">Post-harvest notes</span>
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <span className="font-medium text-black">{cropData.postNotes || 'No notes provided'}</span>
+                      </div>
+                    </div>
+                    </div>
+                     }
+                    { cropData.images && "Images:" }
+<div className='flex gap-4'>
+ {cropData && cropData.images[0] && cropData.images.map((img:string, idx:number) => (
+        <img
+          key={idx}
+          src={img}
+          alt={`thumb-${idx}`}
+          className="w-24 h-24 object-cover rounded cursor-pointer"
+          onClick={() => openViewer(idx)}
+        />
+      ))}
+
+      {isViewerOpen && (
+        <ImageViewer
+          images={cropData && cropData.images}
+          currentIndex={currentIndex}
+          onClose={() => setIsViewerOpen(false)}
+          onNext={next}
+          onPrev={prev}
+        />
+      )}
+</div>
+                   
                   </div>
                 </div>
                 
@@ -267,11 +341,11 @@ export default function CropReviewPage() {
                   <h2 className="text-lg font-semibold mb-4 text-black">Agent Instructions</h2>
                   
                   <ol className="list-decimal pl-5 space-y-2 mb-6 text-[#898989]">
-                    <li>Check submitted logs, images, and farming methods.</li>
-                    <li>Approve if the crop meets standards. Request updates if needed.</li>
-                    <li>Confirm harvest details and final images.</li>
-                    <li>Once approved, generate a unique harvest code and QR code.</li>
-                    <li>Crops move through statuses: In Progress → Verified / Rejected.</li>
+                    <li>Ensure completeness of the submission. All required fields must be filled.</li>
+                    <li>Verify authenticity of the data using available supporting documents, geotagging, images, or system records.</li>
+                    <li>Validate compliance with platform guidelines, regional policies, or agricultural best practices.</li>
+                    <li>Provide objective feedback or request revisions where necessary.</li>
+                    <li>Approve or reject submissions based on their merit and supporting evidence.</li>
                   </ol>
                   
                   <div className="flex gap-4 mt-6">

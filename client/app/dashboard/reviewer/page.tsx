@@ -132,18 +132,18 @@ export default function Home() {
                       <span className="font-medium text-black mr-[170px]">{crop.cropName}</span>
                     </div>
                     <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
-                      <span className={"px-3 basis-1/3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]"}>
-                        {crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest'}
-                      </span>
+                      {crop.growthStage === 'pre-harvest' ? (
+                        <span className="px-3 basis-1/3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]">
+                          Pre-harvest
+                        </span>
+                      ) : (
+                        <span className="px-3 basis-1/3 py-1 text-sm rounded-full bg-[#F0F4F3] border-[0.75px] border-[#003024] text-[#003024]">
+                          Post-harvest
+                        </span>
+                      )}
                       <div className="flex basis-1/3 w-full gap-2 mt-2 md:mt-0">
-                        {/* <Button
-                          variant="outline"
-                          className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg border-[0.75px] border-[#003024] text-black hover:bg-[#f6fded] hover:text-[#003024] px-2 py-2 md:py-3 md:gap-24 mr-[30px]"
-                        >
-                          Skip
-                        </Button> */}
                         <Link href={`/dashboard/reviewer/review/${crop._id}`}>
-                          <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024]  px-2 py-2 md:py-3 ">
+                          <Button className="w-[100px] md:w-[121px] h-[40px] md:h-[43px] text-sm rounded-lg bg-[#a5eb4c] text-[#003024] px-2 py-2 md:py-3">
                             Review
                           </Button>
                         </Link>

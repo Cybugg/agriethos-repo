@@ -43,30 +43,35 @@ const AnimatedPopup: React.FC<AnimatedPopupProps> = ({
     return null;
   }
 
-  let baseClasses = 'fixed top-16 right-5 md:right-10 p-4 rounded-lg shadow-xl text-white text-sm md:text-base';
+  // Changed to position at the top of the screen instead of the middle
+  let baseClasses = 'fixed inset-0 flex items-start justify-center z-50';
+  // Added padding-top to give some space from the very top edge
+  let popupClasses = 'p-4 rounded-lg shadow-xl text-sm md:text-base mx-4 mt-16';
   let typeClasses = '';
   let animationClasses = '';
 
   if (type === 'success') {
-    typeClasses = 'bg-green-500';
+    typeClasses = 'bg-green-100 text-green-800';
   } else if (type === 'error') {
-    typeClasses = 'bg-red-500';
+    typeClasses = 'bg-red-100 text-red-800';
   } else {
-    typeClasses = 'bg-blue-500';
+    typeClasses = 'bg-blue-100 text-blue-800';
   }
 
   if (isVisible) {
-    animationClasses = 'opacity-100 translate-y-0 transition-all duration-500 ease-out';
+    animationClasses = 'opacity-100 scale-100 transition-all duration-500 ease-out';
   } else {
-    animationClasses = 'opacity-0 -translate-y-5 transition-all duration-500 ease-in';
+    animationClasses = 'opacity-0 scale-95 transition-all duration-500 ease-in';
   }
 
   return (
-    <div
-      className={`${baseClasses} ${typeClasses} ${animationClasses}`}
-      style={{ zIndex: 1050 }} // Ensure it's above other elements
-    >
-      {message}
+    <div className={baseClasses}>
+      <div
+        className={`${popupClasses} ${typeClasses} ${animationClasses}`}
+        style={{ maxWidth: '400px' }}
+      >
+        {message}
+      </div>
     </div>
   );
 };

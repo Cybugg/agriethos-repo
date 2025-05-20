@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Menu, Bell, RefreshCw } from 'lucide-react'; // Import RefreshCw
+import { ArrowLeft, Menu, Bell, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import Image from "next/image";
 import { useParams, useRouter } from 'next/navigation';
 import MobileNav from "../../components/MobileNav";
 import axios from 'axios';
-import AnimatedPopup from '@/app/components/AnimatedPopup'; // Import the new component
+import AnimatedPopup from '@/app/components/AnimatedPopup';
 import ImageViewer from '@/app/components/imageViewer';
+import Confirm from '@/app/components/confirm'; // Import the Confirm component
 
 // Define a type for the popup configuration
 interface PopupConfig {
@@ -27,26 +28,30 @@ export default function CropReviewPage() {
     message: '',
     type: 'info',
   });
-const [selectedImages, setSelectedImages] = useState<string[]>([""]);
-const [isViewerOpen, setIsViewerOpen] = useState(false);
-      const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedImages, setSelectedImages] = useState<string[]>([""]);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // State for confirmation modal
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationAction, setConfirmationAction] = useState<'approve' | 'reject' | null>(null);
+  const [confirmationLoading, setConfirmationLoading] = useState(false);
     
-      const openViewer = (index: number) => {
-        setCurrentIndex(index);
-        setIsViewerOpen(true);
-      };
+  const openViewer = (index: number) => {
+    setCurrentIndex(index);
+    setIsViewerOpen(true);
+  };
     
-      const next = () =>selectedImages && selectedImages && setCurrentIndex((prev) => (prev + 1) % selectedImages.length);
-      const prev = () =>selectedImages && selectedImages && setCurrentIndex((prev) => (prev - 1 + selectedImages.length) % selectedImages.length);
+  const next = () => selectedImages && selectedImages && setCurrentIndex((prev) => (prev + 1) % selectedImages.length);
+  const prev = () => selectedImages && selectedImages && setCurrentIndex((prev) => (prev - 1 + selectedImages.length) % selectedImages.length);
+
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
 
-  useEffect(
-    ()=>{
-      cropData && setSelectedImages(cropData.images);
-    },[cropData]
-  )
+  useEffect(() => {
+    cropData && setSelectedImages(cropData.images);
+  }, [cropData]);
 
   useEffect(() => {
     const fetchCropData = async () => {
@@ -93,15 +98,32 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   const handleReload = () => {
     router.refresh(); // Soft refresh, re-runs server components and fetches new data
-    // For a hard refresh, you could use: window.location.reload();
   };
 
-  const handleApprove = async () => {
+  // Show confirmation modal for approve action
+  const initiateApprove = () => {
     if (!cropData) {
       showPopup('Crop data not loaded yet.', 'error');
       return;
     }
+    setConfirmationAction('approve');
+    setShowConfirmation(true);
+  };
 
+  // Show confirmation modal for reject action
+  const initiateReject = () => {
+    if (!cropData) {
+      showPopup('Crop data not loaded yet.', 'error');
+      return;
+    }
+    setConfirmationAction('reject');
+    setShowConfirmation(true);
+  };
+
+  // The actual approve functionality
+  const handleApprove = async () => {
+    setConfirmationLoading(true);
+    
     let newStatus = '';
     let successMessage = '';
 
@@ -112,7 +134,9 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
       newStatus = 'verified';
       successMessage = 'Post-harvest approved successfully!';
     } else {
+      setShowConfirmation(false);
       showPopup('Unknown crop growth stage.', 'error');
+      setConfirmationLoading(false);
       return;
     }
 
@@ -122,45 +146,121 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
       });
       
       if (response.data.success) {
+        setShowConfirmation(false);
         showPopup(successMessage, 'success');
         // The navigation will happen in handlePopupClose's callback
       } else {
+        setShowConfirmation(false);
         showPopup('Failed to approve crop: ' + (response.data.message || 'Unknown error'), 'error');
       }
     } catch (err: any) {
       console.error('Error approving crop:', err);
+      setShowConfirmation(false);
       if (axios.isAxiosError(err) && err.response) {
         showPopup(`Failed to approve crop: ${err.response.status} - ${err.response.data.message || err.message}`, 'error');
       } else {
         showPopup('Failed to approve crop. Please check the console.', 'error');
       }
+    } finally {
+      setConfirmationLoading(false);
     }
   };
 
+  // The actual reject functionality
   const handleReject = async () => {
+    setConfirmationLoading(true);
+    
     try {
       const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
         verificationStatus: 'rejected'
       });
       
       if (response.data.success) {
+        setShowConfirmation(false);
         showPopup('Crop rejected successfully.', 'success');
         // The navigation will happen in handlePopupClose's callback
       } else {
+        setShowConfirmation(false);
         showPopup('Failed to reject crop: ' + (response.data.message || 'Unknown error'), 'error');
       }
     } catch (err: any) {
       console.error('Error rejecting crop:', err);
+      setShowConfirmation(false);
       if (axios.isAxiosError(err) && err.response) {
         showPopup(`Failed to reject crop: ${err.response.status} - ${err.response.data.message || err.message}`, 'error');
       } else {
         showPopup('Failed to reject crop. Please check the console.', 'error');
       }
+    } finally {
+      setConfirmationLoading(false);
     }
   };
 
+  // Handle confirmation modal actions
+  const handleConfirmAction = () => {
+    if (confirmationAction === 'approve') {
+      handleApprove();
+    } else if (confirmationAction === 'reject') {
+      handleReject();
+    }
+  };
+
+  const handleCancelAction = () => {
+    setShowConfirmation(false);
+    setConfirmationAction(null);
+  };
+
   return (
-    <> {/* Use Fragment to wrap multiple top-level elements */}
+    <> 
+      {/* Enhanced Confirmation Modal with backdrop blur */}
+      {showConfirmation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center animate-fadeIn  h-screen  w-full bg-black bg-opacity-10 backdrop-blur-lg text-black p-8">
+          {/* Backdrop with blur effect */}
+          <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm" onClick={handleCancelAction}></div>
+          
+          {/* Modal container */}
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4 z-10 animate-scaleIn">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Confirm {confirmationAction === 'approve' ? 'Approval' : 'Rejection'}
+            </h3>
+            
+            <p className="text-gray-600 mb-6">
+              {confirmationAction === 'approve' 
+                ? 'Are you sure you want to approve this crop? This action will mark the crop as approved and notify the farmer.'
+                : 'Are you sure you want to reject this crop? This action will mark the crop as rejected and notify the farmer.'}
+            </p>
+            
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleCancelAction}
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                disabled={confirmationLoading}
+              >
+                Cancel
+              </button>
+              
+              <button
+                onClick={handleConfirmAction}
+                className={`px-4 py-2 text-white rounded-lg transition-colors ${
+                  confirmationAction === 'approve'
+                    ? 'bg-green-600 hover:bg-green-700'
+                    : 'bg-red-600 hover:bg-red-700'
+                }`}
+                disabled={confirmationLoading}
+              >
+                {confirmationLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Processing...
+                  </div>
+                ) : confirmationAction === 'approve' ? 'Approve' : 'Reject'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Success/Error Popup */}
       <AnimatedPopup
         message={popupConfig.message}
         type={popupConfig.type}
@@ -174,6 +274,7 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
           }
         }}
       />
+      
       <div className="flex h-screen bg-white">
         {/* Mobile Nav */}
         <MobileNav 
@@ -191,7 +292,6 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
               </Link>
               <div>
                 <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Review Submission</h1>
-               
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -203,7 +303,7 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
                 <RefreshCw size={24} />
               </button>
               <button className="p-2 rounded-full hover:bg-[#f6fded]">
-                <Bell size={24} /> {/* Replaced Image with Bell icon for consistency */}
+                <Bell size={24} />
               </button>
               <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
                 <Menu size={24} />
@@ -348,15 +448,16 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
                     <li>Approve or reject submissions based on their merit and supporting evidence.</li>
                   </ol>
                   
+                  {/* Action buttons at the bottom of the card */}
                   <div className="flex gap-4 mt-6">
                     <button 
-                      onClick={handleReject}
+                      onClick={initiateReject}
                       className="flex-1 py-3 border border-[#003024] rounded-lg text-center font-medium text-black"
                     >
                       Reject
                     </button>
                     <button 
-                      onClick={handleApprove}
+                      onClick={initiateApprove}
                       className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
                     >
                       Approve
@@ -372,6 +473,27 @@ const [isViewerOpen, setIsViewerOpen] = useState(false);
           </div>
         </div>
       </div>
+
+      {/* Add global animations for modal */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+          from { transform: scale(0.95); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out forwards;
+        }
+        
+        .animate-scaleIn {
+          animation: scaleIn 0.2s ease-out forwards;
+        }
+      `}</style>
     </>
   );
 }

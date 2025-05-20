@@ -93,9 +93,17 @@ export default function CropHistoryPage() {
             {crop.farm}
           </div>
           <div className="flex items-center justify-between">
-            <span className="px-3 py-1 text-xs rounded-full bg-[#f0f4f3] text-[#898989]">
-              {crop.growthStage}
-            </span>
+            {crop.growthStage === 'Pre-harvest' ? (
+              // Keep original styling for Pre-harvest
+              <span className="px-3 py-1 text-xs rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]">
+                {crop.growthStage}
+              </span>
+            ) : (
+              // New styling for Post-harvest
+              <span className="px-3 py-1 text-xs rounded-full bg-[#F0F4F3] border-[0.75px] border-[#003024] text-[#003024]">
+                {crop.growthStage}
+              </span>
+            )}
             <Link href={`/dashboard/reviewer/review/${crop.id}`} className="text-[#003024] text-sm">
               View
             </Link>
@@ -172,27 +180,33 @@ export default function CropHistoryPage() {
               <MobileCardView />
               
               {/* Table view for desktop */}
-              <div className="hidden md:block overflow-x-auto bg-white rounded-lg">
-                <table className="min-w-full table-fixed">
+              <div className="hidden md:block overflow-x-auto bg-white rounded-lg w-full px-4">
+                <table className="w-full table-auto ml-[-39px]">
                   <thead>
                     <tr className="text-left">
-                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Crop Name</th>
-                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Farm</th>
-                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Growth Stage</th>
-                      <th className="w-1/4 px-12 py-4 font-medium text-lg text-[#898989]">Status</th>
+                      <th className="w-[22%] px-6 py-4 font-medium text-lg text-[#898989]">Crop Name</th>
+                      <th className="w-[22%] px-6 py-4 font-medium text-lg text-[#898989]">Farm</th>
+                      <th className="w-[22%] px-6 py-4 font-medium text-lg text-[#898989]">Growth Stage</th>
+                      <th className="w-[34%] px-6 py-4 font-medium text-lg text-[#898989]">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cropHistory.map((crop) => (
-                      <tr key={crop.id} className="">
-                        <td className="px-12 py-4 font-medium text-black">{crop.cropName}</td>
-                        <td className="px-12 py-4 text-black">{crop.farm}</td>
-                        <td className="px-12 py-4">
-                          <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]">
-                            {crop.growthStage}
-                          </span>
+                      <tr key={crop.id} className="hover:bg-[#f6fded]">
+                        <td className="px-6 py-4 font-medium text-black">{crop.cropName}</td>
+                        <td className="px-6 py-4 text-black">{crop.farm}</td>
+                        <td className="px-6 py-4">
+                          {crop.growthStage === 'Pre-harvest' ? (
+                            <span className="px-3 py-1 text-sm rounded-full bg-[#f6fded] border border-[#96d645] text-[#75a736]">
+                              {crop.growthStage}
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 text-sm rounded-full bg-[#F0F4F3] border-[0.75px] border-[#003024] text-[#003024]">
+                              {crop.growthStage}
+                            </span>
+                          )}
                         </td>
-                        <td className="px-12 py-4">
+                        <td className="px-6 py-4">
                           <StatusBadge className='text-black' status={crop.status} />
                         </td>
                       </tr>

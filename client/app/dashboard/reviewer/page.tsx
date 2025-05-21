@@ -103,7 +103,7 @@ export default function Home() {
               {error}
             </div>
           ) : pendingCrops.length === 0 ? (
-            <div className="text-center p-8">
+            <div className="text-center text-grey-600 p-8">
               <p>No pending crops to review at this time.</p>
             </div>
           ) : (

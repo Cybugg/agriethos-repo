@@ -245,7 +245,7 @@ export default function CropReviewPage() {
                 className={`px-4 py-2 text-black rounded-lg transition-colors ${
                   confirmationAction === 'approve'
                     ? 'bg-primary-600 hover:bg-primary-700'
-                    : 'bg-red-600 hover:bg-red-700'
+                    : 'bg-red-500 hover:bg-red-600'
                 }`}
                 disabled={confirmationLoading}
               >
@@ -409,7 +409,7 @@ export default function CropReviewPage() {
                     </div>
                     </div>
                      }
-                    { cropData.images && "Images:" }
+                    { cropData.images[0] && <div className='text-black'>"Images:" </div>}
 <div className='flex gap-4'>
  {cropData && cropData.images[0] && cropData.images.map((img:string, idx:number) => (
         <img

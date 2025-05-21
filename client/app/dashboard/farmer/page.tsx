@@ -135,7 +135,7 @@ export default function Home() {
         </div>
         <div className='flex gap-2 text-primary-700  font-bold'>
        
-            <PiPlant /> <div>{farm?farm.farmName:"N/A"}</div>
+            <PiPlant /> <div>{farm?farm.farmName:<div className='w-8 h-8 bg-gray-100'></div>}</div>
         
         </div>
        </div>
@@ -155,7 +155,7 @@ export default function Home() {
                        
                        </button>
             <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-            <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
+            <Image src={"/icons/burger.svg"} alt="burger" width={40} height={40} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
                    </div>
         </div>
        {/* Section One */}
@@ -172,7 +172,7 @@ export default function Home() {
           </div >
           </div>
           <div className=' text-2xl '>
-            {farm?farm.crops.length:"N/A"}
+            {farm?farm.crops.length:<div className='w-8 h-8 bg-gray-100'></div>}
           </div>
         </div>
              {/* Item 2 */}
@@ -184,7 +184,7 @@ export default function Home() {
          
           </div>
           <div className='text-2xl '>
-            {farm? farm.location : "N/A"}
+            {farm? farm.location : <div className='w-8 h-8 bg-gray-100'></div>}
           </div>
         </div>
              {/* Item 3 */}
@@ -198,7 +198,7 @@ export default function Home() {
           </div >
           </div>
           <div className='text-2xl '>
-          {farm?farm.size:"N/A"} Hectares
+          {farm?farm.size:<div className='w-8 h-8 bg-gray-100'></div>} {farm && farm.size && "Hectares"}
           </div>
         </div>
              {/* Item 4 */}
@@ -210,7 +210,7 @@ export default function Home() {
       
           </div>
           <div className='text-2xl '>
-            0
+            {!farm?<div className='w-8 h-8 bg-gray-100'></div>:"0"}
           </div>
         </div>
        </section>
@@ -272,21 +272,21 @@ Crop Growth
       </section>
 {/* ############################################################################################### */}
       {/* Section three */}
-      <section className='flex flex-col lg:flex-row gap-8 mt-6'>
-        {/* Recent Crop Logs */}
+      {/* <section className='flex flex-col lg:flex-row gap-8 mt-6'>
+       
         <div className='w-full lg:w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col h-[250px]'>
         <div className='flex items-center justify-between'>
-        {/* Title */}
+    
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Recent Crop Logs
         </div>
         </div>
-        {/* Crop Log variables */}
+     
 <div className='flex flex-col gap-4 lg:w-[346px]'>
 
-{/* Variable */}
+
 <div className='flex items-center justify-between'>
-  {/* Variable Name */}
+
 <div className='text-grey-600'>
 Crop Name/Growth Stage
 </div>
@@ -294,9 +294,9 @@ Crop Name/Growth Stage
 Corn/Pre-harvest
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between'>
-  {/* Variable Name */}
+
 <div className='text-grey-600'>
 Date
 </div>
@@ -304,9 +304,9 @@ Date
 3rd April, 2025
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between'>
-  {/* Variable Name */}
+  
 <div className='text-grey-600'>
 Time
 </div>
@@ -314,9 +314,9 @@ Time
 14:39PM
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between'>
-  {/* Variable Name */}
+
 <div className='text-grey-600'>
 Verifaction Status
 </div>
@@ -328,20 +328,20 @@ Success
      </div>
      </div>
         </div>
-        {/* /////////////////////////////////////////////////////////////////////////////////// */}
-        {/* Verification status */}
+        
+        
         <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-y-scroll'>
         <div className='flex items-center justify-between'>
-        {/* Title */}
+    
         <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
         Verifaction Status
         </div>
         </div>
-        {/* Verification variables */}
+      
 <div className='flex flex-col gap-4 w-full  justify-center '>
-{/* Variable <header>*/}
+
 <div className='flex items-center w-full  justify-between '>
-  {/* Variable Name */}
+
 <div className='text-grey-600  w-full'>
 Entry Name
 </div>
@@ -354,9 +354,9 @@ Verification Status
 <div className='text-grey-600 w-24'>
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between '>
-  {/* Variable Name */}
+
 <div className=' w-full'>
 Corn Pre-harvest
 </div>
@@ -370,14 +370,14 @@ Corn Pre-harvest
 </button>
 </div>
 
-{/* Verification Link */}
+
 <div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between '>
-  {/* Variable Name */}
+ 
 <div className=' w-full'>
 Corn Pre-harvest
 </div>
@@ -391,14 +391,14 @@ Corn Pre-harvest
 </button>
 </div>
 
-{/* Verification Link */}
+
 <div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between '>
-  {/* Variable Name */}
+
 <div className=' w-full'>
 Tomato Post-harvest
 </div>
@@ -412,14 +412,14 @@ Tomato Post-harvest
 </button>
 </div>
 
-{/* Verification Link */}
+
 <div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between '>
-  {/* Variable Name */}
+  
 <div className=' w-full'>
 Ground Pre-harvest
 </div>
@@ -433,14 +433,14 @@ Ground Pre-harvest
 </button>
 </div>
 
-{/* Verification Link */}
+
 <div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
 </div>
-{/* Variable */}
+
 <div className='flex items-center justify-between '>
-  {/* Variable Name */}
+ 
 <div className=' w-full'>
 Corn Post-harvest
 </div>
@@ -454,7 +454,7 @@ Corn Post-harvest
 </button>
 </div>
 
-{/* Verification Link */}
+
 <div className='w-24 cursor-pointer'>
 <Image src={"/icons/link.svg"} alt='success img' width={24} height={24} />
 </div>
@@ -463,7 +463,7 @@ Corn Post-harvest
      </div>
      </div>
         </div>
-      </section>
+      </section> */}
       </div>
     );
   }

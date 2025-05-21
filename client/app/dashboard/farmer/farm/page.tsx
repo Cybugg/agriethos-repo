@@ -83,7 +83,7 @@ const str2Bool = (val:string)=>{
            </div>
              <div className='flex gap-2 text-primary-700  font-bold'>
                   
-                       <PiPlant /> <div>{CFL(farm?farm.farmName:"N/A")}</div>
+                       <PiPlant /> <div>{farm?CFL(farm?farm.farmName:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}</div>
                    
                    </div>
           </div>
@@ -103,7 +103,7 @@ const str2Bool = (val:string)=>{
                                                                 
                                                                 </button>
                                    <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-                                   <Image src={"/icons/burger.svg"} alt="burger" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)} />
+                                   <Image src={"/icons/burger.svg"} alt="burger" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)} />
                                           </div>
            </div>
 
@@ -136,7 +136,7 @@ const str2Bool = (val:string)=>{
    Location
    </div>
    <div>
-   {CFL(farm?farm.location:"N/A")}
+   {farm?CFL(farm?farm.location:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -146,7 +146,7 @@ const str2Bool = (val:string)=>{
    Size
    </div>
    <div>
-   {(farm?farm.size:"0")} acres
+   {(farm?farm.size:<div className='w-12 h-4 bg-gray-100'></div>)} {farm&&farm.size&&"acres"}
    </div>
    </div>
    {/* Variable */}
@@ -156,7 +156,7 @@ const str2Bool = (val:string)=>{
    farm Type
    </div>
    <div>
-   {CFL(farm?farm.farmType:"N/A")}
+   {farm?CFL(farm?farm.farmType:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -166,7 +166,7 @@ const str2Bool = (val:string)=>{
    Soil Type
    </div>
    <div>
-{CFL(farm?farm.soilType:"N/A")}
+{farm?CFL(farm?farm.soilType:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -176,7 +176,7 @@ const str2Bool = (val:string)=>{
    Water Source
    </div>
    <div>
-  {CFL(farm?farm.waterSource:"N/A")}
+  {farm?CFL(farm?farm.waterSource:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    </div>
@@ -206,7 +206,7 @@ const str2Bool = (val:string)=>{
    Fertilizer type
    </div>
    <div>
-  {CFL(farm?farm.fertilizerType:"N/A")}
+  {farm?CFL(farm?farm.fertilizerType:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -216,7 +216,7 @@ const str2Bool = (val:string)=>{
    Irrigation method
    </div>
    <div>
-  {CFL(farm?farm.irrigationType:"N/A")}
+  {farm?CFL(farm?farm.irrigationType:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -226,7 +226,7 @@ const str2Bool = (val:string)=>{
    Pesticide usage
    </div>
    <div>
-  {farm&&str2Bool(farm.pesticideUsage)?CFL("used"):"N/A"}
+  {farm&&str2Bool(farm.pesticideUsage)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -236,7 +236,7 @@ const str2Bool = (val:string)=>{
    Cover crops 
    </div>
    <div>
-  {farm && str2Bool(farm.coverCrops)?CFL("used"):"N/A"}
+  {farm && str2Bool(farm.coverCrops)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    {/* Variable */}
@@ -246,7 +246,7 @@ const str2Bool = (val:string)=>{
    Companion planting
    </div>
    <div>
-{farm&& str2Bool(farm.companionPlanting)?CFL("used"):"N/A"}
+{farm&& str2Bool(farm.companionPlanting)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
    </div>
    </div>
    </div>
@@ -270,10 +270,18 @@ const str2Bool = (val:string)=>{
            {/* Farm Images */}
            <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
             
-              {farm && farm.images && farm["images"].map((url:string,ind:number) =><div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
+              {farm && farm.images && farm["images"].map((url:string,ind:number) => <div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
  )}
-           
+
+
            </div>
+        { !farm &&  <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
+           <div className={'w-50 '}  ><div className='w-full h-96 bg-grey-100 object-cover rounded-lg'> </div></div>
+           <div className={'w-50 '}  ><div className='w-full h-96 bg-grey-100 object-cover rounded-lg'> </div></div>
+           <div className={'w-50 '}  ><div className='w-full h-96 bg-grey-100 object-cover rounded-lg'> </div></div>
+           <div className={'w-50 '}  ><div className='w-full h-96 bg-grey-100 object-cover rounded-lg'> </div></div>
+</div>
+}
          </section>
          </div>
          {alertSub && <Alert message='Sorry, you cannot make changes to your farm images at the moment...' onClose={()=> setAlertSub(false)} color='text-yellow-800'  background='bg-yellow-100' />}

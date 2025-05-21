@@ -220,7 +220,7 @@ export default function StatisticsPage() {
           ) : (
             <>
               {/* Summary Stats Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-6 ">
+              <div className="grid grid-cols-1 overflow-hidden rounded-lg sm:grid-cols-2 md:grid-cols-3 mb-6 ">
                 <div className="bg-white border border-[#cfcfcf] p-4 md:p-6">
                   <p className="text-[#898989] text-sm mb-2">Crops Approved</p>
                   <h2 className="text-2xl md:text-3xl font-bold text-[#149414]">{summaryStats.cropsApproved}</h2>

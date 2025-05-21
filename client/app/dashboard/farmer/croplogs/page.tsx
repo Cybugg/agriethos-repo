@@ -44,6 +44,10 @@ const sampleData = [
   { name: 'Rejected', value: 10 },
 ];
 
+interface StatusData {
+  name:string;
+  value:number
+}
 
 interface crop {
   cropName:string;
@@ -59,14 +63,29 @@ type cropData = {
     preNotes:string;
     [key:string]:string;
 }
+type VerificationStatus = 'pending' | 'verified' | 'rejected' | 'toUpgrade';
 
+interface CropData {
+  farmerId: string;
+  farmPropertyId: string;
+  cropName: string;
+  plantingDate: Date;
+  harvestingDate?: Date;
+  growthStage: 'pre-harvest' | 'post-harvest';
+  verificationStatus: VerificationStatus;
+}
+
+interface ChartData {
+  name: string;
+  value: number;
+}
 function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const [displayUpgradeCrop,setDisplayUpgradeCrop] = useState<boolean>(false)
       const [showQRCode,setShowQRCode] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-      const { address, logout ,isLoginStatusLoading,newUser,farmerId} = useAuth();
+      const { address, logout ,isLoginStatusLoading,newUser,farmerId,user} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
       const [alertErrorCreate, setAlertErrorCreate] = useState(false);
       const [collaInd , setCollaInd] = useState<number|undefined>(undefined);
@@ -76,7 +95,9 @@ function page() {
       const [selectedCrop, setSelectedCrop] = useState<crop>();
       const [isViewerOpen, setIsViewerOpen] = useState(false);
       const [currentIndex, setCurrentIndex] = useState(0);
-      const {farm} = useFarm();
+      const {farm,setFarm} = useFarm();
+      const [statusData,setStatusData] = useState<StatusData[]>([])
+
       const openViewer = (index: number) => {
         setCurrentIndex(index);
         setIsViewerOpen(true);
@@ -84,12 +105,34 @@ function page() {
     
       const next = () =>selectedCrop && selectedCrop.images && setCurrentIndex((prev) => (prev + 1) % selectedCrop.images.length);
       const prev = () =>selectedCrop && selectedCrop.images && setCurrentIndex((prev) => (prev - 1 + selectedCrop.images .length) % selectedCrop.images .length);
+
       useEffect(()=>{
         setCurrentPage("logs");
         setMobileDisplay(false);
       
       },[])
+      // fetch farm details
+useEffect(() => {
+        if(!farm && user && !isLoginStatusLoading){
+          const fetchFarm = async () => {
+            try {
+              const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+user._id);
+              if (!res.ok) throw new Error('Failed to fetch');
+              const data = await res.json();
+              console.log(data);
+              console.log(data["images"][0])
+              setFarm(data); // assuming  backend sends a valid farm object
+            } catch (err) {
+              console.error('Error fetching farm data:', err);
+            }
+          };
+      
+          fetchFarm();
+        }
+        }
+          , [farmerId,farm,setFarm]);
 
+          // fetch crop details
       useEffect(
         ()=>{
           const fetchCrops = async() =>{
@@ -106,6 +149,42 @@ function page() {
           };
          farmerId && fetchCrops();
         },[farmerId]
+      )
+    //  function for the pie chart togenerate summary of the verication status
+    const generateStatusSummary = (data: CropData[]): ChartData[] => {
+      const statusMap: Record<VerificationStatus, string> = {
+        verified: 'Success',
+        pending: 'Pending',
+        rejected: 'Rejected',
+        toUpgrade: 'To Upgrade',
+      };
+    
+      const countMap: Record<VerificationStatus, number> = {
+        verified: 0,
+        pending: 0,
+        rejected: 0,
+        toUpgrade: 0,
+      };
+    
+      data.forEach((item) => {
+        countMap[item.verificationStatus]++;
+      });
+    
+      return (Object.keys(statusMap) as VerificationStatus[]).map((key) => ({
+        name: statusMap[key],
+        value: countMap[key],
+      }));
+    };
+//  To set the Pie-chart data
+      useEffect(
+        ()=>{
+          
+          if(crops){
+            let dataPack = generateStatusSummary(crops);
+            setStatusData(dataPack);
+            console.log(dataPack)
+          }
+        },[crops]
       )
 
          // Route protection
@@ -153,7 +232,7 @@ function page() {
                                                                                                
                                                                                                </button>
                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-                         <Image src={"/icons/burger.svg"} alt="menu" width={24} height={24} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
+                         <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                 </div>
               </div>
    
@@ -181,7 +260,7 @@ function page() {
       {/* Variable */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
-      <div  className='basis-1/5 flex items-center justify-center '>
+      <div  className='basis-1/5 text-grey-900 '>
  S/N
       </div>
         {/* Variable Name */}
@@ -301,7 +380,7 @@ Notes on Post-harvest: {`"${ele.postNotes}"`}
 <div>
 Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with post-harvest data":ele.verificationStatus==="verified"?<span className='text-green-600'>Verified</span>:ele.verificationStatus}
 </div>
-{ ele.images && "Images:" }
+{ ele.images[0] && "Images:" }
 <div className="flex gap-4">
       {ele && ele.images[0] && ele.images.map((img:string, idx:number) => (
         <img
@@ -455,115 +534,71 @@ verificationStatus: "pending" */}
         </div>
         </div>
         {/* Verification variables */}
-<div className='flex flex-col gap-4 w-full items-  justify-center '>
+<div className='flex flex-col gap-4 w-full   justify-center '>
 {/* Variable <header>*/}
-<div className='flex items-center w-full  justify-between '>
+<div className='gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b bg-gray-100'>
   {/* Variable Name */}
-<div className='text-grey-600  w-full'>
+<div className='basis-1/3 text-grey-900 w-full text-center '>
 Crop Name
 </div>
-<div className='text-grey-600 flex  w-full'>
-<span className='hidden lg:block w-full'>Verification Status</span> 
-<span className=' lg:hidden w-full'>Status</span> 
+<div className='text-grey-900  basis-1/3 w-full '>
+<span className='hidden lg:block  text-center '>Verification Status</span> 
+<span className=' lg:hidden text-grey-900  basis-1/3 '>Status</span> 
 </div>
-<div className='text-grey-600 w-full'>
+<div className='text-grey-900  basis-1/3 w-full text-center '>
+  Action
 </div>
 </div>
+
+{/* section 2 */}
+{!crops[0]&& !loadingCrop && <div className='w-full h-56 flex items-center justify-center'>No crops has reached post-harvest stage yet...</div>}
+        {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
+{crops && crops.map((ele,ind)=>ele.growthStage === "post-harvest"&&<div className='relative' key={ind*2*1020}>
 {/* Variable */}
-<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
+<div className=' gap-24 flex items-center  justify-between w-full text-center my-1 '>
   {/* Variable Name */}
-<div className=' w-full'>
-Strawberry
+<div className=' basis-1/3 flex items-center justify-center '>
+{ele?.cropName}
 </div>
-<div className='w-full'>
-  <button className='bg-[#F2FEF2] px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
-<Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
-<div className='text-xs'>Success</div>
+{ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/3 flex items-center justify-center '>
+           <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+           <div className="w-4 h-4"><GrUpdate /></div>
+           <div className='text-xs'>Upgrade</div>
 </button>
-</div>
-{/* Verification action */}
-<div className='w-full'>
-  <button className='hover:underline text-black font-bold'>
-  <span className='lg:hidden'>QR Code</span><span className='hidden lg:block'>View QR Code</span>
-</button>
-</div>
-</div>
-{/* Variable */}
-<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
-  {/* Variable Name */}
-<div className=' w-full'>
-Corn Pre-harvest
-</div>
-<div className='w-full'>
-  <button className='bg-[#FFF1F1] px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
+      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/3 flex items-center justify-center  text-error-500'>
+      
+      <button className=' px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
 </button>
-</div>
-{/* Verification action */}
-<div className='w-full'>
-  <button className='hover:underline text-black font-bold'>
-<span className='lg:hidden'>Reverify</span><span className='hidden lg:block'>Request Re-verification </span>
-</button>
-</div>
-</div>
-{/* Variable */}
-<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
-  {/* Variable Name */}
-<div className=' w-full'>
-Tomato Post-harvest
-</div>
-<div className='w-full'>
-  <button className='bg-[#FFF9E6] px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
-<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
-<div className='text-xs'>Pending</div>
-</button>
-</div>
-{/* Verification action */}
-<div className='w-full'>
-  <button className='hover:underline text-black font-bold'>
-
-</button>
-</div>
-</div>
-{/* Variable */}
-<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
-  {/* Variable Name */}
-<div className=' w-full'>
-Ground Pre-harvest
-</div>
-<div className='w-full'>
-  <button className='bg-[#FFF9E6] px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
-<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
-<div className='text-xs'>Pending</div>
-</button>
-</div>
-{/* Verification action */}
-<div className='w-full'>
-  <button className='hover:underline text-black font-bold'>
-
-</button>
-</div>
-</div>
-{/* Variable */}
-<div className='hover:bg-gray-100 gap-24 flex items-center justify-between '>
-  {/* Variable Name */}
-<div className=' w-full'>
-Corn Post-harvest
-</div>
-<div className='w-full'>
-  <button className='bg-[#F2FEF2] px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+      </div>:ele.verificationStatus === "verified"? <div className='basis-1/3   flex items-center justify-center '>
+      <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>
 </button>
-</div>
-{/* Verification action */}
-<div className='w-full'>
-  <button className='hover:underline text-black font-bold'>
-<span className='lg:hidden'>QR Code</span><span className='hidden lg:block'>View QR Code</span>
+      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/3 flex items-center justify-center '>
+      <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
+<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
+<div className='text-xs'>Pending</div>
 </button>
+      </div>:      <div className='basis-1/3 flex items-center justify-center '>
+      <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
+<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
+<div className='text-xs'>Unkown</div>
+</button>
+      </div>}
+{/* Verification action */}
+<div className='basis-1/3 flex items-center justify-center '>
+{ele.verificationStatus ==="verified"&&<button className='underline px-2 py-1 rounded-lg text-black' onClick={()=>setShowQRCode(true)}>
+View QR Code
+</button>}
 </div>
 </div>
+</div>)}
+
+
+
+
         <div>
      </div>
      </div>
@@ -583,7 +618,7 @@ Corn Post-harvest
       <PieChart>
         {/* Pie component for data rendering */}
         <Pie
-          data={sampleData}
+          data={statusData&& statusData}
           dataKey="value"
           nameKey="name"
           cx="50%"

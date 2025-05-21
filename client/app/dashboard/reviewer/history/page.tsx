@@ -66,15 +66,15 @@ export default function CropHistoryPage() {
     if (status === 'Success') {
       return (
         <div className={`border border-[#149414] border-solid inline-flex items-center px-3 py-1 rounded-full bg-[#f6fded] text-[#149414] text-sm whitespace-nowrap ${className || ''}`}>
-          <Check size={16} className="mr-1 border border-[#149414] border-solid rounded-[18px] p-[1px]" />
-          <span>Success</span>
+          <Check size={16} className="mr-1 border border-[#149414] border-solid rounded-[18px] text-[#149414] p-[1px]" />
+          <span className='text-[#149414]'>Success</span>
         </div>
       );
     } else {
       return (
         <div className={`inline-flex items-center px-3 py-1 rounded-full bg-[#FFF1F1] text-[#e30e0e] text-sm border border-[#e30e0e] whitespace-nowrap ${className || ''}`}>
-          <X size={16} className="mr-1 border border-[#e30e0e] border-solid rounded-[18px] p-[1px]" />
-          <span>Rejected</span>
+          <X size={16} className="mr-1 border border-[#e30e0e] text-[#e30e0e] border-solid rounded-[18px] p-[1px]" />
+          <span className='text-[#e30e0e]'>Rejected</span>
         </div>
       );
     }

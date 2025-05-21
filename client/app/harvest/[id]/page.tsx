@@ -88,8 +88,8 @@ export default function Home() {
          {crop?.cropName &&
           <div className="flex flex-col xl:flex-row justify-between  gap-32 items-start w-full">
              {/* left-Body of the main page */}
-                      <div className="flex basis-1/3 flex-col text-xl w-full border border-gray-200 p-5 rounded-2xl">
-                        <div className="font-semibold my-3">Pre-harvest details:</div>
+                      <div className="flex basis-1/3 flex-col text-lg w-full border border-gray-200 p-5 rounded-2xl">
+                        <div className="font-semibold my-3g">Pre-harvest details:</div>
        
                   <div className="space-y-4 mt-2">
                     <div className="flex justify-between">

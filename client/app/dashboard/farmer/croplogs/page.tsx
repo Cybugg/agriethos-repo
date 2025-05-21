@@ -21,6 +21,7 @@ import { useFarm } from '@/app/Context/FarmContext';
 import Loader from '@/app/components/loader';
 import UpgradeCrop from '../components/upgradeCrop';
 import ImageViewer from '@/app/components/imageViewer';
+import DisplayQRCode from '../components/qrcodePreview';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -63,6 +64,7 @@ function page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const [displayUpgradeCrop,setDisplayUpgradeCrop] = useState<boolean>(false)
+      const [showQRCode,setShowQRCode] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const { address, logout ,isLoginStatusLoading,newUser,farmerId} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
@@ -74,7 +76,7 @@ function page() {
       const [selectedCrop, setSelectedCrop] = useState<crop>();
       const [isViewerOpen, setIsViewerOpen] = useState(false);
       const [currentIndex, setCurrentIndex] = useState(0);
-      const {farmName} = useFarm();
+      const {farm} = useFarm();
       const openViewer = (index: number) => {
         setCurrentIndex(index);
         setIsViewerOpen(true);
@@ -116,7 +118,8 @@ function page() {
     <div>
        {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
        {displayUpgradeCrop && <UpgradeCrop setDisplayUpgradeCrop={setDisplayUpgradeCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} selectedCrop={selectedCrop} setSelectedCrop={setSelectedCrop} />}
-
+       {showQRCode && <DisplayQRCode setShowQRCode={setShowQRCode} url='' />}
+      
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
        
               {/* Header and Descriptive Text */}
@@ -128,9 +131,9 @@ function page() {
               <div className='text-grey-600'>
                 Keep track of every farming activity
               </div>
-                <div className='flex gap-2 text-primary-700 text-xs font-bold'>
+                <div className='flex gap-2 text-primary-700 font-bold'>
                      
-                          <PiPlant /> <div>{farmName&&farmName}</div>
+                          <PiPlant /> <div>{farm&&farm.farmName}</div>
                       
                       </div>
              </div>
@@ -296,7 +299,7 @@ Notes on Post-harvest: {`"${ele.postNotes}"`}
   </div>
 }
 <div>
-Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with post-harvest data":ele.verificationStatus}
+Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with post-harvest data":ele.verificationStatus==="verified"?<span className='text-green-600'>Verified</span>:ele.verificationStatus}
 </div>
 { ele.images && "Images:" }
 <div className="flex gap-4">
@@ -330,8 +333,8 @@ Upgrade
 {ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
 View on Explorer
 </button>}
-{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
-Generate QR Code
+{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setShowQRCode(true)}>
+View QR Code
 </button>
 }
 </div>

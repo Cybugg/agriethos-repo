@@ -198,6 +198,10 @@ export default function StatisticsPage() {
             <p className="text-sm md:text-base text-[#898989]">View your review performance and metrics</p>
           </div>
           <div className="flex items-center gap-2">
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+        Reload
+       </div>
+               
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
             </button>
@@ -242,7 +246,7 @@ export default function StatisticsPage() {
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-base md:text-lg font-medium text-[#000000]">Review Activity</h3>
                     <button 
-                      onClick={toggleTimeframe}
+                      // onClick={toggleTimeframe}
                       className="flex items-center gap-1 text-black border border-[#cfcfcf] rounded-lg px-2 py-1 md:px-3 md:py-2 text-xs md:text-sm hover:bg-[#f6fded]"
                     >
                       {timeframe} {timeframe === 'This Week' ? <ChevronDown size={16} /> : <ChevronUp size={16} />}

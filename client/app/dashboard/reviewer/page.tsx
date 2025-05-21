@@ -14,6 +14,8 @@ interface FarmProperty {
   _id: string;
   farmName: string;
   location: string;
+  images: string[];
+  [key:string]:any;
 }
 
 interface Farmer {
@@ -84,6 +86,10 @@ export default function Home() {
             <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>
           </div>
           <div className="flex items-center gap-2">
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+        Reload
+       </div>
+               
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
             </button>
@@ -103,7 +109,7 @@ export default function Home() {
               {error}
             </div>
           ) : pendingCrops.length === 0 ? (
-            <div className="text-center text-grey-600 p-8">
+            <div className="flex text-grey-600 justify-center items-center h-64">
               <p>No pending crops to review at this time.</p>
             </div>
           ) : (
@@ -114,7 +120,7 @@ export default function Home() {
                   <div className="flex basis-1/4 items-center gap-4 mb-3 md:mb-0">
                     <div className="w-12 h-12 rounded-full overflow-hidden">
                       <Image
-                        src={crop?crop.farmPropertyId.images[0]:""} // Default farm image
+                        src={crop&&crop.farmPropertyId&& crop.farmPropertyId.images&&crop.farmPropertyId.images[0]} // Default farm image
                         alt={crop.farmPropertyId?.farmName || "Farm"}
                         width={48}
                         height={48}

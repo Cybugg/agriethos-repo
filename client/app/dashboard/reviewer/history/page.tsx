@@ -152,9 +152,10 @@ export default function CropHistoryPage() {
             <p className="text-sm md:text-base text-[#898989]">View past crop submissions</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={handleRefresh} className="p-2 rounded-full hover:bg-[#f6fded]">
-              <RefreshCw size={24} />
-            </button>
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+        Reload
+       </div>
+               
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
             </button>
@@ -167,8 +168,8 @@ export default function CropHistoryPage() {
         {/* Main content */}
         <div className="py-4 md:p-6">
           {loading ? (
-            <div className="flex text-gray-600 justify-center items-center h-64">
-              <p>Loading...</p>
+            <div className="flex text-grey-600 justify-center items-center h-64">
+              <p>Loading history data...</p>
             </div>
           ) : error ? (
             <div className="text-red-500 text-center p-8">

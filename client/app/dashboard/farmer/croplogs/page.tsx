@@ -201,7 +201,7 @@ function page() {
       </div>
       </div>
        {/* Variable */}
-       <div className='flex flex-col gap-4 w-full justify-between  max-h-96 overflow-y-scroll min-h-56'>
+       <div className='flex flex-col gap-4 w-full justify-start  max-h-96 overflow-y-scroll min-h-56'>
         {!crops[0]&& !loadingCrop && <div className='w-full h-56 flex items-center justify-center'>No crops has been added yet...</div>}
         {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
              { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>

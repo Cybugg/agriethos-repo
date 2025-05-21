@@ -194,8 +194,8 @@ export default function StatisticsPage() {
       <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6 border-b border-[#cfcfcf]">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold text-[#000000]">Statistics</h1>
-            <p className="text-lg text-[#898989]">View your review performance and metrics</p>
+            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Statistics</h1>
+            <p className="text-sm md:text-base text-[#898989]">View your review performance and metrics</p>
           </div>
           <div className="flex items-center gap-2">
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
@@ -210,7 +210,7 @@ export default function StatisticsPage() {
         {/* Main content */}
         <div className="p-4 md:p-6">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center text-grey-600 items-center h-64">
               <p>Loading statistics data...</p>
             </div>
           ) : error ? (

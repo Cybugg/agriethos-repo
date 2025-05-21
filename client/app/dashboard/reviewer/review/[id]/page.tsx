@@ -10,6 +10,7 @@ import axios from 'axios';
 import AnimatedPopup from '@/app/components/AnimatedPopup';
 import ImageViewer from '@/app/components/imageViewer';
 import Confirm from '@/app/components/confirm'; // Import the Confirm component
+import { IoMdArrowRoundBack } from 'react-icons/io';
 
 // Define a type for the popup configuration
 interface PopupConfig {
@@ -287,9 +288,7 @@ export default function CropReviewPage() {
         <div className="flex-1 overflow-auto mt-[55px]">
           <header className="flex justify-between items-center p-4 md:px-6 border-b border-[#cfcfcf]">
             <div className="flex items-center gap-2">
-              <Link href="/dashboard/reviewer" className="p-2 rounded-full hover:bg-[#f6fded] text-[#003024]">
-                <ArrowLeft size={20} className='mr-[24]' />
-              </Link>
+              <div className="border  p-2 text-black rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>
               <div>
                 <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Review Submission</h1>
               </div>
@@ -458,7 +457,7 @@ export default function CropReviewPage() {
                     </button>
                     <button 
                       onClick={initiateApprove}
-                      className="flex-1 py-3 bg-[#a5eb4c] text-[#003024] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
+                      className="flex-1 py-3 bg-[#a5eb4c] rounded-lg text-center font-medium text-black hover:bg-[#96d645]"
                     >
                       Approve
                     </button>
@@ -475,7 +474,7 @@ export default function CropReviewPage() {
       </div>
 
       {/* Add global animations for modal */}
-      <style jsx global>{`
+      {/* <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -493,7 +492,7 @@ export default function CropReviewPage() {
         .animate-scaleIn {
           animation: scaleIn 0.2s ease-out forwards;
         }
-      `}</style>
+      `}</style> */}
     </>
   );
 }

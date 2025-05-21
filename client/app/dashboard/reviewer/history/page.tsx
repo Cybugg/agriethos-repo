@@ -167,7 +167,7 @@ export default function CropHistoryPage() {
         {/* Main content */}
         <div className="py-4 md:p-6">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex text-gray-600 justify-center items-center h-64">
               <p>Loading...</p>
             </div>
           ) : error ? (

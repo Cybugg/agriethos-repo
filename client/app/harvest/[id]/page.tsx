@@ -69,9 +69,18 @@ export default function Home() {
   <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full">
    {/* Header */}
     <div className='flex flex-col gap-2 '>
-           <div className='text-xl font-semibold lg:font-normal lg:text-2xl flex gap-5 items-center'>
+      <div className="flex items-center justify-between">
+   <div className='text-xl font-semibold lg:font-normal lg:text-2xl flex gap-5 items-center '>
           <div className="border p-2 rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>  <div>About this harvest</div> 
            </div>
+              {/* Signin */}
+     <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
+   <div>
+   {"Sign in"}  
+   </div>
+  </Link>
+      </div>
+        
           </div>
           {crop?.farmPropertyId?._id && (
             <div className="my-8">

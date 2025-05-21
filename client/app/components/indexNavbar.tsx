@@ -19,7 +19,7 @@ type NavItemPropsMobile = {
 
 
 const NavItem: React.FC<NavItemProps> = ({ icon, label, active, address}) => (
-  <Link href={`${address}`} className={`group relative flex items-center text-black justify-start w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${label ==="Sign up"&& "border border-[#a5eb4c]"}  ${active&&"bg-primary-500"}`}>
+  <Link href={`${address}`} className={`group relative flex items-center text-black justify-start w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${label ==="Sign in"&& "border border-[#a5eb4c]"}  ${active&&"bg-primary-500"}`}>
    <span><Image src={icon} alt="logo" width={24} height={24} className=""></Image>
    </span> 
    <div>
@@ -29,7 +29,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, active, address}) => (
 );
 
 const NavItemMobile: React.FC<NavItemPropsMobile> = ({ label, active, address}) => (
-  <Link href={`${address}`} className={`group relative flex items-center text-black justify-center w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${label ==="Sign up"&& "border border-[#a5eb4c]"}  ${active && " text-primary-500"}`}>
+  <Link href={`${address}`} className={`group relative flex items-center text-black justify-center w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${label ==="Sign in"&& "border border-[#a5eb4c]"}  ${active && " text-primary-500"}`}>
    <div>
    {label}
    </div>
@@ -57,7 +57,7 @@ const IndexNavbar: React.FC<props> = ({currentPage,mobileDisplay,setMobileDispla
       {/* Side Bar Nav */}
       <div className="flex flex-col w-full gap-[16px] text-black">
         <NavItem icon={"/icons/explore.svg"} label="Explore" active={currentPage === "home"} address="/" />
-        <NavItem icon={"/icons/person.png"} label="Sign up" active={currentPage === "join"} address="/auth" />
+        <NavItem icon={"/icons/person.png"} label="Sign in" active={currentPage === "join"} address="/auth" />
       </div> 
     </div>
 
@@ -77,7 +77,7 @@ const IndexNavbar: React.FC<props> = ({currentPage,mobileDisplay,setMobileDispla
 {/* nav links */}
 <div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] ">
 <NavItemMobile  label="Explore" active={currentPage === "explore"} address="/"  />
-<NavItemMobile  label="Sign up" active={currentPage === "join"} address="/auth"  />
+<NavItemMobile  label="Sign in" active={currentPage === "join"} address="/auth"  />
 
 </div>
  </div>

@@ -96,6 +96,11 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
             <PiPlant /> <div>{CFL(farm.farmName)}</div>
           </div>
         </div>
+        <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-sm"}`}>
+   <div>
+   {"Sign in"}  
+   </div>
+  </Link>
       </div>
 
       {/* Section One */}

@@ -85,14 +85,19 @@ export default function Home() {
 <IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
-        {/* Search bar */}
-        
-     <div className=''>
+       
+     <div className='flex items-center justify-between'>
+       {/* Search bar */}
         <div className=' border-2 w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
           <input type="search" placeholder="Search" className="outline-none  w-full "    value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}/> <BiSearch className="text-[24px] text-grey-500" />
         </div>
-     
+     {/* Signin */}
+     <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
+   <div>
+   {"Sign in"}  
+   </div>
+  </Link>
    </div>
    {/* Header */}
     <div className='flex flex-col gap-2 mt-8'>

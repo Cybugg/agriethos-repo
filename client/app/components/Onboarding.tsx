@@ -34,7 +34,7 @@ const NIGERIAN_STATES = [
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
-  const {farmerId,setNewUser} = useAuth();
+  const { user, farmerId, updateNewUserStatus } = useAuth();
   const [formData, setFormData] = useState<FarmFormData>({
     farmName: "",
     location: "",
@@ -45,31 +45,38 @@ export default function FarmOnboardingForm() {
     irrigationType: "",
     fertilizerType: "",
     pesticideUsage: false,
-    coverCrops:false,
-    companionPlanting:false,
+    coverCrops: false,
+    companionPlanting: false,
     images: []
   });
   const [successSub, setSuccessSub] = useState<boolean>(false);
-  const [showConfirm,setShowConfirm] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [redirecting, setRedirecting] = useState(false);
 
   const router = useRouter();
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!farmerId) {
+      router.replace("/auth");
+    }
+  }, [farmerId, router]);
 
-
-  useEffect(
-    ()=>{
-      if(!farmerId)router.replace("/auth");
-
-    },[]
-  )
-  function boolToStr (arg:Boolean){
-    return arg === true? "true" : "false";
+  // Helper functions for boolean conversion
+  function boolToStr(arg: Boolean) {
+    return arg === true ? "true" : "false";
   }
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const str2Bool = (val: string) => {
+    return val === "true" ? true : val === "false" ? false : undefined;
+  };
 
   const totalSteps = steps.length;
 
+  // Navigation functions
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
@@ -105,27 +112,49 @@ export default function FarmOnboardingForm() {
       }));
     }
   };
-  const str2Bool = (val:string)=>{
-    return val==="true"? true: val==="false"?false:undefined
-};
 
-  const handleSubmit = async () => {
+  // Updated submit handler with improved error handling and state management
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
     setLoading(true);
+    setError('');
     console.log('Submitting farm data:', formData);
    
-    if(!boolToStr(formData.companionPlanting)||!boolToStr(formData.coverCrops)||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!boolToStr(formData.pesticideUsage)||!formData.size||!formData.soilType||!formData.waterSource){
-      alert("Fill out all fields")
-      console.log("Fill out all fields")
-      return;
-    } if (formData.images.length !=4) {
-      alert('You must upload 4 images');
+    // Validation
+    if (!boolToStr(formData.companionPlanting) || 
+        !boolToStr(formData.coverCrops) || 
+        !formData.farmName || 
+        !formData.farmType || 
+        !formData.fertilizerType || 
+        !formData.images || 
+        !formData.irrigationType || 
+        !formData.location || 
+        !boolToStr(formData.pesticideUsage) || 
+        !formData.size || 
+        !formData.soilType || 
+        !formData.waterSource) {
+      alert("Please fill out all fields");
+      setLoading(false);
       return;
     }
+    
+    if (formData.images.length != 4) {
+      alert('You must upload 4 images');
+      setLoading(false);
+      return;
+    }
+
     try {
+      // Create FormData object for multipart form submission
       const data = new FormData();
       
-      // Append text fields
-      farmerId && data.append('farmerId',farmerId.toString())
+      // Append form fields
+      if (farmerId) {
+        data.append('farmerId', farmerId.toString());
+      } else {
+        throw new Error("User ID is required");
+      }
+      
       data.append('farmName', formData.farmName);
       data.append('location', formData.location);
       data.append('size', formData.size);
@@ -134,38 +163,91 @@ export default function FarmOnboardingForm() {
       data.append('soilType', formData.soilType);
       data.append('irrigationType', formData.irrigationType);
       data.append('fertilizerType', formData.fertilizerType);
-      data.append('pesticideUsage',boolToStr(formData.pesticideUsage));
-      data.append('coverCrops',boolToStr(formData.coverCrops)); 
-      data.append('companionPlanting',boolToStr(formData.companionPlanting));
+      data.append('pesticideUsage', boolToStr(formData.pesticideUsage));
+      data.append('coverCrops', boolToStr(formData.coverCrops)); 
+      data.append('companionPlanting', boolToStr(formData.companionPlanting));
      
-      // Append multiple images correctly
+      // Append images
       formData.images.forEach((file: File) => {
-        data.append('images', file); // 'images' must match backend field
+        data.append('images', file);
       });
-    
-      const res = await axios.post('http://localhost:5000/api/farm/farm-properties', data, {headers: {
-          'Content-Type': 'multipart/form-data',
-        }});
-    
      
-    
-      const result = await res.data;
-      console.log('Upload result:', result);
-      setSuccessSub(true);
-      setNewUser("false")
-      router.replace("/dashboard/farmer");
-    
-    } catch (err) {
-      console.error('Upload failed:', err);
-    } 
-
+      console.log('Submitting farm data to server...');
+      
+      // Submit farm data to server
+      const res = await axios.post('http://localhost:5000/api/farm/farm-properties', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (res.status === 201) {
+        console.log('Farm creation successful! Updating user status...');
+        setSuccessSub(true);
+        
+        try {
+          // Update user status using apiClient instead of direct function call
+          if (user && user._id) {
+            await apiClient(`/auth/update-status/${user._id}`, {
+              method: 'PUT',
+              body: { newUser: "false" }
+            });
+            
+            console.log('User status updated successfully!');
+            setRedirecting(true);
+            
+            // Force token refresh before redirecting
+            await verifyAuth();
+            
+            // Add a delay before redirecting
+            setTimeout(() => {
+              router.push("/dashboard/farmer");
+            }, 2000);
+          }
+        } catch (updateError) {
+          console.error('Error updating user status:', updateError);
+          setError('Successfully created farm but failed to update profile status. Please try logging in again.');
+          setLoading(false);
+        }
+      } else {
+        console.error("Unexpected response:", res);
+        setError('Unexpected response from server');
+        setLoading(false);
+      }
+    } catch (err: any) {
+      console.error('Error submitting farm data:', err);
+      setError(err.message || 'An error occurred while creating your farm');
+      setLoading(false);
+    }
   };
 
   const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
 
+  if (redirecting) {
+    return (
+      <div className="max-w-xl mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white text-center">
+        <div className="py-8">
+          <Loader />
+          <p className="mt-4 text-xl">Farm created successfully!</p>
+          <p className="mt-2 text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-xl max-h-screen mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
-      {showConfirm &&<Confirm loading={loading} onCancel={()=>setShowConfirm(false)} onConfirm={handleSubmit} mainMsg=' Have you confirmed that every details you provided are correct?' subMsg='Submissions are subjected to review'/>} 
+      {showConfirm && (
+        <Confirm 
+          loading={loading} 
+          onCancel={() => setShowConfirm(false)} 
+          onConfirm={handleSubmit} 
+          mainMsg='Have you confirmed that all details you provided are correct?' 
+          subMsg='Submissions are subject to review'
+        />
+      )} 
+      
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2">
@@ -418,28 +500,48 @@ Companion planting
         {currentStep > 0 && (
           <button
             onClick={handleBack}
-            className="border  mr-5   text-black px-4 py-2 rounded hover:bg-primary-400"
+            className="border mr-5 text-black px-4 py-2 rounded hover:bg-primary-400"
+            disabled={loading}
           >
             Back
           </button>
         )}
+        
         {currentStep < totalSteps - 1 ? (
           <button
             onClick={handleNext}
-            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto"
+            className="bg-primary-500 text-black w-full px-4 py-2 rounded ml-auto"
           >
             Continue
           </button>
         ) : (
           <button
-            onClick={()=>setShowConfirm(true)}
-            className="bg-primary-500 text-black w-full px-4 py-2 rounded  ml-auto cursor-pointer"
+            onClick={() => setShowConfirm(true)}
+            className="bg-primary-500 text-black w-full px-4 py-2 rounded ml-auto cursor-pointer"
+            disabled={loading}
           >
-            Submit
+            {loading ? <Loader /> : "Submit"}
           </button>
         )}
       </div>
-      {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
+      
+      {successSub && (
+        <Alert 
+          message='Farm created successfully! Redirecting to dashboard...' 
+          onClose={() => setSuccessSub(false)} 
+          color='text-green-800'  
+          background='bg-green-100' 
+        />
+      )}
+      
+      {error && (
+        <Alert 
+          message={error} 
+          onClose={() => setError('')} 
+          color='text-red-800'  
+          background='bg-red-100' 
+        />
+      )}
     </div>
   );
 }

@@ -180,7 +180,7 @@ const UpgradeCrop:React.FC<props> = ({setDisplayUpgradeCrop, setAlertCreate,setC
  className="w-full bg-white "
 >
   <option value="">Select quantity</option>
-  {[...Array(100)].map((_, i) => (
+  {[...Array(1000)].map((_, i) => (
     <option key={i + 1} value={i + 1}>
       {i + 1}
     </option>

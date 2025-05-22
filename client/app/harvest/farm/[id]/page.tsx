@@ -84,7 +84,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
     <main className="lg:ml-[352px] w-full flex-1 bg-white ">
     <div className="text-sm md:text-lg min-h-screen px-[32px] py-[80px] bg-white text-black">
       {/* Header and Descriptive Text */}
-      <div className='flex items-start justify-between'>
+      <div className='flex items-start justify-between gap-3'>
         <div className='flex flex-col gap-2'>
             <div className='text-xl font-semibold lg:font-normal lg:text-2xl flex gap-5 items-center'>
                      <div className="border p-2 rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>  <div>farm details</div> 

@@ -69,7 +69,7 @@ export default function Home() {
   <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full">
    {/* Header */}
     <div className='flex flex-col gap-2 '>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
    <div className='text-xl font-semibold lg:font-normal lg:text-2xl flex gap-5 items-center '>
           <div className="border p-2 rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>  <div>About this harvest</div> 
            </div>

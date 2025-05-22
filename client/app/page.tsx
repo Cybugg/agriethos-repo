@@ -86,7 +86,7 @@ export default function Home() {
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
        
-     <div className='flex items-center justify-between'>
+     <div className='flex items-center justify-between gap-3'>
        {/* Search bar */}
         <div className=' border-2 w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
           <input type="search" placeholder="Search" className="outline-none  w-full "    value={searchQuery}

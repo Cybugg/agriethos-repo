@@ -60,7 +60,7 @@ export default function Home() {
 
    }
    fetchOverview();
-    },[]
+    },[user]
   )
        // to fetch admins properties and set it to state
           useEffect(

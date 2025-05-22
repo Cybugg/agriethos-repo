@@ -83,12 +83,14 @@ Only sign this message if you trust AgriEthos.
       agent.nonce = generateNonce();
    
       await agent.save();
+console.log(recovered.toLowerCase());
+console.log(address.toLowerCase())
 
-
-
+console.log("agent:",agent);
 
       return res.json({ success: true, message: "Wallet verified", data:{agent}});
     } else {
+        console.log(agent)
       return res.status(401).json({ error: "Signature verification failed" });
     }
   } catch (err) {

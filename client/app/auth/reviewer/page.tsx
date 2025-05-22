@@ -1,18 +1,19 @@
 'use client';
 
-import { useAuth } from '../../Context/AuthContext';
+import { useAdminAuth } from '../../Context/AdminAuthContext';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Image from 'next/image';
 import Loader from '../../components/loader';
 import {useRouter} from "next/navigation";
 import Alert from '../../components/alert';
+import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
+  const { setAddress ,setAgentId, agentId , address,user,setUser} = useAgentAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -21,12 +22,12 @@ export default function Page() {
 
 
 
-//   useEffect(()=>
-//     {
-//       if (address && farmerId){router.replace("/dashboard/farmer/")}
+  useEffect(()=>
+    {
+      if (address  && user && user.role && user.role ==="reviewer"){router.replace("/dashboard/reviewer/")}
      
-//     },[address,farmerId]
-//   )
+    },[address,user]
+  )
 
   // onConnect getNonce -> 
   const connectWallet = async () => {
@@ -45,10 +46,10 @@ export default function Page() {
     
 
     // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+    const resNonce = await fetch("http://localhost:5000/api/agent/request-nonce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr }),
+      body: JSON.stringify({ walletAddress: addr }),
     });
    // Parse Nonce data
     const { nonce, timestamp } = await resNonce.json();
@@ -69,27 +70,39 @@ Only sign this message if you trust AgriEthos.
   console.log(addr,nonce,timestamp)
     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+    const resLogin = await fetch("http://localhost:5000/api/agent/wallet-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr, signature }),
     }); 
     const loginData = await resLogin.json();
-    const {address,farmerId,newUser,userPack} = await loginData.data
-    if (loginData.success) {
+    const {agent} = await loginData.data;
+    console.log(agent);
+    console.log(agent);
+    console.log(agent);
+    console.log(agent);
+    console.log(agent);
+    if(!resLogin.ok || loginData.error){
+      setMsg(loginData.error || "Login failed... try again");
+      console.error('Backend error:', loginData.error || loginData.message);
+      setLoading(false);
+      return;
+    }
+    if (loginData.success && agent.role ) {
       console.log("✅ Login successful!");
         setLoading(false);
         setSuccess("sucess")
-        setAddress(address);
-        setFarmerId(farmerId);
-        setNewUser(newUser);
+        setAddress(agent.walletAddress);
+        console.log(address)
+        console.log(agent)
         setSuccessSub(true);
-        setUser(userPack)
-        console.log(address,farmerId)
-      if(newUser === "false")  router.replace("/dashboard/farmer")
-        else if (newUser === "true") router.replace("/onboard")
+        setAgentId(agent._d)
+        setUser(agent)
+        console.log(agent)
+      router.replace("/dashboard/reviewer")
+        
     } else {
-      setMsg(loginData.error || "Login failed.");
+      setMsg(loginData.error || "Login failed... try again");
       setLoading(false);
     }
   };
@@ -107,7 +120,7 @@ Only sign this message if you trust AgriEthos.
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
     <Image src={"/icons/logo.svg"} alt="logo" width={46} height={61.5} />
     <h2 className="text-3xl">Agent</h2>
-    <div className='italic'>Sign in to be a guardian of the harvest.</div>
+    <div className='italic'>Sign in to grow trust with every harvest.</div>
     <button
       onClick={connectWallet}
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"

@@ -3,10 +3,11 @@ import React from "react";
 import { AuthProvider } from "@/app/Context/AuthContext";
 import { NavProvider } from "./NavContext"; // Update import to use reviewer's NavContext
 import Navbar from "./components/Navbar";
+import { AgentAuthProvider } from "@/app/Context/AgentAuthContext";
 
 export default function ReviewerDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
+    <AgentAuthProvider>
       <NavProvider>
         <div className="flex bg-white">
           <Navbar />
@@ -15,6 +16,6 @@ export default function ReviewerDashboardLayout({ children }: { children: React.
           </main>
         </div>
       </NavProvider>
-    </AuthProvider>
+    </AgentAuthProvider>
   );
 }

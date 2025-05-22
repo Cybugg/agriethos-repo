@@ -90,6 +90,7 @@ Only sign this message if you trust AgriEthos.
         console.log(address)
         console.log(admin)
         setSuccessSub(true);
+        setAdminId(admin._id)
         setUser(admin)
         console.log(admin)
       router.replace("/dashboard/admin")

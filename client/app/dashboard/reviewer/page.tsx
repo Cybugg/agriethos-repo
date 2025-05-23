@@ -8,6 +8,7 @@ import { Menu } from "lucide-react";
 import MobileNav from "./components/MobileNav";
 import axios from 'axios';
 import { useNavContext } from './NavContext';
+import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 // Define interfaces for type safety
 interface FarmProperty {
@@ -41,8 +42,10 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [pendingCrops, setPendingCrops] = useState<PendingCrop[]>([]);
   const [loading, setLoading] = useState(true);
+    const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
    const {setCurrentPage,setMobileDisplay} = useNavContext();
+   const {address, logout} = useAgentAuth();
 
 
    //Navbar default settings
@@ -86,6 +89,17 @@ export default function Home() {
             <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>
           </div>
           <div className="flex items-center gap-2">
+              <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                  
+                                <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                   { displayLogout && address &&<div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                                      Disconnect
+                                    </div>}
+                                </div>
+                                </div> 
+                                   
+                                   </button>
           <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>

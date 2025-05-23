@@ -15,13 +15,16 @@ interface Crop {
   status: 'Success' | 'Rejected';
 }
 import { useNavContext } from '../NavContext';
+import { BsPerson } from 'react-icons/bs';
+import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 export default function CropHistoryPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+ const {address, logout} = useAgentAuth();
+    const [displayLogout,setDisplayLogout] = useState<boolean>(false);
      const {setCurrentPage,setMobileDisplay} = useNavContext();
   
   
@@ -155,9 +158,20 @@ export default function CropHistoryPage() {
           <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
+         <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                
+                                              <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                              <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                 { displayLogout && address &&<div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                                                    Disconnect
+                                                  </div>}
+                                              </div>
+                                              </div> 
+                                                 
+                                                 </button>
                
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
-              <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
+              <Image src="/icons/bell.svg" alt="Notifications" width={40} height={24} />
             </button>
             <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
               <Menu size={24} />

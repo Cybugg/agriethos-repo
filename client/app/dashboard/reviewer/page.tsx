@@ -9,6 +9,7 @@ import MobileNav from "./components/MobileNav";
 import axios from 'axios';
 import { useNavContext } from './NavContext';
 import { useAgentAuth } from '@/app/Context/AgentAuthContext';
+import { BsPerson } from 'react-icons/bs';
 
 // Define interfaces for type safety
 interface FarmProperty {
@@ -89,7 +90,11 @@ export default function Home() {
             <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>
           </div>
           <div className="flex items-center gap-2">
-              <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+             
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+        Reload
+       </div>
+                <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                                   
                                 <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
                                 <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
@@ -100,12 +105,8 @@ export default function Home() {
                                 </div> 
                                    
                                    </button>
-          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
-        Reload
-       </div>
-               
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
-              <Image src="/icons/bell.svg" alt="Notifications" width={24} height={24} />
+              <Image src="/icons/bell.svg" alt="Notifications" width={40} height={24} />
             </button>
             <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
               <Menu size={24} />

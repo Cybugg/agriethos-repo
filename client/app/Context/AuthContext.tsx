@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
+// Add this import at the top of the file
+import { apiClient } from '@/app/utils/apiClient';
 
 interface User {
   _id: string;
@@ -41,6 +43,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoginStatusLoading, setIsLoginStatusLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [authInitialized, setAuthInitialized] = useState<boolean>(false);
+  const [address, setAddress] = useState<string | null>(null);
+  const [farmerId, setFarmerId] = useState<string | null>(null);
+  const [newUser, setNewUser] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -103,8 +108,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Public method to verify authentication
   const verifyAuth = async (): Promise<boolean> => {
-    if (!token) return false;
-    return await verifyStoredToken(token);
+    try {
+      // First check localStorage
+      const storedFarmerId = localStorage.getItem('farmerId');
+      const storedNewUser = localStorage.getItem('newUser');
+      const storedAddress = localStorage.getItem('walletAddress');
+      
+      console.log('Local storage auth state:', {
+        storedFarmerId,
+        storedNewUser,
+        storedAddress
+      });
+      
+      // Set initial values from localStorage
+      if (storedAddress) setAddress(storedAddress);
+      if (storedFarmerId) setFarmerId(storedFarmerId);
+      if (storedNewUser) setNewUser(storedNewUser);
+      
+      // Then verify with server if we have an ID
+      if (storedFarmerId) {
+        const response = await apiClient('/auth/check-auth');
+        
+        if (response && response.user) {
+          setUser(response.user);
+          setFarmerId(response.user._id);
+          
+          // Important: update newUser status from server
+          if (response.user.newUser !== storedNewUser) {
+            console.log(`Updating newUser value: ${storedNewUser} → ${response.user.newUser}`);
+            setNewUser(response.user.newUser);
+            localStorage.setItem('newUser', response.user.newUser);
+          }
+          
+          return true;
+        }
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Auth verification failed:', error);
+      return false;
+    }
   };
 
   // Handle wallet connection and login
@@ -341,9 +385,19 @@ Only sign this message if you trust AgriEthos.`;
     updateUserStatus,
     verifyAuth,
     logout,
+    address,
+    farmerId,
+    newUser,
+    setAddress,
+    setFarmerId,
+    setNewUser,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

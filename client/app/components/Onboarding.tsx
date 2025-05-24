@@ -34,7 +34,7 @@ const NIGERIAN_STATES = [
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
-  const { user, farmerId, updateNewUserStatus } = useAuth();
+  const { user, farmerId, updateNewUserStatus, setNewUser } = useAuth();
   const [formData, setFormData] = useState<FarmFormData>({
     farmName: "",
     location: "",
@@ -198,12 +198,18 @@ export default function FarmOnboardingForm() {
             setRedirecting(true);
             
             // Force token refresh before redirecting
-            await verifyAuth();
+            const authVerified = await verifyAuth();
+            console.log('Auth verification result:', authVerified);
             
-            // Add a delay before redirecting
-            setTimeout(() => {
-              router.push("/dashboard/farmer");
-            }, 2000);
+            if (authVerified) {
+              // Add a delay before redirecting
+              setTimeout(() => {
+                router.push("/dashboard/farmer");
+              }, 2000);
+            } else {
+              console.error('Failed to verify auth after status update');
+              // Handle error case
+            }
           }
         } catch (updateError) {
           console.error('Error updating user status:', updateError);

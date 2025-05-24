@@ -49,12 +49,22 @@ exports.createFarmProperty = async (req, res) => {
 
       await newProperty.save();
 
-      let user = await Farmer.findOne({ _id: farmerId});
+
+      // Update user status
+      let user = await Farmer.findOne({ _id: farmerId });
       user.newUser = "false";
       user.farmId = newProperty._id;
-      await user.save()
-
-      res.status(201).json({ message: 'Farm property created', data: newProperty });
+      await user.save();
+    
+      // Return updated user status along with farm property
+      res.status(201).json({ 
+        message: 'Farm property created', 
+        data: newProperty,
+        user: {
+          _id: user._id,
+          newUser: user.newUser
+        }
+      });
     } catch (err) {
       console.error('Error creating farm property:', err);
       res.status(500).json({ error: 'Internal Server Error' });

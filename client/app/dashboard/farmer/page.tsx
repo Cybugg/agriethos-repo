@@ -74,34 +74,54 @@ const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
 };
 
 export default function Home() {
+  const { address, farmerId, newUser, user, isLoginStatusLoading, handleFarmerId } = useAuth();
   const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
-  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
-  const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, logout ,isLoginStatusLoading,farmerId,newUser,user,setUser} = useAuth();
-  const data = cropData[selectedCrop][selectedRange];
-  const router = useRouter();
+  const [displayLogout, setDisplayLogout] = useState<boolean>(false);
+  const { setCurrentPage, setMobileDisplay } = useNavContext();
   const { farm, setFarm } = useFarm();
- 
+  const router = useRouter();
+  const data = cropData[selectedCrop][selectedRange];
 
   // Route protection
   useEffect(() => {
-    if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
-    if(!isLoginStatusLoading && address && farmerId && newUser ==="true"){router.push('/onboard');
-       console.log("new user ni") }
-       console.log(newUser)
-  }, [address,farmerId,isLoginStatusLoading])
-
-   useEffect(()=>{
+    console.log('Auth state check:', {
+      isLoginStatusLoading,
+      address,
+      farmerId,
+      newUser,
+      user: user ? `${user._id} (newUser: ${user.newUser})` : 'null'
+    });
+    
+    if (!isLoginStatusLoading) {
+      if (!user) {
+        console.log('No user - redirecting to auth');
+        router.push('/auth');
+      } else if (user.newUser === "true") {
+        console.log('New user - redirecting to onboard');
+        router.push('/onboard');
+      } else {
+        console.log('Authenticated user - staying on dashboard');
+        // Instead of using setFarmerId directly, use handleFarmerId
+        if (!farmerId && user._id) {
+          handleFarmerId(user._id);
+        }
+      }
+    }
+  }, [isLoginStatusLoading, user, router, farmerId, handleFarmerId])
+  
+  useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
         },[])
   
         // to fetch farm properties and set it to state
   useEffect(() => {
-    if (!isLoginStatusLoading && user) {
+    // Only fetch if we don't already have farm data, user exists and not loading
+    if (!isLoginStatusLoading && user && !farm) {
       const fetchFarm = async () => {
         try {
+          // Add fetch implementation
           console.log('Fetching farm data for user ID:', user._id);
           const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${user._id}`);
           
@@ -120,7 +140,7 @@ export default function Home() {
 
       fetchFarm();
     }
-  }, [user, isLoginStatusLoading]);
+  }, [user, isLoginStatusLoading, farm]);
 
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">

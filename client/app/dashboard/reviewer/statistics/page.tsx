@@ -14,7 +14,7 @@ import { BsPerson } from 'react-icons/bs';
 export default function StatisticsPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [timeframe, setTimeframe] = useState('This Week');
-   const {address, logout} = useAgentAuth();
+   const {address, logout,user} = useAgentAuth();
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
      const {setCurrentPage,setMobileDisplay} = useNavContext();
   
@@ -42,19 +42,24 @@ export default function StatisticsPage() {
   // Fetch statistics data from the backend
   useEffect(() => {
     const fetchStatistics = async () => {
+      if (!user?._id) return; // Don't fetch if user ID isn't available
+      
       try {
         setLoading(true);
         
-        // Fetch reviewed crops
-        const reviewedResponse = await axios.get('http://localhost:5000/api/crops/reviewed');
+        // Use reviewer-specific endpoint
+        const reviewedResponse = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
         
         if (reviewedResponse.data.success) {
           const reviewedCrops = reviewedResponse.data.data;
           
           // Calculate summary stats
-          const verified = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'verified').length;
-          const rejected = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'rejected').length;
-          const toUpgrade = reviewedCrops.filter((crop: { verificationStatus: string; }) => crop.verificationStatus === 'toUpgrade').length;
+          const verified = reviewedCrops.filter((crop: { verificationStatus: string; }) => 
+            crop.verificationStatus === 'verified').length;
+          const rejected = reviewedCrops.filter((crop: { verificationStatus: string; }) => 
+            crop.verificationStatus === 'rejected').length;
+          const toUpgrade = reviewedCrops.filter((crop: { verificationStatus: string; }) => 
+            crop.verificationStatus === 'toUpgrade').length;
           const total = reviewedCrops.length;
           
           setSummaryStats({
@@ -153,7 +158,7 @@ export default function StatisticsPage() {
     };
     
     fetchStatistics();
-  }, [timeframe]); // Refetch when timeframe changes
+  }, [timeframe, user?._id]); // Add user._id as dependency
   
   const toggleTimeframe = () => {
     setTimeframe(timeframe === 'This Week' ? 'This Month' : 'This Week');

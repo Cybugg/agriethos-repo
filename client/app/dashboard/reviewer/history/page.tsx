@@ -23,7 +23,7 @@ export default function CropHistoryPage() {
   const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
- const {address, logout} = useAgentAuth();
+ const {address, logout,user} = useAgentAuth();
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
      const {setCurrentPage,setMobileDisplay} = useNavContext();
   
@@ -38,9 +38,13 @@ export default function CropHistoryPage() {
   // Fetch crops from API
   useEffect(() => {
     const fetchReviewedCrops = async () => {
+      if (!user?._id) return; // Don't fetch if user ID isn't available
+      
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/crops/reviewed');
+        // Use reviewer-specific endpoint
+        const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+        
         if (response.data.success) {
           // Map the API response to match the existing cropHistory structure
           const formattedData = response.data.data.map((crop: { _id: any; cropName: any; farmPropertyId: { farmName: any; }; growthStage: string; verificationStatus: string; }) => ({
@@ -63,7 +67,7 @@ export default function CropHistoryPage() {
     };
 
     fetchReviewedCrops();
-  }, []);
+  }, [user?._id]); // Add user._id as dependency
 
   const StatusBadge = ({ status, className }: { status: 'Success' | 'Rejected', className?: string }) => {
     if (status === 'Success') {
@@ -118,9 +122,12 @@ export default function CropHistoryPage() {
 
   // Refresh function
   const handleRefresh = async () => {
+    if (!user?._id) return;
+    
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/crops/reviewed');
+      const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+      
       if (response.data.success) {
         const formattedData = response.data.data.map((crop: { _id: any; cropName: any; farmPropertyId: { farmName: any; }; growthStage: string; verificationStatus: string; }) => ({
           id: crop._id,

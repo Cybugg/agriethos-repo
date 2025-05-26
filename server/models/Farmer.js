@@ -33,6 +33,10 @@ const farmerSchema = new mongoose.Schema({
    required: true,
    default:'farmer'
   },
+  password: String,
+  isVerified: { type: Boolean, default: false },
+  verificationToken: String,
+  verificationTokenExpires: Date,
   createdAt: {
     type: Date,
     default: Date.now,

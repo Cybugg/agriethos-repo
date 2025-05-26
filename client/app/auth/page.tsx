@@ -8,6 +8,7 @@ import Loader from '../components/loader';
 import {useRouter} from "next/navigation";
 import Alert from '../components/alert';
 import Link from 'next/link';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 
 
@@ -16,7 +17,8 @@ export default function Page() {
   const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
-  const [successSub, setSuccessSub] = useState<boolean>(false)
+  const [successSub, setSuccessSub] = useState<boolean>(false);
+  const [viewPass, setViewPass] = useState<boolean>(false);
   const router = useRouter();
 
 
@@ -113,7 +115,7 @@ Only sign this message if you trust AgriEthos.
       <div>
         Don&apos;t have an account? 
       </div>
-      <Link href={"/register"} className='text-primary-500 underline'>
+      <Link href={"/register"} className='text-primary-600 underline'>
         Register
       </Link>
     </div>
@@ -147,12 +149,15 @@ OR
 <input type='email' className='w-full p-2 px-4 outline-none' placeholder='Email' required />
     </div>
     <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' required />
+<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' required />
+<div className='text-grey-400 px-2' onClick={()=>setViewPass(pre=>!pre)}>
+{!viewPass ? <FiEye />: <FiEyeOff />}
+</div>
     </div>
     <button
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Continue</div></div>}
+      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Sign in</div></div>}
     </button>
 
     </div>

@@ -8,7 +8,6 @@ import Loader from '../components/loader';
 import {useRouter} from "next/navigation";
 import Alert from '../components/alert';
 import Link from 'next/link';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 
 
@@ -17,9 +16,7 @@ export default function Page() {
   const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
-  const [successSub, setSuccessSub] = useState<boolean>(false);
-  const [viewPass, setViewPass] = useState<boolean>(false);
-  const [viewConfirmPass, setViewConfirmPass] = useState<boolean>(false);
+  const [successSub, setSuccessSub] = useState<boolean>(false)
   const router = useRouter();
 
 
@@ -109,66 +106,16 @@ Only sign this message if you trust AgriEthos.
   <div className="h-screen w-full flex flex-col gap-1 bg-white items-center justify-center text-black">
       {/* Display Element */}
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
-    <Image src={"/icons/logo.svg"} alt="logo" width={46} height={61.5} />
-    <h2 className="text-3xl">Welcome to Agriethos</h2>
-    <div className='italic'>Sign in to grow trust with every harvest.</div>
-    <div className='flex gap-2 text-xs text-grey-600'>
-      <div>
-        Don&apos;t have an account? 
-      </div>
-      <Link href={"/register"} className='text-primary-600 underline'>
-        Register
-      </Link>
-    </div>
-    <div className='flex flex-col gap-3 w-full'>
- <button
-      onClick={connectWallet}
-      className="px-4 mt-5 w-full py-2 border  text-black rounded"
-    >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><Image src={"/icons/metamask.png"} alt="metamask" width={18} height={14} /><div>Connect with Metamask</div></div>}
-    </button>
+    <Image src={"/icons/verified.png"} alt="logo" width={46} height={61.5} />
+    <h2 className="text-3xl">Email verified</h2>
+    <div className=' text-center'>Your email has been verified. <br/>
+    Let&apos;s get your farm on the map</div>
     <button
-      
-      className="px-4  w-full py-2 border boder-gray-500 text-black rounded"
-    >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><Image src={"/icons/google.svg"} alt="google" width={18} height={14} /><div>Sign in with Google</div></div>}
-    </button>
-    {/* Divider */}
-    <div className='  w-full py-2 flex items-center justify-between gap-3 text-black rounded'>
-<div className='w-full border border-gray-200'>
-
-</div>
-<div className='text-grey-500'>
-OR
-</div>
-<div className='w-full border border-gray-200'>
-
-</div>
-    </div>
-    {/* Email Auth */}
-    <div className=' w-full border boder-gray-500 text-black rounded'>
-<input type='email' className='w-full p-2 px-4 outline-none' placeholder='Email' required />
-    </div>
-    <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' required />
-<div className='text-grey-400 px-2' onClick={()=>setViewPass(pre=>!pre)}>
-{!viewPass ? <FiEye />: <FiEyeOff />}
-</div>
-    </div>
-    <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewConfirmPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Confirm Password' required />
-<div className='text-grey-400 px-2' onClick={()=>setViewConfirmPass(pre=>!pre)}>
-{!viewPass ? <FiEye />: <FiEyeOff />}
-</div>
-    </div>
-    <button
+     
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Continue</div></div>}
+      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><div>Get started</div></div>}
     </button>
-
-    </div>
-   
       </div> 
     {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}

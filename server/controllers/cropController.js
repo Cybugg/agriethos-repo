@@ -99,15 +99,18 @@ exports.getCropsByFarmer = async (req, res) => {
 exports.updateCrop = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const { verificationStatus, reviewerId } = req.body;
     
-    // If there are new images to add
-    if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map(file => file.path);
+    // Create update object
+    const updateData = {
+      verificationStatus,
+      updatedAt: Date.now()
+    };
+    
+    // Only add reviewerId to the update if it was provided
+    if (reviewerId) {
+      updateData.reviewedBy = reviewerId;
     }
-
-    // Update the timestamp
-    updateData.updatedAt = Date.now();
     
     const updatedCrop = await Crop.findByIdAndUpdate(
       id,

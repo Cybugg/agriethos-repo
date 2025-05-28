@@ -11,6 +11,7 @@ import AnimatedPopup from '@/app/components/AnimatedPopup';
 import ImageViewer from '@/app/components/imageViewer';
 import Confirm from '@/app/components/confirm'; // Import the Confirm component
 import { IoMdArrowRoundBack } from 'react-icons/io';
+import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 // Define a type for the popup configuration
 interface PopupConfig {
@@ -50,6 +51,8 @@ export default function CropReviewPage() {
   const router = useRouter();
   const id = params.id as string;
 
+  const { user } = useAgentAuth();
+  
   useEffect(() => {
     cropData && setSelectedImages(cropData.images);
   }, [cropData]);
@@ -143,7 +146,8 @@ export default function CropReviewPage() {
 
     try {
       const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
-        verificationStatus: newStatus
+        verificationStatus: newStatus,
+        reviewerId: user?._id // Add reviewerId to the request
       });
       
       if (response.data.success) {
@@ -173,7 +177,8 @@ export default function CropReviewPage() {
     
     try {
       const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
-        verificationStatus: 'rejected'
+        verificationStatus: 'rejected',
+        reviewerId: user?._id // Add reviewerId to the request
       });
       
       if (response.data.success) {

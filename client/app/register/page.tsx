@@ -161,11 +161,13 @@ Only sign this message if you trust AgriEthos.
         throw new Error(data.message || 'Something went wrong');
      
         }
-        localStorage.setItem("emailToVerify",form.email);
+        setSuccessSub(true);
         console.log("Registeration success")
         setLoading(false);
       setSuccess('Sign up successful!');
-      router.replace("/auth")
+       // in develoment
+       localStorage.setItem("emailToVerify",form.email);
+      router.replace("/registered")
     } catch (err: any) {
       setError(err.message);
     }
@@ -198,10 +200,10 @@ Only sign this message if you trust AgriEthos.
     <div className='italic'>Sign in to grow trust with every harvest.</div>
     <div className='flex gap-2 text-xs text-grey-600'>
       <div>
-        Don&apos;t have an account? 
+        Already have an account? 
       </div>
-      <Link href={"/register"} className='text-primary-600 underline'>
-        Register
+      <Link href={"/auth"} className='text-primary-600 underline'>
+        Log in
       </Link>
     </div>
     <div className='flex flex-col gap-3 w-full'>
@@ -211,12 +213,12 @@ Only sign this message if you trust AgriEthos.
     >
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><Image src={"/icons/metamask.png"} alt="metamask" width={18} height={14} /><div>Connect with Metamask</div></div>}
     </button>
-    <button
+    {/* <button
       
       className="px-4  w-full py-2 border boder-gray-500 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><Image src={"/icons/google.svg"} alt="google" width={18} height={14} /><div>Sign in with Google</div></div>}
-    </button>
+      { !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><Image src={"/icons/google.svg"} alt="google" width={18} height={14} /><div>Sign in with Google</div></div>}
+    </button> */}
     {/* Divider */}
     <div className='  w-full py-2 flex items-center justify-between gap-3 text-black rounded'>
 <div className='w-full border border-gray-200'>
@@ -239,10 +241,10 @@ OR
     </div>
    
     <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' name="password"
+<input type={viewPass?'text':'password'} className='w-full bg-white p-2 outline-none px-4 ' name="password"
             placeholder="Password"
             value={form.password}
-            onChange={handleChange}required />
+            onChange={handleChange} required />
 <div className='text-grey-400 px-2' onClick={()=>setViewPass(pre=>!pre)}>
 {!viewPass ? <FiEye />: <FiEyeOff />}
 </div>
@@ -252,11 +254,11 @@ OR
               Password strength: {strength}
             </p>
           )}
-    <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewConfirmPass?'text':'password'} className='w-full p-2 outline-none px-4 ' name="confirmPassword"
+    <div className=' flex gap-2 items-center  w-full border boder-gray-500 text-black rounded'>
+<input type={viewConfirmPass?'text':'password'} className='w-full p-2 outline-none px-4 bg-white' name="confirmPassword"
             placeholder="Confirm Password"
             value={form.confirmPassword}
-            onChange={handleChange}required />
+            onChange={handleChange} required />
 <div className='text-grey-400 px-2' onClick={()=>setViewConfirmPass(pre=>!pre)}>
 {!viewPass ? <FiEye />: <FiEyeOff />}
 </div>
@@ -269,13 +271,13 @@ OR
     <button
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"  onClick={handleSubmit}
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Continue</div></div>}
+      {!loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Continue</div></div>}
     </button>
 
     </div>
    
       </div> 
-    {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
+    {successSub && <Alert message='Operation successful ...redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
     {error && <p className="text-red-600 mt-2">{error}</p>}
   </div>

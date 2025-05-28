@@ -107,14 +107,14 @@ Only sign this message if you trust AgriEthos.
       {/* Display Element */}
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
     <Image src={"/icons/verified.png"} alt="logo" width={46} height={61.5} />
-    <h2 className="text-3xl">Email verified</h2>
-    <div className=' text-center'>Your email has been verified. <br/>
-    Let&apos;s get your farm on the map</div>
+    <h2 className="text-3xl">You have been registered</h2>
+    <div className=' text-center'>You will need to sign-in in to proceed <br/>
+    </div>
     <button
      
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><div>Get started</div></div>}
+      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <Link href={"/auth"} className='flex items-center justify-center gap-1'><div>Get started</div></Link>}
     </button>
       </div> 
     {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}

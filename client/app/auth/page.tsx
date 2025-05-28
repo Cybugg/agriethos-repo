@@ -14,22 +14,67 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [viewPass, setViewPass] = useState<boolean>(false);
+  const [form,setForm]=useState({email:"",password:""})
   const router = useRouter();
 
-
-
-
+  
+  // Autopass already logged in users ...
   useEffect(()=>
     {
       if (address && farmerId){router.replace("/dashboard/farmer/")}
      
     },[address,farmerId]
   )
+
+  // Change event function for the form
+  const handleChange  = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    const {name,value} = e.target;
+    setForm(prev => ({...prev,[name]:value}))
+  }
+
+// log in function using email
+
+const signInWithEmail = async()=>{ 
+ 
+    try{
+      const res = await fetch("http://localhost:5000/api/auth/email-login",{
+        headers:{"Content-Type":"application/json"},
+        method:"POST",
+        body:JSON.stringify({email:form.email,password:form.password})
+      })
+      const resJSON = await res.json();
+      const {email,farmerId,newUser,userPack} = await resJSON.data;
+
+      if(!res.ok){
+        console.log("Cannot login user")
+        return;
+      }
+      if ( resJSON.success) {
+        console.log("✅ Login successful!");
+          setEmail(email)
+          setLoading(false);
+          setSuccess("sucess")
+          setFarmerId(farmerId);
+          setNewUser(newUser);
+          setSuccessSub(true);
+          setUser(userPack)
+          console.log(email,farmerId)
+        if(newUser === "false")  router.replace("/dashboard/farmer")
+          else if (newUser === "true") router.replace("/onboard")
+      } else {
+        setMsg(resJSON.message || "Login failed.");
+        setLoading(false);
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+};
 
   // onConnect getNonce -> 
   const connectWallet = async () => {
@@ -97,6 +142,7 @@ Only sign this message if you trust AgriEthos.
     }
   };
 
+  
 
 
   return (
@@ -126,12 +172,12 @@ Only sign this message if you trust AgriEthos.
     >
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><Image src={"/icons/metamask.png"} alt="metamask" width={18} height={14} /><div>Connect with Metamask</div></div>}
     </button>
-    <button
+    {/* <button
       
       className="px-4  w-full py-2 border boder-gray-500 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><Image src={"/icons/google.svg"} alt="google" width={18} height={14} /><div>Sign in with Google</div></div>}
-    </button>
+      {!loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><Image src={"/icons/google.svg"} alt="google" width={18} height={14} /><div>Sign in with Google</div></div>}
+    </button> */}
     {/* Divider */}
     <div className='  w-full py-2 flex items-center justify-between gap-3 text-black rounded'>
 <div className='w-full border border-gray-200'>
@@ -146,24 +192,25 @@ OR
     </div>
     {/* Email Auth */}
     <div className=' w-full border boder-gray-500 text-black rounded'>
-<input type='email' className='w-full p-2 px-4 outline-none' placeholder='Email' required />
+<input type='email' value={form.email} onChange={handleChange} name='email' className='w-full p-2 px-4 outline-none' placeholder='Email' required />
     </div>
     <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' required />
+<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' value={form.password} onChange={handleChange} name='password'  required />
 <div className='text-grey-400 px-2' onClick={()=>setViewPass(pre=>!pre)}>
 {!viewPass ? <FiEye />: <FiEyeOff />}
 </div>
     </div>
     <button
+    onClick={()=> signInWithEmail()}
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
     >
-      {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Sign in</div></div>}
+      { !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Sign in</div></div>}
     </button>
 
     </div>
    
       </div> 
-    {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
+    {successSub && <Alert message='Logged in successfully ...redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
   </div>
     </div>

@@ -1,5 +1,5 @@
 const express = require("express");
-const { requestNonce, verifySignature, registerWithEmail, verifyEmail, resendReverification } = require("../controllers/authController");
+const { requestNonce, verifySignature, registerWithEmail, verifyEmail, resendReverification, loginWithEmail } = require("../controllers/authController");
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.post("/wallet-login", verifySignature);
 router.post("/email-register", registerWithEmail);
 router.post("/email-verify", verifyEmail);
 router.post("/email-reverify", resendReverification);
+router.post("/email-login",loginWithEmail);
 // for email based auth
 
 module.exports = router;

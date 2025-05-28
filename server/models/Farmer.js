@@ -33,7 +33,7 @@ const farmerSchema = new mongoose.Schema({
    default:'farmer'
   },
   password: String,
-  isVerified: { type: Boolean, default: false },
+  isEmailVerified: { type: Boolean, default: false },
   verificationToken: String,
   verificationTokenExpires: Date,
   createdAt: {

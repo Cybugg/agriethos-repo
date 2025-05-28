@@ -165,7 +165,7 @@ exports.registerWithEmail = async (req,res) => {
 // `,
 //   });
 
-  res.status(201).json({ success:true,message: 'User has beeen registered successfully',data:{email:user.email,farmerId:user._id,newUser:user.newUser,userPack:user} });
+  res.status(201).json({ success:true,message: 'User has beeen registered successfully',data:{email:user.email} });
 };
 
 // verify email
@@ -189,6 +189,7 @@ exports.loginWithEmail = async (req, res) => {
   if(!email || !password){
   return res.status(400).json({ error: 'Incomplete credentials' });
   }
+
   const user = await Farmer.findOne({ email });
 
   if (!user || !(await bcrypt.compare(password, user.password)))
@@ -198,7 +199,7 @@ exports.loginWithEmail = async (req, res) => {
     // return res.status(403).json({ error: 'Email not verified' });
 
   // At this point, you can set session or token (skip JWT for now)
-  res.json({ message: 'Logged in successfully', userId: user._id });
+  res.json({ success:true,message: 'User has logged-in successfully',data:{email:user.email,farmerId:user._id,newUser:user.newUser,userPack:user} });
 }
 
 // reverify email

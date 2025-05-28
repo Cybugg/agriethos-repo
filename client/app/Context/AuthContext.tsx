@@ -7,6 +7,8 @@ interface AuthContextType {
   setNewUser: (person: string | null) => void
   farmerId: string | null
   setFarmerId: (farmerId: string | null) => void
+  email: string | null
+  setEmail: (email: string | null) => void
   address: string | null
   setAddress: (address: string | null) => void
   isLoginStatusLoading:boolean
@@ -28,6 +30,8 @@ export interface User {
 const AuthContext = createContext<AuthContextType >({
   user:  null,
   setUser: () => {},
+  email:  null,
+  setEmail: () => {},
   newUser: null,
   setNewUser: () => {},
   address: null,
@@ -40,6 +44,7 @@ const AuthContext = createContext<AuthContextType >({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [farmerId, setFarmerId] = useState<string | null>(null);
   const [newUser, setNewUser] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -48,8 +53,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   //  Get stored address if stored in local storage
   useEffect(() => {
-    const storedAddr = localStorage.getItem('walletAddress')
     setLoginStatusLoading(false);
+    const storedEmail = localStorage.getItem('email')
+    if (storedEmail) setAddress(storedEmail);
+    const storedAddr = localStorage.getItem('walletAddress')
     if (storedAddr) setAddress(storedAddr)
       const storedId = localStorage.getItem('farmerId')
     if (storedId) setFarmerId(storedId)
@@ -103,7 +110,16 @@ const handleUserPack = ( userPack: User | null) => {
   if (userPack) localStorage.setItem('userPack', JSON.stringify(userPack))
     else localStorage.removeItem('newUser')
 }
-  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, farmerId, setFarmerId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleUserPack }}>
+
+const handleEmail = ( email: string | null) => {
+ 
+
+  setEmail(email);
+  
+  if (email) localStorage.setItem('email', email)
+  else localStorage.removeItem('email')
+}
+  return (<AuthContext.Provider value={{ address, setAddress: handleSetAddress, farmerId, setFarmerId:handleSetId, logout, isLoginStatusLoading, newUser, setNewUser:handleNewUser,user, setUser:handleUserPack,email,setEmail:handleEmail}}>
       {children}
     </AuthContext.Provider>
   )

@@ -33,6 +33,9 @@ const cropSchema = new mongoose.Schema({
     enum: ['pending', 'verified', 'rejected','toUpgrade'],
     default: 'pending'
   },
+  reviewedBy: {
+    type: String
+  },
   images: {
     type: [String]
   },

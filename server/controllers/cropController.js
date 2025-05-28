@@ -345,3 +345,31 @@ exports.getAllVerifiedCrops = async (req, res) => {
 };
 
 
+exports.getReviewedCropsByReviewer = async (req,res)=>{
+  try{
+
+    const { reviewerId } = req.params;
+    
+    // Find crops reviewed by this specific reviewer
+    const crops = await Crop.find({
+      reviewedBy: reviewerId,
+      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
+    })
+    .populate('farmerId')
+    .populate('farmPropertyId')
+    .sort({ updatedAt: -1 });
+    
+    res.status(200).json({
+      success: true,
+      count: crops.length,
+      data: crops
+    });
+  } catch (error) {
+    console.error('Error fetching reviewed crops:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+}

@@ -8,7 +8,8 @@ const {
   getAllPendingCrops,
   getAllReviewedCrops, // Add this
   upgradeCrop,
-  getAllVerifiedCrops
+  getAllVerifiedCrops,
+  getReviewedCropsByReviewer
 } = require('../controllers/cropController');
 const upload = require('../middlewares/upload');
 
@@ -30,32 +31,6 @@ router.put('/upgrade/:id', upload.array('images', 4), upgradeCrop);
 router.delete('/:id', deleteCrop);
 
 // Get crops reviewed by a specific reviewer
-router.get('/reviewed/:reviewerId', async (req, res) => {
-  try {
-    const { reviewerId } = req.params;
-    
-    // Find crops reviewed by this specific reviewer
-    const crops = await Crop.find({
-      reviewedBy: reviewerId,
-      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
-    })
-    .populate('farmerId')
-    .populate('farmPropertyId')
-    .sort({ updatedAt: -1 });
-    
-    res.status(200).json({
-      success: true,
-      count: crops.length,
-      data: crops
-    });
-  } catch (error) {
-    console.error('Error fetching reviewed crops:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server Error',
-      error: error.message
-    });
-  }
-});
+router.get('/reviewed/:reviewerId', getReviewedCropsByReviewer);
 
 module.exports = router;

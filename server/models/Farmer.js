@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const farmerSchema = new mongoose.Schema({
   walletAddress: {
     type: String,
-    required: true,
     unique: true, 
     lowercase: true,
+    sparse: true,
   },
   email:{
     type:String,
@@ -13,7 +13,6 @@ const farmerSchema = new mongoose.Schema({
   },
   nonce:{
     type:String,
-    required:true
   },
   farmId:{
     type:String,

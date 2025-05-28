@@ -1,6 +1,8 @@
 const Farmer = require('../models/Farmer');
 const nodemailer = require('nodemailer');
-
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 const {ethers} = require('ethers');
 require('dotenv').config();
 const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
@@ -115,55 +117,55 @@ exports.registerWithEmail = async (req,res) => {
     verificationToken,
   });
 
-  const link = `${process.env.CLIENT_URL}/verify?token=${verificationToken}`;
+//   const link = `${process.env.CLIENT_URL}/verify?token=${verificationToken}`;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: email,
-    subject: 'Verify your email',
-    html: `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Email Verification</title>
-  </head>
-  <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="padding: 20px;">
-      <tr>
-        <td align="center">
-          <table width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
-            <tr>
-              <td style="padding: 30px;">
-                <h2 style="color: #333333;">Verify Your Email</h2>
-                <p style="color: #555555; font-size: 16px;">
-                  Thank you for signing up! Please click the button below to verify your email address.
-                </p>
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="{${link}}" target="_blank" style="background-color: #34a853; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                    Verify Email
-                  </a>
-                </div>
-                <p style="color: #999999; font-size: 14px;">
-                  If you did not request this, please ignore this email.
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 13px; color: #888888;">
-                &copy; 2025 Crop Verification System. All rights reserved.
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-`,
-  });
+//   await transporter.sendMail({
+//     from: process.env.EMAIL,
+//     to: email,
+//     subject: 'Verify your email',
+//     html: `<!DOCTYPE html>
+// <html lang="en">
+//   <head>
+//     <meta charset="UTF-8" />
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+//     <title>Email Verification</title>
+//   </head>
+//   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9;">
+//     <table width="100%" cellpadding="0" cellspacing="0" style="padding: 20px;">
+//       <tr>
+//         <td align="center">
+//           <table width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+//             <tr>
+//               <td style="padding: 30px;">
+//                 <h2 style="color: #333333;">Verify Your Email</h2>
+//                 <p style="color: #555555; font-size: 16px;">
+//                   Thank you for signing up! Please click the button below to verify your email address.
+//                 </p>
+//                 <div style="text-align: center; margin: 30px 0;">
+//                   <a href="{${link}}" target="_blank" style="background-color: #34a853; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+//                     Verify Email
+//                   </a>
+//                 </div>
+//                 <p style="color: #999999; font-size: 14px;">
+//                   If you did not request this, please ignore this email.
+//                 </p>
+//               </td>
+//             </tr>
+//             <tr>
+//               <td style="background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 13px; color: #888888;">
+//                 &copy;2025 Agriethos. All rights reserved.
+//               </td>
+//             </tr>
+//           </table>
+//         </td>
+//       </tr>
+//     </table>
+//   </body>
+// </html>
+// `,
+//   });
 
-  res.status(201).json({ message: 'Verification email sent' });
+  res.status(201).json({ success:true,message: 'User has beeen registered successfully',data:{email:user.email,farmerId:user._id,newUser:user.newUser,userPack:user} });
 };
 
 // verify email
@@ -192,8 +194,8 @@ exports.loginWithEmail = async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password)))
     return res.status(400).json({ error: 'Invalid credentials' });
 
-  if (!user.isVerified)
-    return res.status(403).json({ error: 'Email not verified' });
+  // if (!user.isVerified)
+    // return res.status(403).json({ error: 'Email not verified' });
 
   // At this point, you can set session or token (skip JWT for now)
   res.json({ message: 'Logged in successfully', userId: user._id });

@@ -9,7 +9,7 @@ import {useRouter} from "next/navigation";
 import Alert from '../components/alert';
 import Link from 'next/link';
 
-
+// _______________Not presently implemented_____________
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,27 @@ export default function Page() {
      
     },[address,farmerId]
   )
+  // Resend re-verification link
+const reverify = async() =>{
 
+  let email = localStorage.getItem("emailToVerify");
+  try{
+    const res = await fetch("http://localhost:5000/api/auth/email-reverify",{
+      headers:{"Content-Type":"json/application"},
+      method:"POST",
+      body:JSON.stringify({email:email})
+    })
+    if(!res.ok){
+      console.log("Error in trying to re-request for email verification")
+      return;
+    }
+    console.log("Email sent successfully")
+  }
+  catch(err){
+    console.log(err)
+  }
+
+}
   // onConnect getNonce -> 
   const connectWallet = async () => {
     // init
@@ -111,7 +131,7 @@ Only sign this message if you trust AgriEthos.
     <div className=' text-center'>We sent a verification link to name@email.com.<br/>
     Check your inbox or spam to verify</div>
     <button
-     
+     onClick={reverify}
       className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
     >
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-1'><div>Resend email</div></div>}

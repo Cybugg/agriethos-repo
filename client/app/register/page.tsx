@@ -20,6 +20,9 @@ export default function Page() {
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [viewPass, setViewPass] = useState<boolean>(false);
   const [viewConfirmPass, setViewConfirmPass] = useState<boolean>(false);
+  const [form, setForm] = useState({ email: '', password: '', confirmPassword: '' });
+  const [error, setError] = useState<string>('');
+  const [strength, setStrength] = useState<string>('');
   const router = useRouter();
 
 
@@ -98,7 +101,88 @@ Only sign this message if you trust AgriEthos.
     }
   };
 
+  // function for the email auth
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
 
+    if (name === 'password') {
+      checkPasswordStrength(value);
+    }
+  };
+
+  const checkPasswordStrength = (password: string) => {
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const mediumRegex = /^(?=.*[a-z])(?=.*\d).{6,}$/;
+
+    if (strongRegex.test(password)) {
+      setStrength('Strong');
+    } else if (mediumRegex.test(password)) {
+      setStrength('Medium');
+    } else {
+      setStrength('Weak');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    setError('');
+    setSuccess('');
+
+    const { email, password, confirmPassword } = form;
+
+    if (!email || !password || !confirmPassword) {
+      setError('All fields are required.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/email-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok){
+        console.log(data.message)
+        setMsg(data.message);
+        throw new Error(data.message || 'Something went wrong');
+     
+        }
+        localStorage.setItem("emailToVerify",form.email);
+        console.log("Registeration success")
+        setLoading(false);
+      setSuccess('Sign up successful!');
+      router.replace("/auth")
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const getStrengthColor = () => {
+    switch (strength) {
+      case 'Strong':
+        return 'text-green-600';
+      case 'Medium':
+        return 'text-yellow-500';
+      case 'Weak':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
 
   return (
     <div className='flex w-full'>
@@ -147,22 +231,43 @@ OR
     </div>
     {/* Email Auth */}
     <div className=' w-full border boder-gray-500 text-black rounded'>
-<input type='email' className='w-full p-2 px-4 outline-none' placeholder='Email' required />
+<input name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange} className='w-full p-2 px-4 outline-none'  required />
     </div>
+   
     <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Password' required />
+<input type={viewPass?'text':'password'} className='w-full p-2 outline-none px-4 ' name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}required />
 <div className='text-grey-400 px-2' onClick={()=>setViewPass(pre=>!pre)}>
 {!viewPass ? <FiEye />: <FiEyeOff />}
 </div>
     </div>
+    {form.password && (
+            <p className={`text-sm ${getStrengthColor()}`}>
+              Password strength: {strength}
+            </p>
+          )}
     <div className=' flex gap-2 items-center  w-full  border boder-gray-500 text-black rounded'>
-<input type={viewConfirmPass?'text':'password'} className='w-full p-2 outline-none px-4 ' placeholder='Confirm Password' required />
+<input type={viewConfirmPass?'text':'password'} className='w-full p-2 outline-none px-4 ' name="confirmPassword"
+            placeholder="Confirm Password"
+            value={form.confirmPassword}
+            onChange={handleChange}required />
 <div className='text-grey-400 px-2' onClick={()=>setViewConfirmPass(pre=>!pre)}>
 {!viewPass ? <FiEye />: <FiEyeOff />}
 </div>
     </div>
+    {form.password && form.confirmPassword && form.password !== form.confirmPassword && (
+            <p className={`text-sm text-red-500`}>
+             Passwords do not match
+            </p>
+          )}
     <button
-      className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"
+      className="px-4 mt-5 w-full py-2 bg-primary-600 text-black rounded"  onClick={handleSubmit}
     >
       {loading && success !== "successful"?<Loader />: !loading && success === "success"?"Login successful": <div className='flex items-center justify-center gap-2'><div>Continue</div></div>}
     </button>
@@ -172,6 +277,7 @@ OR
       </div> 
     {successSub && <Alert message='Logged in successful ... redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
+    {error && <p className="text-red-600 mt-2">{error}</p>}
   </div>
     </div>
   

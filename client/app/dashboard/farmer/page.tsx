@@ -8,12 +8,15 @@ import {
 import { useNavContext } from './NavContext';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsPerson } from 'react-icons/bs';
+import { BsMailbox, BsPerson, BsWallet } from 'react-icons/bs';
 import { GiFarmer } from 'react-icons/gi';
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
 import axios from 'axios';
 import Weather from './components/weather';
+import { CiMail } from 'react-icons/ci';
+import { ethers } from 'ethers';
+import Alert from '@/app/components/alert';
 
 
 // Define the shape of the chart data
@@ -77,8 +80,10 @@ export default function Home() {
   const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
   const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
+  const [error,setError] = useState<boolean>(false);
+  const [msg,setMsg] = useState<string>("");
   const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, logout ,isLoginStatusLoading,farmerId,newUser,user,setUser} = useAuth();
+  const { address, setAddress,logout ,isLoginStatusLoading,farmerId,newUser,user,setUser,email} = useAuth();
   const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
   const { farm, setFarm } = useFarm();
@@ -86,7 +91,8 @@ export default function Home() {
 
   // Route protection
   useEffect(() => {
-    if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+
+    if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
     if(!isLoginStatusLoading && address && farmerId && newUser ==="true"){router.push('/onboard');
        console.log("new user ni") }
        console.log(newUser)
@@ -95,7 +101,7 @@ export default function Home() {
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
-        },[])
+        },[address])
   
         // to fetch farm properties and set it to state
   useEffect(() => {
@@ -122,10 +128,70 @@ export default function Home() {
     }
   }, [user, isLoginStatusLoading]);
 
+
+  const connectWallet = async () =>{
+      if (!(window as any).ethereum) return alert("Please install MetaMask");
+      // Provider for the EVM wallet
+ const provider = new ethers.BrowserProvider((window as any).ethereum);
+ // client 
+ const signer = await provider.getSigner();
+
+ const addr = await signer.getAddress();
+    if(user && user._id){
+  // send request to get Nonce and transaction timestamp (addr as payload)
+const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce/"+user._id, {
+method: "PUT",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ address: addr }),
+});
+// Parse Nonce data
+const { nonce, timestamp } = await resNonce.json();
+console.log(nonce)
+
+const message = `Welcome to AgriEthos 🌱
+
+Sign this message to verify you own this wallet and authenticate securely.
+
+Wallet Address: ${addr}
+Nonce: ${nonce}
+Timestamp: ${timestamp}
+
+This request will not trigger a blockchain transaction or cost any gas.
+
+Only sign this message if you trust AgriEthos.
+`;
+console.log(addr,nonce,timestamp)
+const signature = await signer.signMessage(message);
+
+const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login/"+user._id, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ address: addr, signature }),
+}); 
+const loginData = await resLogin.json();
+const {address,farmerId,newUser,userPack} = await loginData.data
+if (loginData.success && resLogin.ok) {
+console.log("✅ Login successful!");
+ 
+ setAddress(address);
+ 
+
+
+} else {
+console.log(loginData.error || "Login failed.");
+setMsg(loginData.message)
+setError(true)
+}
+
+    }
+       
+    
+  }
+
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
         {/* Header and Descriptive Text */}
-        <div className='flex items-start justify-between'>
+        <div className='flex items-start justify-between w-full'>
      <div className='flex flex-col gap-2'>
         <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
           Home
@@ -139,21 +205,32 @@ export default function Home() {
         
         </div>
        </div>
-       <div className='flex gap-2 items-center'>
+       <div className='flex gap-2 items-center  '>
        <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
-                    <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
-                      
-                    <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                   {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                   
+                    <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
                     <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-                       { displayLogout && address &&<div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
+                       { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
                           Disconnect
                         </div>}
                     </div>
                     </div> 
                        
-                       </button>
+                       </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' onClick={()=>connectWallet()} >Connect Wallet</div></button>} */}
+                       {/* Email */}
+                       { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                   
+                   <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                   <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                   
+                   </div>
+                   </div> 
+                      
+                      </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+           
             <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
             <Image src={"/icons/burger.svg"} alt="burger" width={40} height={40} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
                    </div>
@@ -464,6 +541,7 @@ Corn Post-harvest
      </div>
         </div>
       </section> */}
+       {error&& <Alert message={`${msg}`} color='text-red-800' background='bg-red-100' onClose={()=> setError(false)}/>}
       </div>
     );
   }

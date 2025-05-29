@@ -60,7 +60,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ setImages }) => {
         className="border-dashed border-2 border-gray-400 p-4 rounded text-center cursor-pointer hover:bg-gray-50 transition"
       >
         <input {...getInputProps()} />
-        <p>Drag and drop up to 4 images here</p>
+        <p>Click on/Drag and drop up to 4 images here</p>
       </div>
 
       <div className="flex gap-3 flex-wrap mt-4">

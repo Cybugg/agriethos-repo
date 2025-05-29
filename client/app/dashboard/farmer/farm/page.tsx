@@ -7,24 +7,27 @@ import EditFarmMethod from '../components/editFarmMethod';
 import EditFarmImage from '../components/ediitFarmImage';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsPerson } from 'react-icons/bs';
+import { BsPerson, BsWallet } from 'react-icons/bs';
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
 import Alert from '@/app/components/alert';
+import { CiMail } from 'react-icons/ci';
+import { ethers } from 'ethers';
 
 function page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
     const [editOverview, setEditOverview] = useState<boolean | null>(false);
     const [editMethod, setEditMethod] = useState<boolean| null>(false);
+    const [editImage, setEditImage] = useState<boolean| null>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const [alertSub, setAlertSub] = useState<boolean>(false);
-        const { address, logout ,isLoginStatusLoading,farmerId, newUser, user} = useAuth();
+        const { address, logout ,isLoginStatusLoading,farmerId, newUser, user, email, setAddress} = useAuth();
           const { farm, setFarm } = useFarm();
         const router = useRouter();
 
     // Route protection
     useEffect(() => {
-    if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+    if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
     if(address && newUser ==="true"){router.push('/onboard')}
   }, [address])
 
@@ -62,6 +65,60 @@ const str2Bool = (val:string)=>{
   return val==="true"? true: val==="false"?false:undefined
 };
 
+const connectWallet = async () =>{
+      if (!(window as any).ethereum) return alert("Please install MetaMask");
+    
+        // Provider for the EVM wallet
+        const provider = new ethers.BrowserProvider((window as any).ethereum);
+        // client 
+        const signer = await provider.getSigner();
+    
+        const addr = await signer.getAddress();
+
+         // send request to get Nonce and transaction timestamp (addr as payload)
+    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: addr }),
+    });
+   // Parse Nonce data
+    const { nonce, timestamp } = await resNonce.json();
+    console.log(nonce)
+
+    const message = `Welcome to AgriEthos 🌱
+
+Sign this message to verify you own this wallet and authenticate securely.
+
+Wallet Address: ${addr}
+Nonce: ${nonce}
+Timestamp: ${timestamp}
+
+This request will not trigger a blockchain transaction or cost any gas.
+
+Only sign this message if you trust AgriEthos.
+  `;
+  console.log(addr,nonce,timestamp)
+    const signature = await signer.signMessage(message);
+
+    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: addr, signature }),
+    }); 
+    const loginData = await resLogin.json();
+    const {address,farmerId,newUser,userPack} = await loginData.data
+    if (loginData.success) {
+      console.log("✅ Login successful!");
+      
+        setAddress(address);
+      
+      
+    } else {
+      console.log(loginData.error || "Login failed.");
+      
+    }
+    
+  }
 
   return (
     <div className='relative'> 
@@ -69,7 +126,7 @@ const str2Bool = (val:string)=>{
       {/* Edit overview */}
    {( editOverview &&  <EditOverview setEditMethod={setEditMethod} setEditOverview={setEditOverview}  />)}
      {editMethod && <EditFarmMethod setEditMethod={setEditMethod} setEditOverview={setEditOverview} />}
-      {/* <EditFarmImage /> */}
+   { editImage &&  <EditFarmImage setEditImage={setEditImage}/>}
  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black ml-[]">
     
            {/* Header and Descriptive Text */}
@@ -91,17 +148,28 @@ const str2Bool = (val:string)=>{
              <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
-                                         <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                         {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                           
+                                                            <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                                            <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                               { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
+                                                                  Disconnect
+                                                                </div>}
+                                                            </div>
+                                                            </div> 
                                                                
-                                                             <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
-                                                             <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-                                                                { displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
-                                                                   Disconnect
-                                                                 </div>}
-                                                             </div>
-                                                             </div> 
-                                                                
-                                                                </button>
+                                                               </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div  onClick={()=>connectWallet()} className='flex items-center justify-center gap-2 relative' >Connect Wallet</div></button>} */}
+                                                               {/* Email */}
+                                                               { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                           
+                                                           <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                                           <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                           
+                                                           </div>
+                                                           </div> 
+                                                              
+                                                              </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+                                                   
                                    <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                                    <Image src={"/icons/burger.svg"} alt="burger" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)} />
                                           </div>
@@ -262,7 +330,7 @@ const str2Bool = (val:string)=>{
    </div>
    <div className='flex gap-2'>
  
-   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2' onClick={()=>setAlertSub(true)}>
+   <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex gap-2' onClick={()=>setEditImage(true)}>
    <Image src={"/icons/edit.png"} alt='edit img' width={24} height={24} /> <span className='hidden lg:block'>Edit Images</span>
   </div>
    </div>

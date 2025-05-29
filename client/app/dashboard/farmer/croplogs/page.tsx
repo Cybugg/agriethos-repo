@@ -13,7 +13,7 @@ import {
 import AddCrop from '../components/addCrops';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsPerson } from 'react-icons/bs';
+import { BsPerson, BsWallet } from 'react-icons/bs';
 import { PiPlant } from 'react-icons/pi';
 import { GrUpdate } from "react-icons/gr";
 import Alert from '@/app/components/alert';
@@ -22,6 +22,8 @@ import Loader from '@/app/components/loader';
 import UpgradeCrop from '../components/upgradeCrop';
 import ImageViewer from '@/app/components/imageViewer';
 import DisplayQRCode from '../components/qrcodePreview';
+import { CiMail } from 'react-icons/ci';
+import { ethers } from 'ethers';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -85,7 +87,7 @@ function page() {
       const [displayUpgradeCrop,setDisplayUpgradeCrop] = useState<boolean>(false)
       const [showQRCode,setShowQRCode] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-      const { address, logout ,isLoginStatusLoading,newUser,farmerId,user} = useAuth();
+      const { address, logout ,isLoginStatusLoading,newUser,farmerId,user,email,setAddress} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
       const [alertErrorCreate, setAlertErrorCreate] = useState(false);
       const [collaInd , setCollaInd] = useState<number|undefined>(undefined);
@@ -189,10 +191,63 @@ useEffect(() => {
 
          // Route protection
           useEffect(() => {
-          if (!isLoginStatusLoading && !address  ) {router.push('/auth')}
+          if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
           if(address && newUser ==="true"){router.push('/onboard')}
         }, [address])
+      const connectWallet = async () =>{
+            if (!(window as any).ethereum) return alert("Please install MetaMask");
+          
+              // Provider for the EVM wallet
+              const provider = new ethers.BrowserProvider((window as any).ethereum);
+              // client 
+              const signer = await provider.getSigner();
+          
+              const addr = await signer.getAddress();
       
+               // send request to get Nonce and transaction timestamp (addr as payload)
+          const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: addr }),
+          });
+         // Parse Nonce data
+          const { nonce, timestamp } = await resNonce.json();
+          console.log(nonce)
+      
+          const message = `Welcome to AgriEthos 🌱
+      
+      Sign this message to verify you own this wallet and authenticate securely.
+      
+      Wallet Address: ${addr}
+      Nonce: ${nonce}
+      Timestamp: ${timestamp}
+      
+      This request will not trigger a blockchain transaction or cost any gas.
+      
+      Only sign this message if you trust AgriEthos.
+        `;
+        console.log(addr,nonce,timestamp)
+          const signature = await signer.signMessage(message);
+      
+          const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: addr, signature }),
+          }); 
+          const loginData = await resLogin.json();
+          const {address,farmerId,newUser,userPack} = await loginData.data
+          if (loginData.success) {
+            console.log("✅ Login successful!");
+            
+              setAddress(address);
+            
+            
+          } else {
+            console.log(loginData.error || "Login failed.");
+            
+          }
+          
+        }
   return (
     <div>
        {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
@@ -220,17 +275,28 @@ useEffect(() => {
               <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
         Reload
        </div>
-                                <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
-                                                                                              
-              <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
-             <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-{ displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
-  Disconnect
-  </div>}
- </div>
- </div> 
-                                                                                               
-                                                                                               </button>
+                                {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                  
+                                                   <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                                   <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                      { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
+                                                         Disconnect
+                                                       </div>}
+                                                   </div>
+                                                   </div> 
+                                                      
+                                                      </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative'onClick={()=>connectWallet()} >Connect Wallet</div></button>} */}
+                                                      {/* Email */}
+                                                      { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c]  rounded-2xl  lg:block text-grey-800'>
+                                                  
+                                                  <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                                  <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                  
+                                                  </div>
+                                                  </div> 
+                                                     
+                                                     </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+                                          
                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                          <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                 </div>

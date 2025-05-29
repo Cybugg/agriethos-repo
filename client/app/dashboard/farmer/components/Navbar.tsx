@@ -5,6 +5,9 @@ import React from "react";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useNavContext } from "../NavContext";
 import Link from "next/link";
+import { CiSettings } from "react-icons/ci";
+import { LogOut } from "lucide-react";
+import { useAuth } from "@/app/Context/AuthContext";
 
 type NavItemProps = {
   icon: string;
@@ -39,6 +42,7 @@ const NavItemMobile: React.FC<NavItemPropsMobile> = ({ label, active, address}) 
 
 const Navbar: React.FC = () => {
 const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
+const {logout} = useAuth()
 // Hides navbar mobile
 
   return (
@@ -56,7 +60,11 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
         <NavItem icon={"/icons/tree-palm.svg"} label="My Farm" active={currentPage === "farm"} address="/farm" />
         <NavItem icon={"/icons/notepad.svg"} label="Crop Logs" active={currentPage === "logs"} address="/croplogs"/>
         <NavItem icon={"/icons/explore.svg"} label="Explore" active={currentPage === "explore"} address="/explore"/>
+        <NavItem icon={"/icons/settings.png"} label="Settings" active={currentPage === "settings"} address="/settings"/>
    
+        <div className="group relative flex items-center text-black justify-start w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px]">
+      <div className="text-orange-500"><LogOut /></div> <div className="text-orange-500" onClick={()=>logout()}>Logout</div> 
+        </div>
       </div> 
     </div>
 
@@ -79,6 +87,10 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
 <NavItemMobile  label="My Farm" active={currentPage === "farm"} address="/farm"  />
 <NavItemMobile  label="Crop Logs" active={currentPage === "logs"} address="/croplogs" />
 <NavItemMobile label="Explore" active={currentPage === "explore"} address="/explore"/>
+<NavItemMobile label="Settings" active={currentPage === "settings"} address="/settings"/>
+<div className="group relative flex items-center text-black justify-center w-full h-12 rounded-lg cursor-pointer transition gap-[12px] p-[12px]">
+  <div className="text-orange-500" onClick={()=>logout()}>Logout</div> 
+        </div>
 
 </div>
  </div>

@@ -1,12 +1,60 @@
 "use client"
+import Alert from "@/app/components/alert";
+import ImageUploader from "@/app/components/imageUploader";
+import Loader from "@/app/components/loader";
 import Switch from "@/app/components/switch";
+import { useFarm } from "@/app/Context/FarmContext";
+import axios from "axios";
 import Image from "next/image";
-import React, {ReactNode} from "react";
+import React, {ReactNode, useState} from "react";
 import { BiUpload } from "react-icons/bi";
 import { MdFileUpload } from "react-icons/md";
 
 
-const EditFarmImage:React.FC = () => {
+interface props {
+  setEditImage: (data:boolean) => void }
+  
+const EditFarmImage:React.FC<props> = ({setEditImage}) => {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const {farm} = useFarm();
+  const [msg, setMsg] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [successSub, setSuccessSub] = useState<boolean>(false);
+  const [warning , setWarning]= useState<boolean>(false);
+
+  const handleUpload = async () => {
+    if (!selectedFiles) return;
+    if(selectedFiles.length !== 4){
+      alert("Exactly, 4 Images of your farm is required")
+      return;
+    }
+    const formData = new FormData();
+    Array.from(selectedFiles).forEach(file => {
+      formData.append('images', file);
+    });
+
+    try {
+      setLoading(true);
+      const res = await axios.put(
+        `http://localhost:5000/api/farm/images/${farm&&farm._id}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+        
+      );
+      const result = await res.data;
+    setMsg(res.data.message)
+    setSuccess(res.data.message)
+      console.log('Upload success:', res.data);
+    } catch (err) {
+      console.error('Upload failed:', err);
+    } finally {
+      setLoading(false);
+      window.location.reload()
+    }
+  };
     return (
         <div className="z-50 h-screen fixed flex items-center justify-center w-full bg-black bg-opacity-10 backdrop-blur-lg text-black p-8">
 
@@ -15,9 +63,9 @@ const EditFarmImage:React.FC = () => {
     {/* Title */}
     <div className="flex w-full h-full justify-between items-center">
      <div className="text-lg">
-      Edit Farm Images
+      Edit Farm Images 
      </div>
-    <div className="cursor-pointer">
+    <div className="cursor-pointer" onClick={()=>setEditImage(false)}>
       <Image src="/icons/cancel.svg" alt="cancel" width={24} height={24} />
     </div>
     </div>    
@@ -26,11 +74,9 @@ const EditFarmImage:React.FC = () => {
 
 {/* Upload area */}
 <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
+<ImageUploader setImages={setSelectedFiles} />
 
 
-<button className="border-[0.75px] border-[#CFCFCF] p-3 text-grey-600 rounded-2xl flex items-center gap-2">
-Upload  <span className="font-bold ">4</span>Images <BiUpload className="text-2xl text-primary-500"/>
-</button>
 <div className="text-xs text-grey-500">
 Note: You are required to upload 4 images of your farm
 </div>
@@ -39,11 +85,13 @@ Note: You are required to upload 4 images of your farm
 
 
 {/* item 6 submit*/}
-<button className="bg-primary-500 text-center p-3 rounded-lg w-full">
-  Save
+<button className="bg-primary-500 text-center p-3 rounded-lg w-full" onClick={()=>handleUpload()}>
+ {loading?<Loader/> :" Save"}
 </button>
 </div>
    </div>
+   {successSub && <Alert message={success} color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
+   {warning&& <Alert message='' color='text-yellow-800' background='bg-yellow-100' onClose={()=> setWarning(false)}/>}
         </div>
     )
 }

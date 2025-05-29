@@ -1,5 +1,7 @@
 const FarmProperty = require('../models/FarmProperties');
 const Farmer = require('../models/Farmer');
+const cloudinary = require('cloudinary').v2;
+const fs = require("fs") ;
 
 exports.createFarmProperty = async (req, res) => {
     try {
@@ -128,3 +130,61 @@ exports.getFarmByPropertyId = async (req, res) => {
 
 
 
+
+
+
+
+// Helper to extract public_id from Cloudinary URL
+const getPublicIdFromUrl = (url) => {
+  try {
+    const parts = url.split("/");
+    const filename = parts[parts.length - 1]; // e.g., abc123.jpg
+    const [publicId] = filename.split(".");
+    return "farm_properties/" + publicId;
+  } catch (err) {
+    console.error("Error extracting publicId:", err);
+    return null;
+  }
+};
+
+exports.updateFarmImages = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const farm = await FarmProperty.findById(id);
+    if (!farm) return res.status(404).json({ error: "Farm not found" });
+
+    // 1. Delete old images from Cloudinary
+    for (const imageUrl of farm.images) {
+      const publicId = getPublicIdFromUrl(imageUrl);
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
+
+    // 2. Upload new images to Cloudinary
+    const files = req.files;
+    const newImageUrls = [];
+
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "farm_properties",
+      });
+      newImageUrls.push(result.secure_url);
+
+      // Delete the local file (not the Cloudinary URL!)
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    }
+
+    // 3. Update MongoDB
+    farm.images = newImageUrls;
+    await farm.save();
+
+    return res.status(200).json({ message: "Images updated", images: newImageUrls });
+  } catch (error) {
+    console.error("Error updating images:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

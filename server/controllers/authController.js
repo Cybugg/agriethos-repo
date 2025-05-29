@@ -9,24 +9,43 @@ const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
 
 
 exports.requestNonce = async (req, res) => {
+  const {id} = req.params;
+
+  
   const { address } = req.body;
-  if (!address) return res.status(400).json({ error: "Address required" });
+
+if (!address) {
+    return res.status(400).json({ success: false, message: 'Wallet address is required' });
+  }
   const timestamp = new Date().toISOString();
 
-  let user = await Farmer.findOne({ walletAddress: address.toLowerCase()});
+  try {
+    let user = await Farmer.findOne({ _id:id });
 
-  if (!user) {
-    user = new Farmer({ walletAddress: address.toLowerCase(), nonce: generateNonce() });
-  } else {
-    user.nonce = generateNonce(); // refresh nonce each time
-  }
+    if (!user) {
+      return res.status(401).json("UNAUTHURIZED ACCESS")
+    }
+    else {
+      user.nonce = generateNonce(); // refresh nonce each time
+    }
+    user.walletAddress = address;
   user.last_transaction_stamp = timestamp;
+  
+    console.log(timestamp);
   await user.save();
-  res.json({ nonce: user.nonce ,timestamp:timestamp});
+
+    return res.status(200).json({ success: true, data: user,nonce: user.nonce ,timestamp:timestamp});
+  } catch (error) {
+    console.error('User login error:', error);
+    return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
 };
 
 
+
 exports.verifySignature = async (req, res) => {
+
+  const {id} = req.params;
 
   // Get address and signature from the client
   const { address, signature } = req.body;
@@ -37,12 +56,12 @@ exports.verifySignature = async (req, res) => {
   }
 
   // Fetch user from the database 
-  const user = await Farmer.findOne({ walletAddress: address.toLowerCase() });
+  const user = await Farmer.findOne({ walletAddress: address.toLowerCase(), _id:id });
   
   // If user is not on the database -> Return 404 cannot find status
-  if (!user) return res.status(400).json({ error: "User not found" });
+  if (!user) return res.status(400).json({ error: "user not found" });
 
-  // Mesage (Must align with the client's message)
+  // Message (Must align with the client's message)
   const message = `Welcome to AgriEthos 🌱
 
 Sign this message to verify you own this wallet and authenticate securely.
@@ -62,6 +81,8 @@ Only sign this message if you trust AgriEthos.
   try {
     // verify the message
     const recovered = ethers.verifyMessage(message, signature);
+    console.log(recovered.toLowerCase());
+    console.log(address.toLowerCase());
     // If the the parsed address is same as the recovered
     if (recovered.toLowerCase() === address.toLowerCase()) {
 
@@ -70,7 +91,10 @@ Only sign this message if you trust AgriEthos.
    
       await user.save();
 
-      return res.json({ success: true, message: "Wallet verified", data:{address,farmerId:user._id,newUser:user.newUser,userPack:user} });
+
+
+
+      return res.json({ success: true, message: "Wallet verified", data:{user}});
     } else {
       return res.status(401).json({ error: "Signature verification failed" });
     }
@@ -79,6 +103,15 @@ Only sign this message if you trust AgriEthos.
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+
+
+
+
+
+
+
+
 // Email related auth
 //  Setup transporter
 const transporter = nodemailer.createTransport({
@@ -254,6 +287,46 @@ exports.resendReverification = async (req, res) => {
 
   } catch (error) {
     console.error('Error resending verification email:', error);
-    return res.status(500).json({ message: 'Something went wrong.' });
+    return res.status(500).json({ message: 'Something Went Wrong.' });
   }
 };
+
+
+
+exports.changePassword = async (req,res)=>{
+  // Get user ID for verification and update
+  const {id}= req.params;
+  // Get new-password and previous-password
+  const {newPassword,prevPassword} = req.body;
+
+  // input validation
+  if(!newPassword || !prevPassword){
+    return res.status(400).json({message:"Invalid Credentials"})
+  }
+   // input validation
+   if(newPassword === prevPassword){
+    return res.status(400).json({message:"new password is the same with the old password"})
+  }
+
+  //check if user exists
+  try{
+    const user = await Farmer.findOne({_id:id});
+    if(!user){
+      return res.status(404).json({message:"Cannot Find User"})
+    }
+    // Verify prev password
+    const passAuthentic = await bcrypt.compare(prevPassword,user.password);
+    if(!passAuthentic){
+      return res.status(400).json({message:"Wrong Previous Password"})
+    }
+    user.password = await bcrypt.hash(newPassword,10);
+    await user.save();
+    return res.status(200).json({message:"Password Updated"})
+  }
+  catch(err){
+
+    return res.status(500).json({message:"Internal Server Error"})
+  }
+  
+  
+}

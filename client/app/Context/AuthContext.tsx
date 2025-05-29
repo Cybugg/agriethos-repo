@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setLoginStatusLoading(false);
     const storedEmail = localStorage.getItem('email')
-    if (storedEmail) setAddress(storedEmail);
+    if (storedEmail) setEmail(storedEmail);
     const storedAddr = localStorage.getItem('walletAddress')
     if (storedAddr) setAddress(storedAddr)
       const storedId = localStorage.getItem('farmerId')

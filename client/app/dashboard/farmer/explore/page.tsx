@@ -10,7 +10,10 @@ import Loader from "../../../components/loader";
 import Link from "next/link";
 import { useNavContext } from "../NavContext";
 import { useAuth } from "@/app/Context/AuthContext";
-import { BsPerson } from "react-icons/bs";
+import { BsPerson, BsWallet } from "react-icons/bs";
+import { CiMail } from "react-icons/ci";
+import { useRouter } from "next/navigation";
+import { ethers } from "ethers";
 
 dayjs.extend(relativeTime);
 // capitalize first character
@@ -34,14 +37,17 @@ export default function Home() {
   const observer = useRef<IntersectionObserver | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
  const {setCurrentPage,setMobileDisplay} = useNavContext();
- const { address, logout ,isLoginStatusLoading,newUser,farmerId} = useAuth();
+ const { address, logout ,isLoginStatusLoading,newUser,farmerId, setAddress,email} = useAuth();
  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
-
+const router = useRouter();
     useEffect(()=>{
           setCurrentPage("explore");
           setMobileDisplay(false);
         
         },[])
+
+        if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
+
   const fetchCrops = async (pageNum: number, search: string) => {
     setLoading(true);
     try {
@@ -90,6 +96,61 @@ export default function Home() {
     },
     [loading, hasMore]
   );
+
+  const connectWallet = async () =>{
+        if (!(window as any).ethereum) return alert("Please install MetaMask");
+      
+          // Provider for the EVM wallet
+          const provider = new ethers.BrowserProvider((window as any).ethereum);
+          // client 
+          const signer = await provider.getSigner();
+      
+          const addr = await signer.getAddress();
+  
+           // send request to get Nonce and transaction timestamp (addr as payload)
+      const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: addr }),
+      });
+     // Parse Nonce data
+      const { nonce, timestamp } = await resNonce.json();
+      console.log(nonce)
+  
+      const message = `Welcome to AgriEthos 🌱
+  
+  Sign this message to verify you own this wallet and authenticate securely.
+  
+  Wallet Address: ${addr}
+  Nonce: ${nonce}
+  Timestamp: ${timestamp}
+  
+  This request will not trigger a blockchain transaction or cost any gas.
+  
+  Only sign this message if you trust AgriEthos.
+    `;
+    console.log(addr,nonce,timestamp)
+      const signature = await signer.signMessage(message);
+  
+      const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: addr, signature }),
+      }); 
+      const loginData = await resLogin.json();
+      const {address,farmerId,newUser,userPack} = await loginData.data
+      if (loginData.success) {
+        console.log("✅ Login successful!");
+        
+          setAddress(address);
+        
+        
+      } else {
+        console.log(loginData.error || "Login failed.");
+        
+      }
+      
+    }
   return (
  
 <main className=" w-full flex-1 bg-white ">
@@ -103,17 +164,28 @@ export default function Home() {
         </div>
             <div className='flex gap-2 items-center'>
                
-                                     <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800 hidden md:block'>
-                                                                                                   
-                   <div className='flex items-center justify-center gap-2 relative ' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsPerson /></div> <div className="">{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
-                  <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-     { displayLogout && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> logout()}>
-       Disconnect
-       </div>}
-      </div>
-      </div> 
-                                                                                                    
-                                                                                                    </button>
+                                    {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                      
+                                                       <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                                       <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                          { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
+                                                             Disconnect
+                                                           </div>}
+                                                       </div>
+                                                       </div> 
+                                                          
+                                                          </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative'  onClick={()=>connectWallet()} >Connect Wallet</div></button>} */}
+                                                          {/* Email */}
+                                                          { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                      
+                                                      <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                                      <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                      
+                                                      </div>
+                                                      </div> 
+                                                         
+                                                         </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+                                              
                               <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
                               <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
                                      </div>

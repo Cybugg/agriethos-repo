@@ -52,6 +52,8 @@ export default function FarmOnboardingForm() {
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [successSub, setSuccessSub] = useState<boolean>(false);
+  const [msg, setMsg] = useState<string>("");
+  const [errorSub, setErrorSub] = useState<boolean>(false);
   const [showConfirm,setShowConfirm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -155,10 +157,14 @@ export default function FarmOnboardingForm() {
       console.log('Upload result:', result);
       setSuccessSub(true);
       setNewUser("false")
+      setMsg(res.data.message)
       router.replace("/dashboard/farmer");
     
     } catch (err) {
       console.error('Upload failed:', err);
+      setCurrentStep(0)
+      setMsg("Something just happended, don't fret and try again. ")
+      setShowConfirm(false)
     } 
 
   };
@@ -434,7 +440,8 @@ Note: You are required to upload 4 images of your farm
           </button>
         )}
       </div>
-      {successSub && <Alert message='Logged in successful ... redirecting' onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
+      {successSub && <Alert message={msg} onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
+      {errorSub && <Alert message={msg}onClose={()=> setErrorSub(false)} color='text-red-800'  background='bg-red-100' />}
     </div>
   );
 }

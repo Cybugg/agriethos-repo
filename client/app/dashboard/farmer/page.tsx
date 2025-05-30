@@ -196,7 +196,7 @@ setError(true)
         <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
           Home
         </div>
-        <div className='text-grey-600'>
+        <div className='text-grey-600 hidden lg:block'>
           Your farm at a glance
         </div>
         <div className='flex gap-2 text-primary-700  font-bold'>
@@ -206,7 +206,7 @@ setError(true)
         </div>
        </div>
        <div className='flex gap-2 items-center  '>
-       <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+       <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={()=> window.location.reload()}>
         Reload
        </div>
                    {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
@@ -232,7 +232,7 @@ setError(true)
                       </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
            
             <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-            <Image src={"/icons/burger.svg"} alt="burger" width={40} height={40} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
+            <Image src={"/icons/burger.svg"} alt="burger" width={70} height={70} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
                    </div>
         </div>
        {/* Section One */}

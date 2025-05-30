@@ -155,14 +155,31 @@ const router = useRouter();
  
 <main className=" w-full flex-1 bg-white ">
 <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
+
+<div className='flex gap-2 items-center w-full justify-end lg:hidden my-2'>
+            
+                                     {/* Email */}
+                                     { email?   <button className='px-2 py-1 border-2  border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                 
+                                 <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                 <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                 
+                                 </div>
+                                 </div> 
+                                    
+                                    </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+                         
+         <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
+         <Image src={"/icons/burger.svg"} alt="menu" width={70} height={70} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
+                </div>
         {/* Search bar */}
         
      <div className='flex w-full gap-4 justify-between'>
-        <div className=' border-2 w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
+        <div className=' border-2 w-full lg:w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
           <input type="search" placeholder="Search" className="outline-none  w-full "    value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}/> <BiSearch className="text-[24px] text-grey-500" />
         </div>
-            <div className='flex gap-2 items-center'>
+            <div className='lg:flex gap-2 items-center hidden'>
                
                                     {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
                                                       

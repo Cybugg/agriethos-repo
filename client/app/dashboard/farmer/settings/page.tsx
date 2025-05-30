@@ -199,8 +199,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   return (
  
-<main className=" w-full flex-1 bg-white ">
-<div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
+<main className=" w-full bg-white ">
+<div className="text-sm md:text-md min-h-screen px-[35px] py-[80px] bg-white text-black w-full ">
         {/* Search bar */}
         
      <div className='flex w-full gap-4 justify-between'>
@@ -242,7 +242,7 @@ const handleSubmit = async (e: React.FormEvent) => {
            </div>
           </div>
        {/* Section One */}
-       <section className='lg:max-w-96 flex flex-col gap-2'>
+       <section className=' w-full flex flex-col gap-2'>
         
         {/* item */}
         <div className="flex flex-col gap-1">

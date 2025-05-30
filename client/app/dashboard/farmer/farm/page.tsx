@@ -13,6 +13,7 @@ import { useFarm } from '@/app/Context/FarmContext';
 import Alert from '@/app/components/alert';
 import { CiMail } from 'react-icons/ci';
 import { ethers } from 'ethers';
+import ImageViewer from '@/app/components/imageViewer';
 
 function page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
@@ -21,9 +22,24 @@ function page() {
     const [editImage, setEditImage] = useState<boolean| null>(false);
       const {setCurrentPage,setMobileDisplay} = useNavContext();
       const [alertSub, setAlertSub] = useState<boolean>(false);
+      const [isViewerOpen, setIsViewerOpen] = useState(false);
+       const [currentIndex, setCurrentIndex] = useState(0);
+       const [selected, setSelected] = useState<string>();
         const { address, logout ,isLoginStatusLoading,farmerId, newUser, user, email, setAddress} = useAuth();
           const { farm, setFarm } = useFarm();
         const router = useRouter();
+
+
+
+
+        // Image viewer functions
+        const openViewer = (index: number) => {
+          setCurrentIndex(index);
+          setIsViewerOpen(true);
+        };
+      
+        const next = () =>farm && farm.images && setCurrentIndex((prev) => (prev + 1) % farm.images.length);
+        const prev = () =>farm && farm.images && setCurrentIndex((prev) => (prev - 1 + farm.images.length) % farm.images.length);
 
     // Route protection
     useEffect(() => {
@@ -294,7 +310,7 @@ Only sign this message if you trust AgriEthos.
    Pesticide usage
    </div>
    <div>
-  {farm&&str2Bool(farm.pesticideUsage)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
+  {farm&&str2Bool(farm.pesticideUsage)?CFL("used"): !farm ?<div className='w-12 h-4 bg-gray-100'></div>:"Not-used"}
    </div>
    </div>
    {/* Variable */}
@@ -304,7 +320,7 @@ Only sign this message if you trust AgriEthos.
    Cover crops 
    </div>
    <div>
-  {farm && str2Bool(farm.coverCrops)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
+  {farm && str2Bool(farm.coverCrops)?CFL("used"):!farm ?<div className='w-12 h-4 bg-gray-100'></div>:"Not-used"}
    </div>
    </div>
    {/* Variable */}
@@ -314,7 +330,7 @@ Only sign this message if you trust AgriEthos.
    Companion planting
    </div>
    <div>
-{farm&& str2Bool(farm.companionPlanting)?CFL("used"):<div className='w-12 h-4 bg-gray-100'></div>}
+{farm&& str2Bool(farm.companionPlanting)?CFL("used"):!farm ?<div className='w-12 h-4 bg-gray-100'></div>:"Not-used"}
    </div>
    </div>
    </div>
@@ -338,7 +354,18 @@ Only sign this message if you trust AgriEthos.
            {/* Farm Images */}
            <div className=' w-full gap-6 grid grid-cols-1 lg:grid-cols-2'>
             
-              {farm && farm.images && farm["images"].map((url:string,ind:number) => <div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg' width={100} height={100}/> </div>
+              {farm && farm.images && farm["images"].map((url:string,ind:number) => <div className='w-50'  key={ind}><Image src={url} alt='img' className='w-full h-96 bg-grey-500 object-cover rounded-lg cursor-pointer' width={100} height={100}  onClick={() => openViewer(ind)}/>
+
+                 {isViewerOpen && (
+                        <ImageViewer
+                          images={farm && farm.images}
+                          currentIndex={currentIndex}
+                          onClose={() => setIsViewerOpen(false)}
+                          onNext={next}
+                          onPrev={prev}
+                        />
+                      )}
+                 </div>
  )}
 
 

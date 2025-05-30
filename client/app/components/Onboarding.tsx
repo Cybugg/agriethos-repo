@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import Alert from './alert';
 import Confirm from './confirm';
 import Loader from './loader';
+import ImageUploader from './imageUploader';
 
 interface FarmFormData {
     farmName: string,
@@ -49,6 +50,7 @@ export default function FarmOnboardingForm() {
     companionPlanting:false,
     images: []
   });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [showConfirm,setShowConfirm] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -113,11 +115,11 @@ export default function FarmOnboardingForm() {
     setLoading(true);
     console.log('Submitting farm data:', formData);
    
-    if(!boolToStr(formData.companionPlanting)||!boolToStr(formData.coverCrops)||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!formData.images||!formData.irrigationType||!formData.location||!boolToStr(formData.pesticideUsage)||!formData.size||!formData.soilType||!formData.waterSource){
+    if(!boolToStr(formData.companionPlanting)||!boolToStr(formData.coverCrops)||!formData.farmName ||!formData.farmType||!formData.fertilizerType||!selectedFiles||!formData.irrigationType||!formData.location||!boolToStr(formData.pesticideUsage)||!formData.size||!formData.soilType||!formData.waterSource){
       alert("Fill out all fields")
       console.log("Fill out all fields")
       return;
-    } if (formData.images.length !=4) {
+    } if (selectedFiles.length !=4) {
       alert('You must upload 4 images');
       return;
     }
@@ -139,7 +141,7 @@ export default function FarmOnboardingForm() {
       data.append('companionPlanting',boolToStr(formData.companionPlanting));
      
       // Append multiple images correctly
-      formData.images.forEach((file: File) => {
+      selectedFiles.forEach((file: File) => {
         data.append('images', file); // 'images' must match backend field
       });
     
@@ -376,25 +378,18 @@ Companion planting
 
           <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
           
-      <div className='text-3xl py-12 text-center'>
+      <div className='text-3xl py-12 text-center '>
    Share 4  Images of Farm
                 </div>
-          <button className="border border-black border-dashed  p-2 text-grey-600 rounded-2xl items-center gap-2 flex ">
-           <input
-            type="file"
-            multiple
-           max={4}
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-96 h-48 border-none p-2 rounded"
-          />
-          </button>
-          <div className="text-lg text-grey-500">
-          or Drag and Drop above
-          </div>
-          <div className="text-xs text-grey-500">
-          Note: You are required to upload 4 images of your farm
-          </div>
+         {/* Upload area */}
+<div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
+<ImageUploader setImages={setSelectedFiles} />
+
+
+<div className="text-xs text-grey-500">
+Note: You are required to upload 4 images of your farm
+</div>
+</div>
           </div>
          
           {formData.images.length > 0 && (

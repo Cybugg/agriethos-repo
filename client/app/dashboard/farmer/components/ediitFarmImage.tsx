@@ -44,7 +44,7 @@ const EditFarmImage:React.FC<props> = ({setEditImage}) => {
         }
         
       );
-      const result = await res.data;
+     
     setMsg(res.data.message)
     setSuccess(res.data.message)
       console.log('Upload success:', res.data);

@@ -9,7 +9,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import Loader from "./components/loader";
 import Link from "next/link";
 import { useAuth } from "./Context/AuthContext";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 // capitalize first character

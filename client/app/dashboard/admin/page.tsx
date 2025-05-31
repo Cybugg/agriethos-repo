@@ -205,18 +205,18 @@ export default function Home() {
             {/* Title */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
-      <div  className='basis-1/5 flex items-center justify-center '>
+      <div  className='basis-1/2 hidden gl:flex lg:basis-1/5  items-center justify-center '>
  S/N
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
     Address
       </div>
     
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
       Name
       </div>
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900 hidden gl:flex basis-1/2 lg:basis-1/5 '>
       Date Created
       </div>
 
@@ -226,18 +226,18 @@ export default function Home() {
       {agents[0] && agents.map((ele,ind)=>(
     <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
           {/* S/N */}
-      <div  className='basis-1/4 flex items-start justify-center '>
+      <div  className= 'basis-1/2 lg:basis-1/5 hidden gl:flexflex items-start justify-center '>
      {ind+1}
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.walletAddress} 
       </div>
     
-      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.name}
       </div>
-      <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+      <div className='text-grey-900 hidden gl:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.createdAt}
       </div>
 
@@ -270,18 +270,18 @@ export default function Home() {
             {/* Title */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
-      <div  className='basis-1/5 flex items-center justify-center '>
+      <div  className='basis-1/2 hidden gl:flex lg:basis-1/5items-center justify-center '>
  S/N
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900  basis-1/2 lg:basis-1/5 '>
     Address
       </div>
     
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
       Name
       </div>
-      <div className='text-grey-900 basis-1/5 '>
+      <div className='text-grey-900 hidden gl:flex basis-1/2 lg:basis-1/5 '>
       Date Created
       </div>
 
@@ -292,18 +292,18 @@ export default function Home() {
 {admins && admins.map((ele,ind)=>(
   <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
         {/* S/N */}
-    <div  className='basis-1/4 flex items-start justify-center '>
+    <div  className= 'hidden gl:flex basis-1/2 lg:basis-1/5  items-start justify-center '>
    {ind+1}
     </div>
       {/* Variable Name */}
-    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.walletAddress} 
     </div>
   
-    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.name} {user &&user._id === ele._id && "(You)"}
     </div>
-    <div className='text-grey-900 basis-1/4 overflow-x-scroll '>
+    <div className='text-grey-900 hidden gl:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.createdAt}
     </div>
 

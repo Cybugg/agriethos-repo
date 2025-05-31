@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/utils/Strings.sol"; // For toHexString, if generating ID on-chain
 
@@ -47,6 +47,7 @@ contract AgriEthosProductLedger {
 
     address public owner;
     mapping(address => bool) public authorizedReviewers;
+    uint256 private authorizedReviewerCount; // ADD THIS LINE
 
     // --- Events ---
 
@@ -85,6 +86,7 @@ contract AgriEthosProductLedger {
         owner = msg.sender;
         // Optionally, add the deployer as an initial authorized reviewer
         authorizedReviewers[msg.sender] = true;
+        authorizedReviewerCount = 1; // INITIALIZE COUNT
         emit ReviewerAdded(msg.sender, msg.sender);
     }
 
@@ -98,6 +100,7 @@ contract AgriEthosProductLedger {
         require(_reviewer != address(0), "AgriEthos: Invalid reviewer address");
         require(!authorizedReviewers[_reviewer], "AgriEthos: Reviewer already authorized");
         authorizedReviewers[_reviewer] = true;
+        authorizedReviewerCount++; // INCREMENT COUNT
         emit ReviewerAdded(_reviewer, msg.sender);
     }
 
@@ -108,6 +111,10 @@ contract AgriEthosProductLedger {
     function removeReviewer(address _reviewer) external onlyOwner {
         require(_reviewer != address(0), "AgriEthos: Invalid reviewer address");
         require(authorizedReviewers[_reviewer], "AgriEthos: Reviewer not currently authorized");
+        // Ensure we don't go below zero, though logic should prevent this if _reviewer was indeed authorized.
+        if (authorizedReviewers[_reviewer]) {
+            authorizedReviewerCount--; // DECREMENT COUNT
+        }
         authorizedReviewers[_reviewer] = false;
         emit ReviewerRemoved(_reviewer, msg.sender);
     }
@@ -255,15 +262,6 @@ contract AgriEthosProductLedger {
      * @return The number of authorized reviewers.
      */
     function getAuthorizedReviewersCount() external view returns (uint256) {
-        // This is not efficient for a large number of reviewers.
-        // For a large list, consider managing it off-chain or using a different pattern.
-        uint256 count = 0;
-        // This part would require iterating through known reviewer addresses if you don't store them in an array.
-        // For simplicity, this function is a placeholder if you need such a count.
-        // A more practical approach for on-chain counting would be to maintain a counter variable
-        // that increments/decrements in addReviewer/removeReviewer.
-        // However, the primary use of authorizedReviewers is the mapping check.
-        revert("AgriEthos: getAuthorizedReviewersCount not fully implemented for on-chain iteration without an array of reviewers.");
-        return count; // Unreachable
+        return authorizedReviewerCount; // RETURN THE COUNT FROM STATE VARIABLE
     }
 }

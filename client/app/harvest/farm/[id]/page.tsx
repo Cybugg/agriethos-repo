@@ -68,7 +68,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
   }
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading farm data...</div>
+    return <div className="flex justify-center text-black items-center h-screen">Loading farm data...</div>
   }
 
   if (error) {
@@ -76,7 +76,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
   }
 
   if (!farm) {
-    return <div className="flex justify-center items-center h-screen">No farm data available.</div>;
+    return <div className="flex justify-center text-black items-center h-screen">No farm data available.</div>;
   }
 
   return (
@@ -183,7 +183,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
               <div className='w-full' key={ind}>
                 <Image 
                   src={url} 
-                  alt={`Farm image ${ind + 1}`} 
+                  alt={``} 
                   className='w-full h-64 md:h-96 bg-grey-500 object-cover rounded-lg' 
                   width={500} 
                   height={400}

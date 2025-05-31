@@ -44,7 +44,7 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
   return (
     <div>
       {/* Desktop mode */}
-        <div className="h-screen hidden  w-[352px] py-[80px] px-[32px] bg-white  fixed lg:flex flex-col  gap-[40px] items-center border-r-grey-200 border-r-[0.75px] ">
+        <div className="h-screen hidden  w-[352px] py-[80px] px-[32px] bg-white  fixed lg:flex flex-col  gap-[40px] items-center border-r-grey-200 border-r-[0.75px] z-[99999] ">
       {/* Top: Logo or Brand */}
       <div className="flex flex-col w-full items-center space-y-4">
         <div className="text-2xl font-bold flex items-center justify-start w-full"><Image src={"/static/logo-black.png"} alt="logo" width={167} height={34.99} className=""></Image></div>
@@ -58,7 +58,7 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
     </div>
 
     {/* Mobile mode */}
- <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-[80px] px-[32px] text-black` }>
+ <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-5 px-[32px] text-black z-[99999]` }>
   {/* Header */}
   <div className="flex justify-between items-center">
 {/* Logo */}
@@ -67,13 +67,13 @@ const {currentPage,mobileDisplay,setMobileDisplay} = useNavContext();
 </div>
 {/* Cancel */}
 <button onClick={()=> setMobileDisplay(false)}>
-<Image src={"/icons/cancel.svg"} alt="logo" width={24} height={24} className="" />
+<Image src={"/icons/cancel.svg"} alt="logo" width={40} height={40} className="" />
 </button>
     </div>
 {/* nav links */}
 <div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] ">
 <NavItemMobile  label="Home" active={currentPage === "home"} address="/"  />
-<NavItemMobile  label="Manage users" active={currentPage === "manage"} address="/farm"  />
+<NavItemMobile  label="Manage users" active={currentPage === "manage"} address="/manage"  />
 
 </div>
  </div>

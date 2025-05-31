@@ -8,6 +8,7 @@ import { useAdminAuth } from "@/app/Context/AdminAuthContext";
 import { BsPerson } from "react-icons/bs";
 import Loader from "@/app/components/loader";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 
 
@@ -110,15 +111,18 @@ export default function Home() {
   
 
     return (
-      <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black">
+      <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:p-[80px] bg-white text-black">
+         <div className="flex w-full justify-end my-1">
+         <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
+          </div>
         {/* Header and Descriptive Text */}
         <div className='flex items-start justify-between'>
      <div className='flex flex-col gap-2'>
         <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
           Home
         </div>
-        <div className='text-grey-600'>
-        <span className="text-primary-700">{user? user.name:"user"}</span>, welcome to overview of Agriethos
+        <div className='text-grey-600 hidden lg:block'>
+        <span className="text-primary-700 ">{user? user.name:"user"}</span>, welcome to overview of Agriethos
         </div>
    </div>
        <div className='flex gap-2 items-center'>
@@ -205,7 +209,7 @@ export default function Home() {
             {/* Title */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
-      <div  className='basis-1/2 hidden gl:flex lg:basis-1/5  items-center justify-center '>
+      <div  className='basis-1/2 hidden lg:flex lg:basis-1/5  items-center justify-center '>
  S/N
       </div>
         {/* Variable Name */}
@@ -216,7 +220,7 @@ export default function Home() {
       <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
       Name
       </div>
-      <div className='text-grey-900 hidden gl:flex basis-1/2 lg:basis-1/5 '>
+      <div className='text-grey-900 hidden lg:flex basis-1/2 lg:basis-1/5 '>
       Date Created
       </div>
 
@@ -226,18 +230,18 @@ export default function Home() {
       {agents[0] && agents.map((ele,ind)=>(
     <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
           {/* S/N */}
-      <div  className= 'basis-1/2 lg:basis-1/5 hidden gl:flexflex items-start justify-center '>
+      <div  className= 'basis-1/2 lg:basis-1/5 hidden lg:flex items-start justify-center '>
      {ind+1}
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
+      <div className='text-grey-900 max-w-24 lg:max-w-full basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.walletAddress} 
       </div>
     
       <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.name}
       </div>
-      <div className='text-grey-900 hidden gl:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
+      <div className='text-grey-900 hidden lg:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
       {ele && ele.createdAt}
       </div>
 
@@ -270,7 +274,7 @@ export default function Home() {
             {/* Title */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b '>
           {/* S/N */}
-      <div  className='basis-1/2 hidden gl:flex lg:basis-1/5items-center justify-center '>
+      <div  className='basis-1/2 hidden lg:flex lg:basis-1/5 items-center justify-center '>
  S/N
       </div>
         {/* Variable Name */}
@@ -281,7 +285,7 @@ export default function Home() {
       <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
       Name
       </div>
-      <div className='text-grey-900 hidden gl:flex basis-1/2 lg:basis-1/5 '>
+      <div className='text-grey-900 hidden lg:flex basis-1/2 lg:basis-1/5 '>
       Date Created
       </div>
 
@@ -292,18 +296,18 @@ export default function Home() {
 {admins && admins.map((ele,ind)=>(
   <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
         {/* S/N */}
-    <div  className= 'hidden gl:flex basis-1/2 lg:basis-1/5  items-start justify-center '>
+    <div  className= 'hidden lg:flex basis-1/2 lg:basis-1/5  items-start justify-center '>
    {ind+1}
     </div>
       {/* Variable Name */}
-    <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
+    <div className='text-grey-900 max-w-24 lg:max-w-full  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.walletAddress} 
     </div>
   
     <div className='text-grey-900  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.name} {user &&user._id === ele._id && "(You)"}
     </div>
-    <div className='text-grey-900 hidden gl:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
+    <div className='text-grey-900 hidden lg:flex  basis-1/2 lg:basis-1/5 overflow-x-scroll '>
     {ele && ele.createdAt}
     </div>
 

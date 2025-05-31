@@ -154,7 +154,7 @@ const router = useRouter();
   return (
  
 <main className=" w-full flex-1 bg-white ">
-<div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
+<div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px]  bg-white text-black w-full ">
 
 <div className='flex gap-2 items-center w-full justify-end lg:hidden my-2'>
             

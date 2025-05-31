@@ -200,10 +200,26 @@ const handleSubmit = async (e: React.FormEvent) => {
   return (
  
 <main className=" w-full bg-white ">
-<div className="text-sm md:text-md min-h-screen px-[35px] py-[80px] bg-white text-black w-full ">
+<div className="text-sm md:text-md min-h-screen px-[35px] py-5 lg:py-[80px] bg-white text-black w-full ">
+   <div className='flex gap-2 items-center w-full justify-end lg:hidden my-2'>
+                     
+                                              {/* Email */}
+                                              { email?   <button className='px-2 py-1 border-2  border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                          
+                                          <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                          <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                          
+                                          </div>
+                                          </div> 
+                                             
+                                             </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
+                                  
+                  <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
+                  <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
+                         </div>
                   {/* Header and Descriptive Text */}
                   <div className='flex items-center justify-between'>
-               <div className='flex flex-col gap-2 items-center justify-center'>
+               <div className='flex flex-col gap-2 items-start justify-center'>
                   <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
                    Settings
                   </div>
@@ -212,7 +228,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   </div>
                  
                  </div>
-                    <div className='flex gap-2 items-center'>
+                    <div className='lg:flex gap-2 items-center hidden'>
                     <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={()=> window.location.reload()}>
                Reload
               </div>
@@ -250,7 +266,7 @@ const handleSubmit = async (e: React.FormEvent) => {
            </div>
           </div>
        {/* Section One */}
-       <section className=' w-full flex flex-col gap-2'>
+       <section className=' w-full lg:w-96 flex flex-col gap-2'>
         
         {/* item */}
         <div className="flex flex-col gap-1">

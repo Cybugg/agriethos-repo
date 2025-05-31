@@ -69,7 +69,7 @@ const {logout} = useAuth()
     </div>
 
     {/* Mobile mode */}
- <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-[80px] px-[32px] z-[999999]` }>
+ <div className={` ${mobileDisplay? "fixed":"hidden"} h-screen w-full fixed bg-white py-5 px-[32px] z-[999999]` }>
   {/* Header */}
   <div className="flex justify-between items-center">
 {/* Logo */}
@@ -78,7 +78,7 @@ const {logout} = useAuth()
 </div>
 {/* Cancel */}
 <button onClick={()=> setMobileDisplay(false)}>
-<Image src={"/icons/cancel.svg"} alt="logo" width={24} height={24} className="" />
+<Image src={"/icons/cancel.svg"} alt="logo" width={40} height={40} className="" />
 </button>
     </div>
 {/* nav links */}

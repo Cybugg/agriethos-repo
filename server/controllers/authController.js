@@ -145,7 +145,7 @@ exports.registerWithEmail = async (req,res) => {
 
 
   const user = await Farmer.create({
-    email,
+    email:email.toLowerCase(),
     password: hashed,
     verificationToken,
   });
@@ -223,7 +223,7 @@ exports.loginWithEmail = async (req, res) => {
   return res.status(400).json({ error: 'Incomplete credentials' });
   }
 
-  const user = await Farmer.findOne({ email });
+  const user = await Farmer.findOne({ email:email.toLowerCase() });
 
   if (!user || !(await bcrypt.compare(password, user.password)))
     return res.status(400).json({ error: 'Invalid credentials' });

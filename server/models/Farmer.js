@@ -7,6 +7,7 @@ const farmerSchema = new mongoose.Schema({
   },
   email:{
     type:String,
+    lowercase: true,
     unique:true
   },
   nonce:{

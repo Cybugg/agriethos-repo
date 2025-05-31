@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const Crop = require('../models/Crop');
 const Farmer = require('../models/Farmer');
 const FarmProperty = require('../models/FarmProperties');
-const Reviewer = require('../models/Reviewer'); // If you use reviewerId
+const Reviewer = require('../models/Reviewer');
+const Admin = require('../models/Admin'); // Import the Admin model
 
 // Mock the blockchainService
 jest.mock('../utils/blockchainService');
@@ -16,6 +17,7 @@ describe('Crop API - Blockchain Integration', () => {
   let cropToVerify;
   let verifiedCrop; // For testing addProcessLog
   let reviewer;
+  let adminUser; // Variable to hold the created admin
 
   beforeEach(async () => {
     // Clear mocks before each test
@@ -27,11 +29,18 @@ describe('Crop API - Blockchain Integration', () => {
     addProcessLogToBlockchain.mockResolvedValue("mock_tx_hash_add_log");
 
 
+    // Create a dummy Admin user first
+    adminUser = await Admin.create({
+      name: 'Test Admin',
+      email: 'admin@test.com',
+      password: 'password123', // Add any other required fields for Admin model
+      // Ensure your Admin model has these fields or adjust accordingly
+    });
+
     farmer = await Farmer.create({
       name: 'Test Farmer',
       email: 'farmer@test.com',
-      walletAddress: '0x1234567890123456789012345678901234567890', // Essential for blockchain interaction
-      // Add other required fields for Farmer model
+      walletAddress: '0x1234567890123456789012345678901234567890',
     });
 
     farmProperty = await FarmProperty.create({
@@ -41,7 +50,6 @@ describe('Crop API - Blockchain Integration', () => {
       farmType: 'Organic',
       soilType: 'Loamy',
       waterSource: 'Well',
-      // Add other required fields
     });
 
     cropToVerify = await Crop.create({
@@ -50,28 +58,27 @@ describe('Crop API - Blockchain Integration', () => {
       cropName: 'Test Tomatoes',
       plantingDate: new Date('2024-01-01'),
       expectedHarvestingDate: new Date('2024-06-01'),
-      growthStage: 'flowering',
+      growthStage: 'pre-harvest',
       verificationStatus: 'pending',
     });
 
-    // For testing addProcessLog, create a crop that is already "verified" in DB
-    // and simulate it having a blockchain hash
     verifiedCrop = await Crop.create({
       farmerId: farmer._id,
       farmPropertyId: farmProperty._id,
       cropName: 'Test Carrots (Verified)',
       plantingDate: new Date('2024-02-01'),
       expectedHarvestingDate: new Date('2024-07-01'),
-      growthStage: 'harvested',
-      verificationStatus: 'verified', // Important
-      blockchainTransactionHash: 'existing_mock_tx_hash', // Important
+      growthStage: 'post-harvest',
+      verificationStatus: 'verified',
+      blockchainTransactionHash: 'existing_mock_tx_hash',
       blockchainVerificationTimestamp: new Date(),
     });
 
-    reviewer = await Reviewer.create({ // Or Admin, depending on your reviewerId source
+    reviewer = await Reviewer.create({
         name: 'Test Reviewer',
-        walletAddress: '0xReviewerWalletAddress000000000000000000'
-        // Add other required fields
+        walletAddress: '0xReviewerWalletAddress000000000000000000',
+        createdBy: adminUser._id, // Use the created admin's ID
+        // last_transaction_stamp is not needed here as it has a default in the model
     });
   });
 
@@ -113,7 +120,7 @@ describe('Crop API - Blockchain Integration', () => {
         cropName: 'No Wallet Crop',
         plantingDate: new Date(),
         expectedHarvestingDate: new Date(),
-        growthStage: 'seedling',
+        growthStage: 'pre-harvest',
         verificationStatus: 'pending',
       });
 

@@ -23,9 +23,8 @@ const cropSchema = new mongoose.Schema({
     type: Date
   },
   growthStage: {
-
     type: String,
-    enum: ['pre-harvest', 'post-harvest'],
+    enum: ['pre-harvest', 'post-harvest'], // Only these two values are allowed
     required: true
   },
   verificationStatus: {

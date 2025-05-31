@@ -1,4 +1,3 @@
-// filepath: /home/kingtom/Documents/blockchain/agriethos-repo/server/__tests__/setup.js
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 

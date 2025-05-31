@@ -14,7 +14,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail} = useAuth();
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail, email} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false);
@@ -27,7 +27,7 @@ export default function Page() {
   // Autopass already logged in users ...
   useEffect(()=>
     {
-      if (address && farmerId){router.replace("/dashboard/farmer/")}
+      if (address || farmerId || email){router.replace("/dashboard/farmer/")}
      
     },[address,farmerId]
   )

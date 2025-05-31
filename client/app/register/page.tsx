@@ -14,7 +14,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser} = useAuth();
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser, email} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false);
@@ -29,13 +29,13 @@ export default function Page() {
 
 
 
-  useEffect(()=>
-    {
-      if (address && farmerId){router.replace("/dashboard/farmer/")}
-     
-    },[address,farmerId]
-  )
-
+     // Autopass already logged in users ...
+     useEffect(()=>
+      {
+        if (address || farmerId || email){router.replace("/dashboard/farmer/")}
+       
+      },[address,farmerId]
+    )
   // onConnect getNonce -> 
   const connectWallet = async () => {
     // init

@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Loader from "./components/loader";
 import Link from "next/link";
+import { useAuth } from "./Context/AuthContext";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 // capitalize first character
@@ -30,9 +32,17 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
-
+  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail,email} = useAuth();
+  const router = useRouter();
   const fetchCrops = async (pageNum: number, search: string) => {
     setLoading(true);
+      // Autopass already logged in users ...
+  useEffect(()=>
+    {
+      if (address || farmerId || email){router.replace("/dashboard/farmer/")}
+     
+    },[address,farmerId]
+  )
     try {
       const res = await fetch(
         `http://localhost:5000/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(

@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from "next/link";
 import ImageViewer from "@/app/components/imageViewer";
+import { useAuth } from "@/app/Context/AuthContext";
 
 
 interface crop{
@@ -17,6 +18,7 @@ interface crop{
 export default function Home() {
    const [mobileDisplay,setMobileDisplay] = useState(false);
    const [crop, setCrop] =useState<crop|undefined>(undefined)
+   const {user} = useAuth()
    const { id } = useParams();
    const router = useRouter();
 
@@ -74,11 +76,11 @@ export default function Home() {
           <div className="border p-2 rounded-full text-xl cursor-pointer" onClick={()=> router.back()}><IoMdArrowRoundBack/></div>  <div>About this harvest</div> 
            </div>
               {/* Signin */}
-     <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
+    {!user && <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
    <div>
    {"Sign in"}  
    </div>
-  </Link>
+  </Link>}
       </div>
         
           </div>

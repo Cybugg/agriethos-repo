@@ -143,18 +143,18 @@ Only sign this message if you trust AgriEthos.
    {( editOverview &&  <EditOverview setEditMethod={setEditMethod} setEditOverview={setEditOverview}  />)}
      {editMethod && <EditFarmMethod setEditMethod={setEditMethod} setEditOverview={setEditOverview} />}
    { editImage &&  <EditFarmImage setEditImage={setEditImage}/>}
- <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black ml-[]">
+ <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black m">
     
            {/* Header and Descriptive Text */}
            <div className='flex items-start justify-between'>
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-2 '>
            <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
              My Farm
            </div>
            <div className='text-grey-600 hidden lg:block'>
              Manage and update your farm details
            </div>
-             <div className='flex gap-2 text-primary-700  font-bold'>
+             <div className='flex my-2 gap-2 text-primary-700  font-bold'>
                   
                        <PiPlant /> <div>{farm?CFL(farm?farm.farmName:"N/A"):<div className='w-12 h-4 bg-gray-100'></div>}</div>
                    

@@ -9,12 +9,14 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import IndexNavbar from '@/app/components/indexNavbar'
 import { IoMdArrowRoundBack } from 'react-icons/io'
+import { useAuth } from '@/app/Context/AuthContext'
 
 function Page() {
 const [mobileDisplay,setMobileDisplay] = useState(false);
   const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const {user} =useAuth();
   const params = useParams()
   const id = params.id as string // This 'id' is the farmPropertyId from the URL
   const router = useRouter();
@@ -96,11 +98,11 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
             <PiPlant /> <div>{CFL(farm.farmName)}</div>
           </div>
         </div>
-        <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-sm"}`}>
+       {!user && <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-sm"}`}>
    <div>
    {"Sign in"}  
    </div>
-  </Link>
+  </Link>}
       </div>
 
       {/* Section One */}

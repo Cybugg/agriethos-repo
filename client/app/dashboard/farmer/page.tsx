@@ -199,7 +199,7 @@ setError(true)
         <div className='text-grey-600 hidden lg:block'>
           Your farm at a glance
         </div>
-        <div className='flex gap-2 text-primary-700  font-bold'>
+        <div className='flex my-2 gap-2 text-primary-700  font-bold'>
        
             <PiPlant /> <div>{farm?farm.farmName:<div className='w-8 h-8 bg-gray-100'></div>}</div>
         

@@ -201,40 +201,48 @@ const handleSubmit = async (e: React.FormEvent) => {
  
 <main className=" w-full bg-white ">
 <div className="text-sm md:text-md min-h-screen px-[35px] py-[80px] bg-white text-black w-full ">
-        {/* Search bar */}
-        
-     <div className='flex w-full gap-4 justify-between'>
-        <div className='w-[400px] rounded-full flex gap-1 items-center justify-between py-2 text-2xl'>
-        Settings
-        </div>
-            <div className='flex gap-2 items-center'>
-               
-                                    {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
-                                                      
-                                                       <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
-                                                       <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-                                                          { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
-                                                             Disconnect
-                                                           </div>}
-                                                       </div>
-                                                       </div> 
+                  {/* Header and Descriptive Text */}
+                  <div className='flex items-center justify-between'>
+               <div className='flex flex-col gap-2 items-center justify-center'>
+                  <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
+                   Settings
+                  </div>
+                  <div className='text-grey-600 hidden lg:block'>
+                    Manage user settings
+                  </div>
+                 
+                 </div>
+                    <div className='flex gap-2 items-center'>
+                    <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={()=> window.location.reload()}>
+               Reload
+              </div>
+                                                {/* { address?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                                  
+                                                                   <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><BsWallet /></div> <div>{address && address.slice(0,6)}...{address&&address.slice(-4)}</div>
+                                                                   <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                                      { displayLogout && address && <div className='text-black bg-primary-500 py-1 px-2' onClick={()=> setAddress(null)}>
+                                                                         Disconnect
+                                                                       </div>}
+                                                                   </div>
+                                                                   </div> 
+                                                                      
+                                                                      </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div  onClick={()=>connectWallet()} className='flex items-center justify-center gap-2 relative' >Connect Wallet</div></button>} */}
+                                                                      {/* Email */}
+                                                                      { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
+                                                                  
+                                                                  <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
+                                                                  <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
+                                                                  
+                                                                  </div>
+                                                                  </div> 
+                                                                     
+                                                                     </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
                                                           
-                                                          </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative'  onClick={()=>connectWallet()} >Connect Wallet</div></button>} */}
-                                                          {/* Email */}
-                                                          { email?   <button className='px-2 py-1 border-2 w-full border-[#a5eb4c]  rounded-2xl  lg:block text-grey-800'>
-                                                      
-                                                      <div className='flex items-center justify-center gap-2 relative' onClick={()=> setDisplayLogout(!displayLogout)}>  <div className='text-grey-800 text-lg'><CiMail /></div> <div>{email && email.slice(0,6)}...{email&&email.slice(-4)}</div>
-                                                      <div className='absolute bottom-[-150%] w-full flex flex-col bg-grey-100'>
-                                                      
-                                                      </div>
-                                                      </div> 
-                                                         
-                                                         </button>:<button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'><div className='flex items-center justify-center gap-2 relative' >Add Email</div></button>}
-                                              
-                              <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
-                              <Image src={"/icons/burger.svg"} alt="menu" width={40} height={40} className="cursor-pointer lg:hidden"  onClick={()=>setMobileDisplay(true)}/>
-                                     </div>
-   </div>
+                                          <Image src={"/icons/bell.svg"} alt="bell" width={24} height={24} className="cursor-pointer hidden lg:block" />
+                                          <Image src={"/icons/burger.svg"} alt="burger" width={70} height={70} className="cursor-pointer t lg:hidden" onClick={()=>setMobileDisplay(true)}/>
+                                                 </div>
+                  </div>
+       
    {/* Header */}
     <div className='flex flex-col gap-2 my-8'>
            <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>

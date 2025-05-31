@@ -258,14 +258,14 @@ useEffect(() => {
        
               {/* Header and Descriptive Text */}
               <div className='flex items-start justify-between'>
-           <div className='flex flex-col gap-2'>
+           <div className='flex flex-col gap-2 '>
               <div className='text-xl font-semibold lg:font-normal lg:text-2xl'>
                 Crop Logs
               </div>
               <div className='text-grey-600 hidden lg:block'>
                 Keep track of every farming activity
               </div>
-                <div className='flex gap-2 text-primary-700 font-bold'>
+                <div className='flex my-2 gap-2 text-primary-700 font-bold'>
                      
                           <PiPlant /> <div>{farm&&farm.farmName}</div>
                       
@@ -316,7 +316,7 @@ useEffect(() => {
       <div className='flex gap-2'>
     
       <div className='py-1 px-2 rounded-lg border border-grey-200 cursor-pointer text-grey-700 flex items-center gap-2' onClick={()=>setDisplayAddCrop(true)}>
-      <Image src={"/icons/plus.svg"} alt='edit img' className=' w-4 lg:w-6' width={24} height={24} /> <span className='hidden lg:block w-4 lg:w-6'>Add Crop</span> 
+      <Image src={"/icons/plus.svg"} alt='edit img'  width={24} height={24} /> <span className='hidden lg:block w-4 lg:w-6'>Add Crop</span> 
      </div>
       </div>
       </div>
@@ -326,22 +326,22 @@ useEffect(() => {
       {/* Variable */}
       <div className='bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b  '>
           {/* S/N */}
-      <div  className='basis-1/3 lg:basis-1/5 text-grey-900 '>
+      <div  className='basis-1/2 hidden lg:block lg:basis-1/5 text-grey-900 '>
  S/N
       </div>
         {/* Variable Name */}
-      <div className='text-grey-900 basis-1/3 lg:basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
     Crop Name
       </div>
     
-      <div className='text-grey-900 basis-1/3 hidden lg:block lg:basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 hidden lg:block lg:basis-1/5 '>
       Growth Stage
       </div>
-      <div className='text-grey-900 basis-1/3 hidden lg:block lg:basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 hidden lg:block lg:basis-1/5 '>
       Date Created
       </div>
     
-      <div className='text-grey-900 basis-1/3 lg:basis-1/5 '>
+      <div className='text-grey-900 basis-1/2 lg:basis-1/5 '>
       Crop Status
       </div>
       </div>
@@ -351,44 +351,44 @@ useEffect(() => {
         {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
              { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>
            {/* s/n */}
-           <div className='basis-1/3 lg:basis-1/5 flex items-center justify-center '>
+           <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center hidden lg:block '>
           {ind+1}
         </div>
         {/* Variable Name */}
-      <div className=' basis-1/3 lg:basis-1/5 flex items-center justify-center '>
+      <div className=' basis-1/2 lg:basis-1/5 flex items-center justify-center '>
  {ele.cropName}
       </div>
    
-      <div className=' basis-1/3 lg:basis-1/5 hidden lg:flex items-center justify-center  '>
+      <div className=' basis-1/2 lg:basis-1/5 hidden lg:flex items-center justify-center  '>
       {ele.growthStage}
       </div>
 
-      <div className=' basis-1/3 lg:basis-1/5 hidden lg:flex items-center justify-center  '>
+      <div className=' basis-1/2 lg:basis-1/5 hidden lg:flex items-center justify-center  '>
     {ele.createdAt&&ele.createdAt.slice(0,10)}
       </div>
       {/* Button arena */}
-   {ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/3 lg:basis-1/5 flex items-center justify-center '>
+   {ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/2 lg:basis-1/5 flex items-center justify-center '>
            <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
            <div className="w-4 h-4"><GrUpdate /></div>
            <div className='text-xs'>Upgrade</div>
 </button>
-      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/5 flex items-center justify-center  text-error-500'>
+      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center  text-error-500'>
       
       <button className=' px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
 </button>
-      </div>:ele.verificationStatus === "verified"? <div className='basis-1/5   flex items-center justify-center'>
+      </div>:ele.verificationStatus === "verified"? <div className='basis-1/2 lg:basis-1/5   flex items-center justify-center'>
       <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>
 </button>
-      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/5 flex items-center justify-center '>
+      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center '>
       <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Pending</div>
 </button>
-      </div>:      <div className='basis-1/5 flex items-center justify-center '>
+      </div>:      <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center '>
       <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Unkown</div>
@@ -591,7 +591,7 @@ verificationStatus: "pending" */}
             </section>
       {/* ############################################################################################### */}
             {/* Section two */}
-            <section className='mt-6 flex flex-col lg:flex-row gap-8 items-start '>
+            <section className='mt-6 flex flex-col lg:flex-row gap-2 lg:gap-8 items-start  '>
   <div className=' w-full rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col max-h-[350px]  overflow-y-scroll'>
         <div className='flex items-center justify-between'>
         {/* Title */}
@@ -604,14 +604,14 @@ verificationStatus: "pending" */}
 {/* Variable <header>*/}
 <div className='gap-24 flex items-center text-center justify-between w-full px-2 py-1 border-b bg-gray-100'>
   {/* Variable Name */}
-<div className='basis-1/3 text-grey-900 w-full text-center '>
+<div className='basis-1/2 lg:basis-1/3 text-grey-900 w-full text-center '>
 Crop Name
 </div>
-<div className='text-grey-900  basis-1/3 w-full '>
+<div className='text-grey-900 hidden lg:block  basis-1/2 lg:basis-1/3 w-full '>
 <span className='hidden lg:block  text-center '>Verification Status</span> 
-<span className=' lg:hidden text-grey-900  basis-1/3 '>Status</span> 
+<span className=' lg:hidden text-grey-900  basis-1/2 lg:basis-1/3 '>Status</span> 
 </div>
-<div className='text-grey-900  basis-1/3 w-full text-center '>
+<div className='text-grey-900  basis-1/2 lg:basis-1/3 w-full text-center '>
   Action
 </div>
 </div>
@@ -623,38 +623,38 @@ Crop Name
 {/* Variable */}
 <div className=' gap-24 flex items-center  justify-between w-full text-center my-1 '>
   {/* Variable Name */}
-<div className=' basis-1/3 flex items-center justify-center '>
+<div className=' basis-1/2 lg:basis-1/3 flex items-center justify-center '>
 {ele?.cropName}
 </div>
-{ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/3 flex items-center justify-center '>
+{ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/2 lg:basis-1/3  items-center justify-center hidden lg:flex'>
            <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
            <div className="w-4 h-4"><GrUpdate /></div>
            <div className='text-xs'>Upgrade</div>
 </button>
-      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/3 flex items-center justify-center  text-error-500'>
+      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/2 lg:basis-1/3 fhidden lg:flex items-center justify-center  text-error-500'>
       
-      <button className=' px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
+      <button className=' px-2 py-1 gap-1 hidden lg:flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
 </button>
-      </div>:ele.verificationStatus === "verified"? <div className='basis-1/3   flex items-center justify-center '>
-      <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
+      </div>:ele.verificationStatus === "verified"? <div className='basis-1/2 lg:basis-1/3   hidden lg:flex items-center justify-center '>
+      <button className='  px-2 py-1 gap-1 hidden lg:flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>
 </button>
-      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/3 flex items-center justify-center '>
-      <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
+      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/2 lg:basis-1/3 hidden lg:flex items-center justify-center '>
+      <button className='px-2 py-1 gap-1 hidden lg:flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Pending</div>
 </button>
-      </div>:      <div className='basis-1/3 flex items-center justify-center '>
-      <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
+      </div>:      <div className='basis-1/2 lg:basis-1/3 hidden lg:flex items-center justify-center '>
+      <button className='px-2 py-1 gap-1 hidden lg:flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Unkown</div>
 </button>
       </div>}
 {/* Verification action */}
-<div className='basis-1/3 flex items-center justify-center '>
+<div className='basis-1/2 lg:basis-1/3 flex items-center justify-center '>
 {ele.verificationStatus ==="verified"&&<button className='underline px-2 py-1 rounded-lg text-black' onClick={()=>setShowQRCode(true)}>
 View QR Code
 </button>}

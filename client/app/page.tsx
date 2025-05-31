@@ -84,8 +84,18 @@ export default function Home() {
 <div className="flex bg-white w-full">
 <IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
-<div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full ">
-       
+<div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px] bg-white text-black w-full ">
+       {/* Header for mobile */}
+       <div className="flex justify-between items-center py-5">
+        <div>
+        <Image src={"/icons/logo.svg"} alt="logo" width={24} height={32} className="" />
+        </div>
+       <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] lg:hidden  ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
+   <div>
+   {"Sign in"}  
+   </div>
+  </Link>
+       </div>
      <div className='flex items-center justify-between gap-3'>
        {/* Search bar */}
         <div className=' border-2 w-[400px] rounded-full flex gap-1 items-center justify-between px-4 py-2'>
@@ -93,7 +103,7 @@ export default function Home() {
         onChange={(e) => setSearchQuery(e.target.value)}/> <BiSearch className="text-[24px] text-grey-500" />
         </div>
      {/* Signin */}
-     <Link href={`/auth`} className={`group relative flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
+     <Link href={`/auth`} className={`group relative lg:flex items-center text-black justify-start rounded-lg cursor-pointer transition gap-[12px] p-[12px] hidden  ${"border border-[#a5eb4c] bg-primary-500  text-md"}`}>
    <div>
    {"Sign in"}  
    </div>

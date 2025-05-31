@@ -123,7 +123,7 @@ Only sign this message if you trust AgriEthos.
          <Image src={"/static/auth.jpg"} width={500} height={500} className='w-full h-screen object-cover hidden lg:block opacity-90'  loading='lazy' alt='alt-image' />
       </div>
      
-  <div className="h-screen w-full flex flex-col gap-1 bg-white items-center justify-center text-black">
+  <div className="h-screen w-full flex flex-col gap-1 bg-white items-center justify-center text-black p-5">
       {/* Display Element */}
       <div className='flex flex-col gap-5 h-full  mt-[-200px] max-w-[500px] w-full items-center justify-center'>
     <Image src={"/icons/mail.png"} alt="logo" width={46} height={61.5} />

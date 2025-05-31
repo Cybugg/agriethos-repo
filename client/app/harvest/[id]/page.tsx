@@ -68,7 +68,7 @@ export default function Home() {
 <div className="flex bg-white w-full">
 <IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
-  <div className="text-sm md:text-md min-h-screen px-[32px] py-[80px] bg-white text-black w-full">
+  <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px]  bg-white text-black w-full">
    {/* Header */}
     <div className='flex flex-col gap-2 '>
       <div className="flex items-center justify-between gap-3">

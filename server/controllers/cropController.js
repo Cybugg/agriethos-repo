@@ -243,6 +243,10 @@ exports.getCrop = async (req, res) => {
     
     const crop = await Crop.findById(id)
       .populate('farmPropertyId', 'farmName location');
+
+      const secCrop = await Crop.findById(id)
+      .populate('farmerId');
+      const email = await secCrop.farmerId.email;
     
     if (!crop) {
       return res.status(404).json({
@@ -253,7 +257,8 @@ exports.getCrop = async (req, res) => {
     
     res.status(200).json({
       success: true,
-      data: crop
+      data: crop,
+      email:email
     });
   } catch (error) {
     console.error('Error fetching crop:', error);

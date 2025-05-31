@@ -33,7 +33,7 @@ export default function CropReviewPage() {
   const [selectedImages, setSelectedImages] = useState<string[]>([""]);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+  const [email, setEmail] = useState("");
   // State for confirmation modal
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<'approve' | 'reject' | null>(null);
@@ -61,7 +61,7 @@ export default function CropReviewPage() {
     const fetchCropData = async () => {
       if (!id) {
         setError("Crop ID is missing.");
-        setLoading(false);
+        setLoading(false); 'farmName location'
         return;
       }
       try {
@@ -70,6 +70,7 @@ export default function CropReviewPage() {
         
         if (response.data.success) {
           setCropData(response.data.data);
+          setEmail(response.data.email);
         } else {
           setError('Failed to load crop data: ' + (response.data.message || 'Unknown error'));
         }
@@ -329,7 +330,9 @@ export default function CropReviewPage() {
               <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 {/* Crop details card */}
                 <div className="bg-white rounded-lg border border-[#cfcfcf] p-4 md:p-6 flex-1">
+                  
                   <h2 className="text-lg font-semibold mb-4 text-black">Crop to Review {`(${cropData.growthStage})`}</h2>
+                  <div className='text-black my-3'>Farm Email: {email && email}</div>
                   {cropData.farmPropertyId?._id && (
                           <Link 
                             href={`/dashboard/reviewer/farm/${cropData.farmPropertyId._id}`}

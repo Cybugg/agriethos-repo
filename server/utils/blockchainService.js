@@ -28,6 +28,7 @@ if (!RPC_URL || !SIGNER_KEY || !LEDGER_CONTRACT_ADDRESS) {
   }
 }
 
+// hdbcd
 
 /**
  * Verifies and stores crop details on the blockchain.

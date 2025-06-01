@@ -167,7 +167,7 @@ export default function Home() {
       </div>
       {/* Body */}
       <div className="max-h-96 min-h-24   overflow-y-scroll w-full">
-      {agents[0] && agents.map((ele,ind)=>(
+      {agents && agents[0] && agents.map((ele,ind)=>(
     <div className=' hover:bg-gray-100 gap-24 flex items-center text-center justify-between w-full px-2 py-2 ' key={ind*526+123}>
           {/* S/N */}
       <div  className= 'basis-1/2 lg:basis-1/5 hidden lg:flex items-start justify-center '>
@@ -187,9 +187,7 @@ export default function Home() {
 
       </div>
   ))}
-  {!agents && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
-        No Agents added yet
-        </div>}
+
         {!agents && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
                 No Agents added yet
                 </div>}
@@ -258,9 +256,7 @@ export default function Home() {
 
     </div>
 ))}
-{!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
-      No Admin added yet
-      </div>}
+
        {!admins && <div className="flex items-center p-12 text-gray-600 justify-center w-full ">
               No Admin added yet
               </div>}

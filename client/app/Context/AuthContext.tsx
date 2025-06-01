@@ -86,12 +86,14 @@ const handleSetId = ( id: string | null) => {
   const logout = () => {
     setAddress(null);
     setFarmerId(null);
+    setEmail(null);
     setNewUser(null);
     setUser(null);
     localStorage.removeItem("farmerId")
     localStorage.removeItem("walletAddress")
     localStorage.removeItem("newUser")
     localStorage.removeItem("userPack")
+    localStorage.removeItem("email")
     router.replace('/auth');
   };
   // handle farmer ID

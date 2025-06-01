@@ -82,7 +82,7 @@ Only sign this message if you trust AgriEthos.
     console.log(agent);
     console.log(agent);
     console.log(agent);
-    if(!resLogin.ok || loginData.error){
+    if(!resLogin.ok || loginData.error || !nonce){
       setMsg(loginData.error || "Login failed... try again");
       console.error('Backend error:', loginData.error || loginData.message);
       setLoading(false);

@@ -64,7 +64,7 @@ const signInWithEmail = async()=>{
           setNewUser(newUser);
           setSuccessSub(true);
           setUser(userPack)
-          console.log(email,farmerId)
+          console.log(email,farmerId,newUser)
         if(newUser === "false")  router.replace("/dashboard/farmer")
           else if (newUser === "true") router.replace("/onboard")
       } else {

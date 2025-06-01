@@ -76,7 +76,7 @@ Only sign this message if you trust AgriEthos.
     }); 
     const loginData = await resLogin.json();
     const {admin} = await loginData.data
-    if(!resLogin.ok || loginData.error){
+    if(!resLogin.ok || loginData.error! || !nonce){
       setMsg(loginData.error || "Login failed... try again");
       console.error('Backend error:', loginData.error || loginData.message);
       setLoading(false);

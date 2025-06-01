@@ -44,8 +44,8 @@ function page() {
     // Route protection
     useEffect(() => {
     if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
-    if(address && newUser ==="true"){router.push('/onboard')}
-  }, [address])
+    if(user && newUser ==="true"){router.push('/onboard')}
+  }, [email])
 
       useEffect(()=>{
         setCurrentPage("farm");

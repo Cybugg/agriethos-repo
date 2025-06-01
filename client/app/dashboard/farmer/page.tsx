@@ -93,7 +93,7 @@ export default function Home() {
   useEffect(() => {
 
     if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
-    if(!isLoginStatusLoading && address && farmerId && newUser ==="true"){router.push('/onboard');
+    if(!isLoginStatusLoading && farmerId && newUser ==="true"){router.push('/onboard');
        console.log("new user ni") }
        console.log(newUser)
   }, [address,farmerId,isLoginStatusLoading])
@@ -101,7 +101,7 @@ export default function Home() {
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
-        },[address])
+        },[address,email])
   
         // to fetch farm properties and set it to state
   useEffect(() => {

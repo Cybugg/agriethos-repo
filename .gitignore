@@ -1,0 +1,5 @@
+blockchain/.env
+blockchain/node_modules/
+blockchain/artifacts/
+blockchain/cache/
+blockchain/typechain-types/

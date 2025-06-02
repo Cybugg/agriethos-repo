@@ -64,6 +64,9 @@ const cropSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  blockchainTxHash: {
+    type: String
   }
 });
 

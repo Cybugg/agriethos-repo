@@ -1,6 +1,7 @@
 const Crop = require('../models/Crop');
 const FarmProperty = require('../models/FarmProperties');
-const farmer = require("../models/Farmer")
+const farmer = require("../models/Farmer");
+const { verifyCropOnBlockchain } = require('../utils/blockchainService');
 
 // Create a new crop
 exports.createCrop = async (req, res) => {
@@ -116,13 +117,45 @@ exports.updateCrop = async (req, res) => {
       id,
       updateData,
       { new: true, runValidators: true }
-    );
+    ).populate('farmPropertyId').populate('farmerId').populate('reviewedBy');
     
     if (!updatedCrop) {
       return res.status(404).json({
         success: false,
         message: 'Crop not found'
       });
+    }
+    
+    // Add blockchain verification when crop is verified
+    if (verificationStatus === 'verified' && updatedCrop.harvestingDate) {
+      try {
+        console.log('Adding verified crop to blockchain...');
+        
+        const cropDetails = {
+          cropId: updatedCrop._id.toString(),
+          cropType: updatedCrop.cropName,
+          farmingMethods: `Pre-harvest notes: ${updatedCrop.preNotes || 'N/A'}. Post-harvest notes: ${updatedCrop.postNotes || 'N/A'}. Storage method: ${updatedCrop.storageMethod || 'N/A'}`,
+          harvestDateTimestamp: Math.floor(new Date(updatedCrop.harvestingDate).getTime() / 1000),
+          geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location'
+        };
+        
+        const txHash = await verifyCropOnBlockchain(cropDetails);
+        console.log(`Crop ${updatedCrop._id} successfully added to blockchain. Transaction hash: ${txHash}`);
+        
+        // Store the transaction hash in the crop record
+        await Crop.findByIdAndUpdate(id, { 
+          blockchainTxHash: txHash,
+          blockchainStatus: 'verified'
+        });
+        
+      } catch (blockchainError) {
+        console.error('Failed to add crop to blockchain:', blockchainError.message);
+        // Store the error for retry later
+        await Crop.findByIdAndUpdate(id, { 
+          blockchainStatus: 'failed',
+          blockchainError: blockchainError.message
+        });
+      }
     }
     
     res.status(200).json({

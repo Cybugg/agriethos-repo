@@ -2,10 +2,44 @@ const Reviewer = require('../models/Reviewer');
 const Admin = require('../models/Admin');
 const Crop = require("../models/Crop");
 const Farmer = require('../models/Farmer');
-
-const {ethers} = require('ethers');
+const { ethers } = require('ethers');
 
 const generateNonce = () => Math.floor(Math.random() * 1000000).toString();
+
+// Function to add reviewer to blockchain
+async function addReviewerToBlockchain(reviewerAddress) {
+  try {
+    const RPC_URL = process.env.SEPOLIA_RPC_URL;
+    const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+    const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
+    const AgriEthosProductLedgerABI = require('../abi/AgriEthosProductLedger.json').abi;
+    
+    if (!RPC_URL || !CONTRACT_ADDRESS || !OWNER_PRIVATE_KEY) {
+      throw new Error("Missing blockchain configuration");
+    }
+
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const ownerSigner = new ethers.Wallet(OWNER_PRIVATE_KEY, provider);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, AgriEthosProductLedgerABI, ownerSigner);
+    
+    // Check if already authorized
+    const isAuthorized = await contract.authorizedReviewers(reviewerAddress);
+    if (isAuthorized) {
+      console.log(`Reviewer ${reviewerAddress} is already authorized on blockchain`);
+      return null;
+    }
+    
+    console.log(`Adding reviewer ${reviewerAddress} to blockchain...`);
+    const tx = await contract.addReviewer(reviewerAddress);
+    const receipt = await tx.wait();
+    
+    console.log(`Reviewer ${reviewerAddress} added to blockchain. TxHash: ${receipt.hash}`);
+    return receipt.hash;
+  } catch (error) {
+    console.error(`Error adding reviewer to blockchain:`, error.message);
+    throw error;
+  }
+}
 
 
 
@@ -40,10 +74,11 @@ exports.createAdmin = async (req, res) => {
 exports.createReviewer = async (req, res) => {
   try {
     const { name, walletAddress, adminId } = req.body;
-console.log(adminId);
+    console.log(adminId);
+    
     // Check if the one making the request is an admin
     const validAdmin = await Admin.findOne({_id:adminId});
-    if(!validAdmin)return res.status(401).json({mesage:"UNAUTHURIZED ACCEESS"});
+    if(!validAdmin) return res.status(401).json({message:"UNAUTHORIZED ACCESS"});
 
     // Ensure wallet address is not already registered
     const existing = await Reviewer.findOne({ walletAddress: walletAddress.toLowerCase() });
@@ -52,16 +87,26 @@ console.log(adminId);
     }
 
     const newAgent = new Reviewer({
-      name:name.toLowerCase(),
+      name: name.toLowerCase(),
       walletAddress: walletAddress.toLowerCase(),
-      createdBy:validAdmin._id
+      createdBy: adminId,
     });
 
     await newAgent.save();
 
+    // Add reviewer to blockchain
+    try {
+      await addReviewerToBlockchain(walletAddress.toLowerCase());
+      console.log(`Reviewer ${walletAddress} successfully added to blockchain`);
+    } catch (blockchainError) {
+      console.error(`Failed to add reviewer to blockchain:`, blockchainError.message);
+      // Don't fail the whole operation, but log the error
+      // The reviewer is still created in the database
+    }
+
     res.status(201).json({ success: true, data: newAgent });
   } catch (error) {
-    console.error('Error creating agent:', error);
+    console.error('Error creating reviewer:', error);
     res.status(500).json({ success: false, message: 'Server Error', error: error.message });
   }
 };

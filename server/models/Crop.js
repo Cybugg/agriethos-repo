@@ -23,7 +23,6 @@ const cropSchema = new mongoose.Schema({
     type: Date
   },
   growthStage: {
-
     type: String,
     enum: ['pre-harvest', 'post-harvest'],
     required: true
@@ -33,8 +32,12 @@ const cropSchema = new mongoose.Schema({
     enum: ['pending', 'verified', 'rejected','toUpgrade'],
     default: 'pending'
   },
-  reviewedBy: {
-    type: String
+  // Replace single reviewedBy with separate fields
+  preHarvestAgent: {
+    type: String  // Reviewer wallet address for pre-harvest review
+  },
+  postHarvestAgent: {
+    type: String  // Reviewer wallet address for post-harvest review
   },
   images: {
     type: [String]
@@ -64,6 +67,9 @@ const cropSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  blockchainTxHash: {
+    type: String
   }
 });
 

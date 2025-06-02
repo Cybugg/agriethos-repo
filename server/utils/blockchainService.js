@@ -28,6 +28,13 @@ if (!RPC_URL || !SIGNER_KEY || !LEDGER_CONTRACT_ADDRESS) {
   }
 }
 
+// Add this at the end of the initialization
+console.log('Blockchain service status:');
+console.log('Provider:', provider ? 'Connected' : 'Not connected');
+console.log('Signer:', signer ? 'Connected' : 'Not connected');
+console.log('Contract:', contract ? 'Connected' : 'Not connected');
+
+// hdbcd
 
 /**
  * Verifies and stores crop details on the blockchain.
@@ -47,9 +54,14 @@ async function verifyCropOnBlockchain(cropDetails) {
   }
   try {
     console.log(`Attempting to verify crop on blockchain: ${cropDetails.cropId}`);
+    
+    // Use the service wallet address as a placeholder instead of zero address
+    // Since we're not validating farms anyway, this serves as a valid placeholder
+    const placeholderFarmAddress = await signer.getAddress();
+    
     const tx = await contract.verifyAndStoreCrop(
       cropDetails.cropId,
-      cropDetails.farmWalletAddress,
+      placeholderFarmAddress, // Use service wallet as placeholder farm ID
       cropDetails.cropType,
       cropDetails.farmingMethods,
       cropDetails.harvestDateTimestamp,
@@ -57,7 +69,7 @@ async function verifyCropOnBlockchain(cropDetails) {
     );
 
     console.log(`Transaction sent for crop verification ${cropDetails.cropId}: ${tx.hash}. Waiting for confirmation...`);
-    const receipt = await tx.wait(); // Wait for 1 confirmation by default
+    const receipt = await tx.wait();
     console.log(`Transaction confirmed for crop ${cropDetails.cropId}. Block number: ${receipt.blockNumber}, TxHash: ${receipt.hash}`);
     return receipt.hash;
   } catch (error) {

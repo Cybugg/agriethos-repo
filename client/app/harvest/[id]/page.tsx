@@ -179,7 +179,19 @@ export default function Home() {
                     </div>
                      }
 
-                 
+                     {crop?.preHarvestAgent && (
+                      <div className="flex justify-between">
+                        <span className="text-[#898989]">Pre-harvest Reviewer</span>
+                        <span className="font-medium text-black">{crop.preHarvestAgent.slice(0, 6)}...{crop.preHarvestAgent.slice(-4)}</span>
+                      </div>
+                    )}
+
+                    {crop?.postHarvestAgent && (
+                      <div className="flex justify-between">
+                        <span className="text-[#898989]">Post-harvest Reviewer</span>
+                        <span className="font-medium text-black">{crop.postHarvestAgent.slice(0, 6)}...{crop.postHarvestAgent.slice(-4)}</span>
+                      </div>
+                    )}
 </div>
           </div>
 

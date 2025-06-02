@@ -1,5 +1,5 @@
 {
-    "1_format": "hh-sol-artifact-1",
+    "_format": "hh-sol-artifact-1",
     "contractName": "AgriEthosProductLedger",
     "sourceName": "contracts/AgriEthosProductLedger.sol",
     "abi": [

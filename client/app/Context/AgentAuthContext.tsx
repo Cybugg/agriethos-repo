@@ -76,6 +76,8 @@ const handleSetId = ( id: string | null) => {
   const logout = () => {
     setAddress(null);
     setAgentId(null);
+    setUser(null);
+    localStorage.removeItem("agentPack")
     localStorage.removeItem("agentId")
     localStorage.removeItem("agentAddress")
     localStorage.removeItem("newUser")

@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useNavContext } from './NavContext';
 import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 import { BsPerson } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
 
 // Define interfaces for type safety
 interface FarmProperty {
@@ -46,8 +47,18 @@ export default function Home() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
    const {setCurrentPage,setMobileDisplay} = useNavContext();
-   const {address, logout} = useAgentAuth();
+   const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
 
+  
+         const router = useRouter();
+         // Route protection
+         useEffect(
+           ()=> {
+             if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+               router.replace("/auth/reviewer")
+             }
+           },[user,address,isLoginStatusLoading]
+         )
 
    //Navbar default settings
    useEffect(()=>{

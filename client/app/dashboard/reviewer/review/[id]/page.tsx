@@ -51,8 +51,17 @@ export default function CropReviewPage() {
   const router = useRouter();
   const id = params.id as string;
 
-  const { user } = useAgentAuth();
-  
+  const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
+
+
+  // Route protection
+  useEffect(
+    ()=> {
+      if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+        router.replace("/auth/reviewer")
+      }
+    },[user,address,,isLoginStatusLoading]
+  )
   useEffect(() => {
     cropData && setSelectedImages(cropData.images);
   }, [cropData]);

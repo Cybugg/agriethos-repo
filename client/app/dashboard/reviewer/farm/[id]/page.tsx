@@ -8,6 +8,7 @@ import { ArrowLeft } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { IoMdArrowRoundBack } from 'react-icons/io'
+import { useAgentAuth } from '@/app/Context/AgentAuthContext'
 
 function Page() {
   const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
@@ -15,7 +16,18 @@ function Page() {
   const [error, setError] = useState<string | null>(null)
   const params = useParams()
   const id = params.id as string // This 'id' is the farmPropertyId from the URL
-  const router = useRouter();
+     const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
+  
+       const router = useRouter();
+       // Route protection
+       useEffect(
+         ()=> {
+           if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+             router.replace("/auth/reviewer")
+           }
+         },[user,address,,isLoginStatusLoading]
+       )
+
   useEffect(() => {
     const fetchFarmDetails = async () => {
       if (!id) {

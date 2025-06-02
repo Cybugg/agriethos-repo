@@ -17,16 +17,26 @@ interface Crop {
 import { useNavContext } from '../NavContext';
 import { BsPerson } from 'react-icons/bs';
 import { useAgentAuth } from '@/app/Context/AgentAuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function CropHistoryPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
- const {address, logout,user} = useAgentAuth();
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
      const {setCurrentPage,setMobileDisplay} = useNavContext();
+     const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
   
+       const router = useRouter();
+       // Route protection
+       useEffect(
+         ()=> {
+           if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+             router.replace("/auth/reviewer")
+           }
+         },[user,address,,isLoginStatusLoading]
+       )
   
      //Navbar default settings
      useEffect(()=>{

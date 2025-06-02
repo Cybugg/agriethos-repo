@@ -10,15 +10,26 @@ import { useNavContext } from '../NavContext';
 import axios from 'axios';
 import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 import { BsPerson } from 'react-icons/bs';
+import { useRouter } from 'next/navigation';
 
 export default function StatisticsPage() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [timeframe, setTimeframe] = useState('This Week');
-   const {address, logout,user} = useAgentAuth();
+   
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
      const {setCurrentPage,setMobileDisplay} = useNavContext();
   
+     const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
   
+       const router = useRouter();
+       // Route protection
+       useEffect(
+         ()=> {
+           if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+             router.replace("/auth/reviewer")
+           }
+         },[user,address,isLoginStatusLoading]
+       )
      //Navbar default settings
      useEffect(()=>{
               setCurrentPage("statistics");

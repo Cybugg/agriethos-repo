@@ -285,7 +285,7 @@ exports.deleteCrop = async (req, res) => {
   }
 };
 
-// Get single crop by ID
+// Get single crop by ID with populated agent details
 exports.getCrop = async (req, res) => {
   try {
     const { id } = req.params;
@@ -293,9 +293,9 @@ exports.getCrop = async (req, res) => {
     const crop = await Crop.findById(id)
       .populate('farmPropertyId', 'farmName location');
 
-      const secCrop = await Crop.findById(id)
+    const secCrop = await Crop.findById(id)
       .populate('farmerId');
-      const email = await secCrop.farmerId.email;
+    const email = await secCrop.farmerId.email;
     
     if (!crop) {
       return res.status(404).json({
@@ -303,11 +303,38 @@ exports.getCrop = async (req, res) => {
         message: 'Crop not found'
       });
     }
+
+    // Populate agent details using aggregation for wallet addresses
+    const cropWithAgents = await Crop.aggregate([
+      { $match: { _id: crop._id } },
+      {
+        $lookup: {
+          from: 'reviewers',
+          localField: 'preHarvestAgent',
+          foreignField: 'walletAddress',
+          as: 'preHarvestAgentInfo'
+        }
+      },
+      {
+        $lookup: {
+          from: 'reviewers',
+          localField: 'postHarvestAgent',
+          foreignField: 'walletAddress',
+          as: 'postHarvestAgentInfo'
+        }
+      },
+      {
+        $addFields: {
+          preHarvestAgentInfo: { $arrayElemAt: ['$preHarvestAgentInfo', 0] },
+          postHarvestAgentInfo: { $arrayElemAt: ['$postHarvestAgentInfo', 0] }
+        }
+      }
+    ]);
     
     res.status(200).json({
       success: true,
-      data: crop,
-      email:email
+      data: cropWithAgents[0] || crop,
+      email: email
     });
   } catch (error) {
     console.error('Error fetching crop:', error);
@@ -399,16 +426,19 @@ exports.getAllVerifiedCrops = async (req, res) => {
 };
 
 
-// Update getReviewedCropsByReviewer to check both agent fields
+// Update getReviewedCropsByReviewer to check both agent fields using wallet address
 exports.getReviewedCropsByReviewer = async (req,res)=>{
   try{
     const { reviewerId } = req.params;
     
-    // Find crops reviewed by this specific reviewer (either pre-harvest or post-harvest)
+    // Convert reviewerId to lowercase for consistent matching
+    const walletAddress = reviewerId.toLowerCase();
+    
+    // Find crops reviewed by this specific reviewer wallet address (either pre-harvest or post-harvest)
     const crops = await Crop.find({
       $or: [
-        { preHarvestAgent: reviewerId },
-        { postHarvestAgent: reviewerId }
+        { preHarvestAgent: walletAddress },
+        { postHarvestAgent: walletAddress }
       ],
       verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
     })
@@ -422,11 +452,11 @@ exports.getReviewedCropsByReviewer = async (req,res)=>{
       data: crops
     });
   } catch (error) {
-    console.error('Error fetching reviewed crops:', error);
+    console.error('Error fetching reviewed crops by reviewer:', error);
     res.status(500).json({
       success: false,
       message: 'Server Error',
       error: error.message
     });
   }
-}
+};

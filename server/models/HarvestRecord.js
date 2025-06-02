@@ -66,6 +66,16 @@
 //   updatedAt: {
 //     type: Date,
 //     default: Date.now
+//   },
+//   preHarvestAgent: {
+//     type: String, // Changed from ObjectId to String for wallet address
+//     required: false,
+//     lowercase: true // Ensure consistent casing
+//   },
+//   postHarvestAgent: {
+//     type: String, // Changed from ObjectId to String for wallet address
+//     required: false,
+//     lowercase: true // Ensure consistent casing
 //   }
 // });
 

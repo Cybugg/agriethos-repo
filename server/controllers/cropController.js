@@ -108,16 +108,29 @@ exports.updateCrop = async (req, res) => {
       updatedAt: Date.now()
     };
     
-    // Only add reviewerId to the update if it was provided
+    // Determine which agent field to update based on crop's current growth stage
     if (reviewerId) {
-      updateData.reviewedBy = reviewerId;
+      const existingCrop = await Crop.findById(id);
+      if (!existingCrop) {
+        return res.status(404).json({
+          success: false,
+          message: 'Crop not found'
+        });
+      }
+      
+      // Update appropriate reviewer field based on growth stage
+      if (existingCrop.growthStage === 'pre-harvest') {
+        updateData.preHarvestAgent = reviewerId;
+      } else if (existingCrop.growthStage === 'post-harvest') {
+        updateData.postHarvestAgent = reviewerId;
+      }
     }
     
     const updatedCrop = await Crop.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
-    ).populate('farmPropertyId').populate('farmerId').populate('reviewedBy');
+    ).populate('farmPropertyId').populate('farmerId');
     
     if (!updatedCrop) {
       return res.status(404).json({
@@ -171,6 +184,7 @@ exports.updateCrop = async (req, res) => {
     });
   }
 };
+
 // Update crop details
 exports.upgradeCrop = async (req, res) => {
   try {
@@ -202,7 +216,7 @@ exports.upgradeCrop = async (req, res) => {
 
     // Update the timestamp
     const updatedAt = Date.now();
-    
+
     const updatedCrop = await Crop.findByIdAndUpdate(
       id,
       {harvestingDate,
@@ -214,6 +228,8 @@ exports.upgradeCrop = async (req, res) => {
         images,
         updatedAt,
         verificationStatus:"pending",
+        // Clear post-harvest agent when upgrading (new review needed)
+        postHarvestAgent: null
       },
       { new: true, runValidators: true }
     );
@@ -383,14 +399,17 @@ exports.getAllVerifiedCrops = async (req, res) => {
 };
 
 
+// Update getReviewedCropsByReviewer to check both agent fields
 exports.getReviewedCropsByReviewer = async (req,res)=>{
   try{
-
     const { reviewerId } = req.params;
     
-    // Find crops reviewed by this specific reviewer
+    // Find crops reviewed by this specific reviewer (either pre-harvest or post-harvest)
     const crops = await Crop.find({
-      reviewedBy: reviewerId,
+      $or: [
+        { preHarvestAgent: reviewerId },
+        { postHarvestAgent: reviewerId }
+      ],
       verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
     })
     .populate('farmerId')

@@ -10,7 +10,7 @@ exports.createCrop = async (req, res) => {
   try {
     const {
       farmerId,
-      cropName,
+      cropName, 
       plantingDate,
       expectedHarvestingDate,
       growthStage,

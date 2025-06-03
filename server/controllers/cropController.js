@@ -1,7 +1,9 @@
 const Crop = require('../models/Crop');
 const FarmProperty = require('../models/FarmProperties');
-const farmer = require("../models/Farmer");
-const { verifyCropOnBlockchain } = require('../utils/blockchainService');
+const Farmer = require('../models/Farmer');
+const Reviewer = require('../models/Reviewer'); // Added: Import the Reviewer model
+const { verifyCropOnBlockchain, addProcessLogToBlockchain } = require('../utils/blockchainService');
+const mongoose = require('mongoose');
 
 // Create a new crop
 exports.createCrop = async (req, res) => {
@@ -100,29 +102,44 @@ exports.getCropsByFarmer = async (req, res) => {
 exports.updateCrop = async (req, res) => {
   try {
     const { id } = req.params;
-    const { verificationStatus, reviewerId } = req.body;
-    
-    // Create update object
-    const updateData = {
-      verificationStatus,
-      updatedAt: Date.now()
-    };
-    
-    // Determine which agent field to update based on crop's current growth stage
+    // Assuming reviewerId (agent's _id) is passed in the body when a review action occurs
+    const { verificationStatus, reviewerId, farmerId, ...otherUpdateData } = req.body; 
+
+    let updateData = { ...otherUpdateData, updatedAt: Date.now() };
+
+    if (verificationStatus) {
+      updateData.verificationStatus = verificationStatus;
+    }
+
+    const existingCrop = await Crop.findById(id);
+    if (!existingCrop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+
+    // If a reviewerId is provided, it means a reviewer is actioning this update.
+    // We need to fetch their walletAddress to store it.
     if (reviewerId) {
-      const existingCrop = await Crop.findById(id);
-      if (!existingCrop) {
-        return res.status(404).json({
+      const reviewer = await Reviewer.findById(reviewerId);
+      if (!reviewer || !reviewer.walletAddress) {
+        return res.status(400).json({
           success: false,
-          message: 'Crop not found'
+          message: 'Reviewer not found or reviewer does not have a wallet address.'
         });
       }
       
       // Update appropriate reviewer field based on growth stage
       if (existingCrop.growthStage === 'pre-harvest') {
-        updateData.preHarvestAgent = reviewerId;
+        updateData.preHarvestAgent = reviewer.walletAddress; // Store wallet address
       } else if (existingCrop.growthStage === 'post-harvest') {
-        updateData.postHarvestAgent = reviewerId;
+        updateData.postHarvestAgent = reviewer.walletAddress; // Store wallet address
+      } else {
+        // This case might occur if a crop is somehow updated by a reviewer 
+        // without a 'pre-harvest' or 'post-harvest' stage.
+        // Depending on business logic, you might want to log this or handle it differently.
+        console.warn(`Reviewer update for crop ${id} with growth stage ${existingCrop.growthStage}. Agent field not set.`);
       }
     }
     
@@ -130,7 +147,7 @@ exports.updateCrop = async (req, res) => {
       id,
       updateData,
       { new: true, runValidators: true }
-    ).populate('farmPropertyId').populate('farmerId');
+    ).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' }); // Added more specific population
     
     if (!updatedCrop) {
       return res.status(404).json({
@@ -145,29 +162,28 @@ exports.updateCrop = async (req, res) => {
         console.log('Adding verified crop to blockchain...');
         
         const cropDetails = {
+          farmerWalletAddress: updatedCrop.farmerId?.walletAddress || '0x0000000000000000000000000000000000000000', 
           cropId: updatedCrop._id.toString(),
           cropType: updatedCrop.cropName,
           farmingMethods: `Pre-harvest notes: ${updatedCrop.preNotes || 'N/A'}. Post-harvest notes: ${updatedCrop.postNotes || 'N/A'}. Storage method: ${updatedCrop.storageMethod || 'N/A'}`,
           harvestDateTimestamp: Math.floor(new Date(updatedCrop.harvestingDate).getTime() / 1000),
-          geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location'
+          geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location' // Ensure farmPropertyId is populated
         };
         
         const txHash = await verifyCropOnBlockchain(cropDetails);
         console.log(`Crop ${updatedCrop._id} successfully added to blockchain. Transaction hash: ${txHash}`);
         
-        // Store the transaction hash in the crop record
+        // Store the transaction hash and update blockchain status in the crop record
         await Crop.findByIdAndUpdate(id, { 
           blockchainTxHash: txHash,
-          blockchainStatus: 'verified'
+          // Assuming you have a field like blockchainStatus, otherwise adapt as needed
+          // blockchainStatus: 'verified' 
         });
         
       } catch (blockchainError) {
         console.error('Failed to add crop to blockchain:', blockchainError.message);
-        // Store the error for retry later
-        await Crop.findByIdAndUpdate(id, { 
-          blockchainStatus: 'failed',
-          blockchainError: blockchainError.message
-        });
+        // Optionally, store the error or set a status for retry
+        // await Crop.findByIdAndUpdate(id, { blockchainStatus: 'failed', blockchainError: blockchainError.message });
       }
     }
     
@@ -175,6 +191,7 @@ exports.updateCrop = async (req, res) => {
       success: true,
       data: updatedCrop
     });
+
   } catch (error) {
     console.error('Error updating crop:', error);
     res.status(500).json({
@@ -399,21 +416,31 @@ exports.getAllVerifiedCrops = async (req, res) => {
 };
 
 
-// Update getReviewedCropsByReviewer to check both agent fields
+// Update getReviewedCropsByReviewer to query by wallet address
 exports.getReviewedCropsByReviewer = async (req,res)=>{
   try{
-    const { reviewerId } = req.params;
+    const { reviewerId } = req.params; // This is the agent's _id
+
+    const reviewer = await Reviewer.findById(reviewerId).select('walletAddress'); // Only fetch walletAddress
+    if (!reviewer || !reviewer.walletAddress) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reviewer not found or reviewer does not have a wallet address.'
+      });
+    }
+
+    const reviewerWalletAddress = reviewer.walletAddress;
     
-    // Find crops reviewed by this specific reviewer (either pre-harvest or post-harvest)
+    // Find crops reviewed by this specific reviewer's wallet address
     const crops = await Crop.find({
       $or: [
-        { preHarvestAgent: reviewerId },
-        { postHarvestAgent: reviewerId }
+        { preHarvestAgent: reviewerWalletAddress },
+        { postHarvestAgent: reviewerWalletAddress }
       ],
-      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
+      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] } 
     })
-    .populate('farmerId')
-    .populate('farmPropertyId')
+    .populate({ path: 'farmerId', select: 'name email walletAddress' }) // Select specific fields
+    .populate({ path: 'farmPropertyId', select: 'farmName location farmAddress' }) // Select specific fields
     .sort({ updatedAt: -1 });
     
     res.status(200).json({
@@ -429,4 +456,4 @@ exports.getReviewedCropsByReviewer = async (req,res)=>{
       error: error.message
     });
   }
-}
+};

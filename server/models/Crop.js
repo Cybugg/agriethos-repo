@@ -32,12 +32,13 @@ const cropSchema = new mongoose.Schema({
     enum: ['pending', 'verified', 'rejected','toUpgrade'],
     default: 'pending'
   },
-  // Replace single reviewedBy with separate fields
   preHarvestAgent: {
-    type: String  // Reviewer wallet address for pre-harvest review
+    type: String,  // Changed from ObjectId to String for wallet address
+    lowercase: true // Ensure consistent casing
   },
   postHarvestAgent: {
-    type: String  // Reviewer wallet address for post-harvest review
+    type: String,  // Changed from ObjectId to String for wallet address
+    lowercase: true // Ensure consistent casing
   },
   images: {
     type: [String]

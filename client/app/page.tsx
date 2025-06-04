@@ -146,7 +146,7 @@ export default function Home() {
                  <div className="flex justify-between py-3">
           <div className=" gap-2 font-bold flex items-center justify-center">
             <div className="rounded-full w-8 h-8 bg-blue-500 overflow-hidden">
-              <Image src={ele && ele.farmPropertyId.images[0]}alt={"pfp"} width={50} height={50} className="w-full h-full object-cover" loading="lazy"/>
+              <Image src={ele && ele.farmPropertyId.images[0]}alt={"."} width={50} height={50} className="w-full h-full object-cover" loading="lazy"/>
             </div>
             <div className="flex flex-col gap-1">
                <div className="text-primary-700">{ele && ele.farmPropertyId.farmName}</div>
@@ -166,7 +166,7 @@ export default function Home() {
         
           <div>
             <Image src={ele && ele.images[0]} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
-          </div>     {/* Propertie */}
+          </div>     {/* Properties */}
           <div className="flex flex-col mt-4 justify-center">
             {/* Crop name */}
             <div className="text-lg ">{ele.cropName}</div>

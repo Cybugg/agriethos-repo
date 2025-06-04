@@ -178,11 +178,11 @@ exports.updateCrop = async (req, res) => {
         const farmingMethodsJSON = JSON.stringify(farmingDetails);
 
         const cropDetails = {
-          // Use actual wallet address if available, otherwise a placeholder string.
+          // Use the reviewer's wallet address as the placeholder since they're performing the verification
           // This farmerWalletAddress is part of the data sent *within* farmingMethodsJSON via verifyCropOnBlockchain.
           // The farmId parameter in the smart contract call itself will still use the placeholderFarmAddress (signer's address)
           // as set in verifyCropOnBlockchain.
-          farmerWalletAddress: updatedCrop.farmerId.walletAddress || "0x2Ed32Af34d80ADB200592e7e0bD6a3F761677591", 
+          farmerWalletAddress: updatedCrop.preHarvestAgent || updatedCrop.postHarvestAgent, 
           cropId: updatedCrop._id.toString(),
           cropType: updatedCrop.cropName,
           farmingMethods: farmingMethodsJSON, // Send all details as a JSON string

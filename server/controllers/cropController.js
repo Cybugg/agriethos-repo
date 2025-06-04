@@ -111,7 +111,7 @@ exports.updateCrop = async (req, res) => {
       updateData.verificationStatus = verificationStatus;
     }
 
-    const existingCrop = await Crop.findById(id);
+    const existingCrop = await Crop.findById(id).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' }); // Populate for details
     if (!existingCrop) {
       return res.status(404).json({
         success: false,
@@ -131,15 +131,10 @@ exports.updateCrop = async (req, res) => {
       }
       
       // Update appropriate reviewer field based on growth stage
-      if (existingCrop.growthStage === 'pre-harvest') {
+      if (existingCrop.growthStage === 'pre-harvest' && verificationStatus) { // Ensure verification is happening
         updateData.preHarvestAgent = reviewer.walletAddress; // Store wallet address
-      } else if (existingCrop.growthStage === 'post-harvest') {
+      } else if (existingCrop.growthStage === 'post-harvest' && verificationStatus) { // Ensure verification is happening
         updateData.postHarvestAgent = reviewer.walletAddress; // Store wallet address
-      } else {
-        // This case might occur if a crop is somehow updated by a reviewer 
-        // without a 'pre-harvest' or 'post-harvest' stage.
-        // Depending on business logic, you might want to log this or handle it differently.
-        console.warn(`Reviewer update for crop ${id} with growth stage ${existingCrop.growthStage}. Agent field not set.`);
       }
     }
     
@@ -147,7 +142,7 @@ exports.updateCrop = async (req, res) => {
       id,
       updateData,
       { new: true, runValidators: true }
-    ).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' }); // Added more specific population
+    ).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' });
     
     if (!updatedCrop) {
       return res.status(404).json({
@@ -156,18 +151,43 @@ exports.updateCrop = async (req, res) => {
       });
     }
     
-    // Add blockchain verification when crop is verified
-    if (verificationStatus === 'verified' && updatedCrop.harvestingDate) {
+    // Add blockchain verification when crop is verified and has necessary data
+    // Condition updated: Proceed if farmerId exists, walletAddress can be a placeholder.
+    if (verificationStatus === 'verified' && updatedCrop.harvestingDate && updatedCrop.farmerId) {
       try {
         console.log('Adding verified crop to blockchain...');
         
+        const farmingDetails = {
+          preNotes: updatedCrop.preNotes || 'N/A',
+          postNotes: updatedCrop.postNotes || 'N/A',
+          storageMethod: updatedCrop.storageMethod || 'N/A',
+          plantingDate: updatedCrop.plantingDate ? new Date(updatedCrop.plantingDate).toISOString() : 'N/A',
+          expectedHarvestingDate: updatedCrop.expectedHarvestingDate ? new Date(updatedCrop.expectedHarvestingDate).toISOString() : 'N/A',
+          quantityHarvested: updatedCrop.quantityHarvested || 'N/A',
+          unit: updatedCrop.unit || 'N/A',
+          preHarvestAgent: updatedCrop.preHarvestAgent || 'N/A',
+          postHarvestAgent: updatedCrop.postHarvestAgent || 'N/A',
+          images: updatedCrop.images || [],
+          growthStageAtVerification: updatedCrop.growthStage,
+          farmName: updatedCrop.farmPropertyId?.farmName || 'N/A',
+          farmType: updatedCrop.farmPropertyId?.farmType || 'N/A',
+          // Optionally include DB timestamps if required on-chain
+          // dbCreatedAt: updatedCrop.createdAt ? new Date(updatedCrop.createdAt).toISOString() : 'N/A',
+          // dbUpdatedAt: updatedCrop.updatedAt ? new Date(updatedCrop.updatedAt).toISOString() : 'N/A',
+        };
+        const farmingMethodsJSON = JSON.stringify(farmingDetails);
+
         const cropDetails = {
-          farmerWalletAddress: updatedCrop.farmerId?.walletAddress || '0x0000000000000000000000000000000000000000', 
+          // Use actual wallet address if available, otherwise a placeholder string.
+          // This farmerWalletAddress is part of the data sent *within* farmingMethodsJSON via verifyCropOnBlockchain.
+          // The farmId parameter in the smart contract call itself will still use the placeholderFarmAddress (signer's address)
+          // as set in verifyCropOnBlockchain.
+          farmerWalletAddress: updatedCrop.farmerId.walletAddress || "0x2Ed32Af34d80ADB200592e7e0bD6a3F761677591", 
           cropId: updatedCrop._id.toString(),
           cropType: updatedCrop.cropName,
-          farmingMethods: `Pre-harvest notes: ${updatedCrop.preNotes || 'N/A'}. Post-harvest notes: ${updatedCrop.postNotes || 'N/A'}. Storage method: ${updatedCrop.storageMethod || 'N/A'}`,
+          farmingMethods: farmingMethodsJSON, // Send all details as a JSON string
           harvestDateTimestamp: Math.floor(new Date(updatedCrop.harvestingDate).getTime() / 1000),
-          geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location' // Ensure farmPropertyId is populated
+          geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location'
         };
         
         const txHash = await verifyCropOnBlockchain(cropDetails);

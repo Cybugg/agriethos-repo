@@ -263,6 +263,20 @@ const router = useRouter();
            {CFL(ele && ele.farmPropertyId.farmType)} Farm
             </div>
             </div>
+            
+            {/* Blockchain verification link */}
+            {ele.blockchainTxHash && (
+              <div className="mt-2">
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 text-sm font-medium"
+                >
+                  🔗 View on Blockchain
+                </a>
+              </div>
+            )}
           </div>
         </Link>
    

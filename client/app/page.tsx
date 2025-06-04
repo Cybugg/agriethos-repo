@@ -164,9 +164,9 @@ export default function Home() {
           </div>
           </div>
         
-          <div>
-            <Image src={ele && ele.images[0]} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
-          </div>     {/* Properties */}
+        {ele && ele.images[0]?  <div>
+            <Image src={ele && ele.images[0]} alt={""} width={280} height={200} className="w-full h-64 object-cover" />
+          </div>:<div className="bg-gray-200 w-full h-64"></div>}     {/* Properties */}
           <div className="flex flex-col mt-4 justify-center">
             {/* Crop name */}
             <div className="text-lg ">{ele.cropName}</div>
@@ -177,6 +177,20 @@ export default function Home() {
            {CFL(ele && ele.farmPropertyId.farmType)} Farm
             </div>
             </div>
+            
+            {/* Blockchain verification link */}
+            {ele.blockchainTxHash && (
+              <div className="mt-2">
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 text-sm font-medium"
+                >
+                  🔗 View on Blockchain
+                </a>
+              </div>
+            )}
           </div>
         </Link>
    

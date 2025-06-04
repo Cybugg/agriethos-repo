@@ -40,9 +40,9 @@ console.log('Contract:', contract ? 'Connected' : 'Not connected');
  * Verifies and stores crop details on the blockchain.
  * @param {object} cropDetails - Details of the crop.
  * @param {string} cropDetails.cropId - Unique ID for the crop (e.g., MongoDB _id).
- * @param {string} cropDetails.farmWalletAddress - Wallet address of the farm/farmer.
+ * @param {string} cropDetails.farmerWalletAddress - Wallet address of the farm/farmer (included in farmingMethods).
  * @param {string} cropDetails.cropType - Type of the crop (e.g., crop.cropName).
- * @param {string} cropDetails.farmingMethods - Description of farming methods.
+ * @param {string} cropDetails.farmingMethods - JSON string of detailed farming methods and other crop attributes.
  * @param {number} cropDetails.harvestDateTimestamp - Harvest date as a Unix timestamp.
  * @param {string} cropDetails.geographicOrigin - Location of the farm.
  * @returns {Promise<string>} Transaction hash if successful.
@@ -55,15 +55,18 @@ async function verifyCropOnBlockchain(cropDetails) {
   try {
     console.log(`Attempting to verify crop on blockchain: ${cropDetails.cropId}`);
     
-    // Use the service wallet address as a placeholder instead of zero address
-    // Since we're not validating farms anyway, this serves as a valid placeholder
-    const placeholderFarmAddress = await signer.getAddress();
-    
+    // Ensure all required cropDetails are present
+    if (!cropDetails.farmerWalletAddress || !cropDetails.cropId || !cropDetails.cropType || !cropDetails.farmingMethods || cropDetails.harvestDateTimestamp === undefined || !cropDetails.geographicOrigin) {
+        throw new Error("Missing required crop details for blockchain verification.");
+    }
+
+    const placeholderFarmAddress = await signer.getAddress(); // Using signer's address as placeholder
+
     const tx = await contract.verifyAndStoreCrop(
       cropDetails.cropId,
-      placeholderFarmAddress, // Use service wallet as placeholder farm ID
+      placeholderFarmAddress, // Use the placeholder address for the farmId parameter
       cropDetails.cropType,
-      cropDetails.farmingMethods,
+      cropDetails.farmingMethods, // This will be the JSON string containing farmerWalletAddress and other details
       cropDetails.harvestDateTimestamp,
       cropDetails.geographicOrigin
     );

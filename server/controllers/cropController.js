@@ -1,14 +1,16 @@
 const Crop = require('../models/Crop');
 const FarmProperty = require('../models/FarmProperties');
-const farmer = require("../models/Farmer");
-const { verifyCropOnBlockchain } = require('../utils/blockchainService');
+const Farmer = require('../models/Farmer');
+const Reviewer = require('../models/Reviewer'); // Added: Import the Reviewer model
+const { verifyCropOnBlockchain, addProcessLogToBlockchain } = require('../utils/blockchainService');
+const mongoose = require('mongoose');
 
 // Create a new crop
 exports.createCrop = async (req, res) => {
   try {
     const {
       farmerId,
-      cropName,
+      cropName, 
       plantingDate,
       expectedHarvestingDate,
       growthStage,
@@ -100,29 +102,39 @@ exports.getCropsByFarmer = async (req, res) => {
 exports.updateCrop = async (req, res) => {
   try {
     const { id } = req.params;
-    const { verificationStatus, reviewerId } = req.body;
-    
-    // Create update object
-    const updateData = {
-      verificationStatus,
-      updatedAt: Date.now()
-    };
-    
-    // Determine which agent field to update based on crop's current growth stage
+    // Assuming reviewerId (agent's _id) is passed in the body when a review action occurs
+    const { verificationStatus, reviewerId, farmerId, ...otherUpdateData } = req.body; 
+
+    let updateData = { ...otherUpdateData, updatedAt: Date.now() };
+
+    if (verificationStatus) {
+      updateData.verificationStatus = verificationStatus;
+    }
+
+    const existingCrop = await Crop.findById(id).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' }); // Populate for details
+    if (!existingCrop) {
+      return res.status(404).json({
+        success: false,
+        message: 'Crop not found'
+      });
+    }
+
+    // If a reviewerId is provided, it means a reviewer is actioning this update.
+    // We need to fetch their walletAddress to store it.
     if (reviewerId) {
-      const existingCrop = await Crop.findById(id);
-      if (!existingCrop) {
-        return res.status(404).json({
+      const reviewer = await Reviewer.findById(reviewerId);
+      if (!reviewer || !reviewer.walletAddress) {
+        return res.status(400).json({
           success: false,
-          message: 'Crop not found'
+          message: 'Reviewer not found or reviewer does not have a wallet address.'
         });
       }
       
       // Update appropriate reviewer field based on growth stage
-      if (existingCrop.growthStage === 'pre-harvest') {
-        updateData.preHarvestAgent = reviewerId;
-      } else if (existingCrop.growthStage === 'post-harvest') {
-        updateData.postHarvestAgent = reviewerId;
+      if (existingCrop.growthStage === 'pre-harvest' && verificationStatus) { // Ensure verification is happening
+        updateData.preHarvestAgent = reviewer.walletAddress; // Store wallet address
+      } else if (existingCrop.growthStage === 'post-harvest' && verificationStatus) { // Ensure verification is happening
+        updateData.postHarvestAgent = reviewer.walletAddress; // Store wallet address
       }
     }
     
@@ -130,7 +142,7 @@ exports.updateCrop = async (req, res) => {
       id,
       updateData,
       { new: true, runValidators: true }
-    ).populate('farmPropertyId').populate('farmerId');
+    ).populate('farmPropertyId').populate({ path: 'farmerId', select: 'walletAddress email name' });
     
     if (!updatedCrop) {
       return res.status(404).json({
@@ -139,15 +151,41 @@ exports.updateCrop = async (req, res) => {
       });
     }
     
-    // Add blockchain verification when crop is verified
-    if (verificationStatus === 'verified' && updatedCrop.harvestingDate) {
+    // Add blockchain verification when crop is verified and has necessary data
+    // Condition updated: Proceed if farmerId exists, walletAddress can be a placeholder.
+    if (verificationStatus === 'verified' && updatedCrop.harvestingDate && updatedCrop.farmerId) {
       try {
         console.log('Adding verified crop to blockchain...');
         
+        const farmingDetails = {
+          preNotes: updatedCrop.preNotes || 'N/A',
+          postNotes: updatedCrop.postNotes || 'N/A',
+          storageMethod: updatedCrop.storageMethod || 'N/A',
+          plantingDate: updatedCrop.plantingDate ? new Date(updatedCrop.plantingDate).toISOString() : 'N/A',
+          expectedHarvestingDate: updatedCrop.expectedHarvestingDate ? new Date(updatedCrop.expectedHarvestingDate).toISOString() : 'N/A',
+          quantityHarvested: updatedCrop.quantityHarvested || 'N/A',
+          unit: updatedCrop.unit || 'N/A',
+          preHarvestAgent: updatedCrop.preHarvestAgent || 'N/A',
+          postHarvestAgent: updatedCrop.postHarvestAgent || 'N/A',
+          images: updatedCrop.images || [],
+          growthStageAtVerification: updatedCrop.growthStage,
+          farmName: updatedCrop.farmPropertyId?.farmName || 'N/A',
+          farmType: updatedCrop.farmPropertyId?.farmType || 'N/A',
+          // Optionally include DB timestamps if required on-chain
+          // dbCreatedAt: updatedCrop.createdAt ? new Date(updatedCrop.createdAt).toISOString() : 'N/A',
+          // dbUpdatedAt: updatedCrop.updatedAt ? new Date(updatedCrop.updatedAt).toISOString() : 'N/A',
+        };
+        const farmingMethodsJSON = JSON.stringify(farmingDetails);
+
         const cropDetails = {
+          // Use actual wallet address if available, otherwise a placeholder string.
+          // This farmerWalletAddress is part of the data sent *within* farmingMethodsJSON via verifyCropOnBlockchain.
+          // The farmId parameter in the smart contract call itself will still use the placeholderFarmAddress (signer's address)
+          // as set in verifyCropOnBlockchain.
+          farmerWalletAddress: updatedCrop.farmerId.walletAddress || "0x2Ed32Af34d80ADB200592e7e0bD6a3F761677591", 
           cropId: updatedCrop._id.toString(),
           cropType: updatedCrop.cropName,
-          farmingMethods: `Pre-harvest notes: ${updatedCrop.preNotes || 'N/A'}. Post-harvest notes: ${updatedCrop.postNotes || 'N/A'}. Storage method: ${updatedCrop.storageMethod || 'N/A'}`,
+          farmingMethods: farmingMethodsJSON, // Send all details as a JSON string
           harvestDateTimestamp: Math.floor(new Date(updatedCrop.harvestingDate).getTime() / 1000),
           geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location'
         };
@@ -155,19 +193,17 @@ exports.updateCrop = async (req, res) => {
         const txHash = await verifyCropOnBlockchain(cropDetails);
         console.log(`Crop ${updatedCrop._id} successfully added to blockchain. Transaction hash: ${txHash}`);
         
-        // Store the transaction hash in the crop record
+        // Store the transaction hash and update blockchain status in the crop record
         await Crop.findByIdAndUpdate(id, { 
           blockchainTxHash: txHash,
-          blockchainStatus: 'verified'
+          // Assuming you have a field like blockchainStatus, otherwise adapt as needed
+          // blockchainStatus: 'verified' 
         });
         
       } catch (blockchainError) {
         console.error('Failed to add crop to blockchain:', blockchainError.message);
-        // Store the error for retry later
-        await Crop.findByIdAndUpdate(id, { 
-          blockchainStatus: 'failed',
-          blockchainError: blockchainError.message
-        });
+        // Optionally, store the error or set a status for retry
+        // await Crop.findByIdAndUpdate(id, { blockchainStatus: 'failed', blockchainError: blockchainError.message });
       }
     }
     
@@ -175,6 +211,7 @@ exports.updateCrop = async (req, res) => {
       success: true,
       data: updatedCrop
     });
+
   } catch (error) {
     console.error('Error updating crop:', error);
     res.status(500).json({
@@ -285,7 +322,7 @@ exports.deleteCrop = async (req, res) => {
   }
 };
 
-// Get single crop by ID with populated agent details
+// Get single crop by ID
 exports.getCrop = async (req, res) => {
   try {
     const { id } = req.params;
@@ -293,9 +330,9 @@ exports.getCrop = async (req, res) => {
     const crop = await Crop.findById(id)
       .populate('farmPropertyId', 'farmName location');
 
-    const secCrop = await Crop.findById(id)
+      const secCrop = await Crop.findById(id)
       .populate('farmerId');
-    const email = await secCrop.farmerId.email;
+      const email = await secCrop.farmerId.email;
     
     if (!crop) {
       return res.status(404).json({
@@ -303,38 +340,11 @@ exports.getCrop = async (req, res) => {
         message: 'Crop not found'
       });
     }
-
-    // Populate agent details using aggregation for wallet addresses
-    const cropWithAgents = await Crop.aggregate([
-      { $match: { _id: crop._id } },
-      {
-        $lookup: {
-          from: 'reviewers',
-          localField: 'preHarvestAgent',
-          foreignField: 'walletAddress',
-          as: 'preHarvestAgentInfo'
-        }
-      },
-      {
-        $lookup: {
-          from: 'reviewers',
-          localField: 'postHarvestAgent',
-          foreignField: 'walletAddress',
-          as: 'postHarvestAgentInfo'
-        }
-      },
-      {
-        $addFields: {
-          preHarvestAgentInfo: { $arrayElemAt: ['$preHarvestAgentInfo', 0] },
-          postHarvestAgentInfo: { $arrayElemAt: ['$postHarvestAgentInfo', 0] }
-        }
-      }
-    ]);
     
     res.status(200).json({
       success: true,
-      data: cropWithAgents[0] || crop,
-      email: email
+      data: crop,
+      email:email
     });
   } catch (error) {
     console.error('Error fetching crop:', error);
@@ -426,24 +436,31 @@ exports.getAllVerifiedCrops = async (req, res) => {
 };
 
 
-// Update getReviewedCropsByReviewer to check both agent fields using wallet address
+// Update getReviewedCropsByReviewer to query by wallet address
 exports.getReviewedCropsByReviewer = async (req,res)=>{
   try{
-    const { reviewerId } = req.params;
+    const { reviewerId } = req.params; // This is the agent's _id
+
+    const reviewer = await Reviewer.findById(reviewerId).select('walletAddress'); // Only fetch walletAddress
+    if (!reviewer || !reviewer.walletAddress) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reviewer not found or reviewer does not have a wallet address.'
+      });
+    }
+
+    const reviewerWalletAddress = reviewer.walletAddress;
     
-    // Convert reviewerId to lowercase for consistent matching
-    const walletAddress = reviewerId.toLowerCase();
-    
-    // Find crops reviewed by this specific reviewer wallet address (either pre-harvest or post-harvest)
+    // Find crops reviewed by this specific reviewer's wallet address
     const crops = await Crop.find({
       $or: [
-        { preHarvestAgent: walletAddress },
-        { postHarvestAgent: walletAddress }
+        { preHarvestAgent: reviewerWalletAddress },
+        { postHarvestAgent: reviewerWalletAddress }
       ],
-      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] }
+      verificationStatus: { $in: ['verified', 'rejected', 'toUpgrade'] } 
     })
-    .populate('farmerId')
-    .populate('farmPropertyId')
+    .populate({ path: 'farmerId', select: 'name email walletAddress' }) // Select specific fields
+    .populate({ path: 'farmPropertyId', select: 'farmName location farmAddress' }) // Select specific fields
     .sort({ updatedAt: -1 });
     
     res.status(200).json({
@@ -452,7 +469,7 @@ exports.getReviewedCropsByReviewer = async (req,res)=>{
       data: crops
     });
   } catch (error) {
-    console.error('Error fetching reviewed crops by reviewer:', error);
+    console.error('Error fetching reviewed crops:', error);
     res.status(500).json({
       success: false,
       message: 'Server Error',

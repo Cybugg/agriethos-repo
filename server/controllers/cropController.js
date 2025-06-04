@@ -305,35 +305,35 @@ exports.getCrop = async (req, res) => {
     }
 
     // Populate agent details using aggregation for wallet addresses
-    const cropWithAgents = await Crop.aggregate([
-      { $match: { _id: crop._id } },
-      {
-        $lookup: {
-          from: 'reviewers',
-          localField: 'preHarvestAgent',
-          foreignField: 'walletAddress',
-          as: 'preHarvestAgentInfo'
-        }
-      },
-      {
-        $lookup: {
-          from: 'reviewers',
-          localField: 'postHarvestAgent',
-          foreignField: 'walletAddress',
-          as: 'postHarvestAgentInfo'
-        }
-      },
-      {
-        $addFields: {
-          preHarvestAgentInfo: { $arrayElemAt: ['$preHarvestAgentInfo', 0] },
-          postHarvestAgentInfo: { $arrayElemAt: ['$postHarvestAgentInfo', 0] }
-        }
-      }
-    ]);
+    // const cropWithAgents = await Crop.aggregate([
+    //   { $match: { _id: crop._id } },
+    //   {
+    //     $lookup: {
+    //       from: 'reviewers',
+    //       localField: 'preHarvestAgent',
+    //       foreignField: 'walletAddress',
+    //       as: 'preHarvestAgentInfo'
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'reviewers',
+    //       localField: 'postHarvestAgent',
+    //       foreignField: 'walletAddress',
+    //       as: 'postHarvestAgentInfo'
+    //     }
+    //   },
+    //   {
+    //     $addFields: {
+    //       preHarvestAgentInfo: { $arrayElemAt: ['$preHarvestAgentInfo', 0] },
+    //       postHarvestAgentInfo: { $arrayElemAt: ['$postHarvestAgentInfo', 0] }
+    //     }
+    //   }
+    // ]);
     
     res.status(200).json({
       success: true,
-      data: cropWithAgents[0] || crop,
+      data:  crop,
       email: email
     });
   } catch (error) {

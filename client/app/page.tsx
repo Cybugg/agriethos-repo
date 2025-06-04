@@ -34,15 +34,17 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
   const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail,email} = useAuth();
   const router = useRouter();
+        // Autopass already logged in users ...
+        useEffect(()=>
+          {
+            if (address || farmerId || email){router.replace("/dashboard/farmer/explore/")}
+           
+          },[email,user,farmerId]
+        )
   const fetchCrops = async (pageNum: number, search: string) => {
     setLoading(true);
-      // Autopass already logged in users ...
-  useEffect(()=>
-    {
-      if (address || farmerId || email){router.replace("/dashboard/farmer/")}
-     
-    },[address,farmerId]
-  )
+
+
     try {
       const res = await fetch(
         `http://localhost:5000/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(

@@ -250,9 +250,9 @@ const router = useRouter();
           </div>
           </div>
         
-          <div>
-            <Image src={ele && ele.images[0]} alt={"item"} width={280} height={200} className="w-full h-64 object-cover" />
-          </div>     {/* Propertie */}
+        {ele && ele.images[0]?  <div>
+            <Image src={ele && ele.images[0]} alt={""} width={280} height={200} className="w-full h-64 object-cover" />
+          </div>:<div className="bg-gray-200 w-full h-64"></div>}     {/* Propertie */}
           <div className="flex flex-col mt-4 justify-center">
             {/* Crop name */}
             <div className="text-lg ">{ele.cropName}</div>

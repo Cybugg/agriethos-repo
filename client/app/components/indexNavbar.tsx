@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import Link from "next/link";
+import { useAuth } from "../Context/AuthContext";
 
 type NavItemProps = {
   icon: string;
@@ -43,6 +44,7 @@ interface props {
 }
 const IndexNavbar: React.FC<props> = ({currentPage,mobileDisplay,setMobileDisplay}) => {
 
+  const {user} = useAuth()
 // Hides navbar mobile
 
   return (
@@ -55,10 +57,10 @@ const IndexNavbar: React.FC<props> = ({currentPage,mobileDisplay,setMobileDispla
       </div>
 
       {/* Side Bar Nav */}
-      <div className="flex flex-col w-full gap-[16px] text-black">
+     {!user && <div className="flex flex-col w-full gap-[16px] text-black">
         <NavItem icon={"/icons/explore.svg"} label="Explore" active={currentPage === "home"} address="/" />
         <NavItem icon={"/icons/person.png"} label="Sign in" active={currentPage === "join"} address="/auth" />
-      </div> 
+      </div> }
     </div>
 
     {/* Mobile mode */}
@@ -75,11 +77,11 @@ const IndexNavbar: React.FC<props> = ({currentPage,mobileDisplay,setMobileDispla
 </button>
     </div>
 {/* nav links */}
-<div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] ">
+{!user && <div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] ">
 <NavItemMobile  label="Explore" active={currentPage === "explore"} address="/"  />
 <NavItemMobile  label="Sign in" active={currentPage === "join"} address="/auth"  />
 
-</div>
+</div>}
  </div>
     </div>
   );

@@ -17,7 +17,7 @@ async function addServiceWalletAsReviewer() {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, AgriEthosProductLedgerABI, ownerSigner);
     
     // The service wallet address that needs to be authorized
-    const serviceWalletAddress = "0x2Ed32Af34d80ADB200592e7e0bD6a3F761677591";
+    const serviceWalletAddress = "0x6542034145F96b8F244716F37Cd0e337D1fCDa08";
     
     console.log(`Adding service wallet ${serviceWalletAddress} as authorized reviewer...`);
     console.log(`Using owner wallet: ${ownerSigner.address}`);

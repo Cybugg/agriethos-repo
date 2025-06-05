@@ -37,7 +37,7 @@ const EditFarmImage:React.FC<props> = ({setEditImage}) => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `http://localhost:5000/api/farm/images/${farm&&farm._id}`,
+        `https://agriethos-9wy5.onrender.com/api/farm/images/${farm&&farm._id}`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

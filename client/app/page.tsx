@@ -47,7 +47,7 @@ export default function Home() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(
+        `https://agriethos-9wy5.onrender.com/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(
           search
         )}`
       );

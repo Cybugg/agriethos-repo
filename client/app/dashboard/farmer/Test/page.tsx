@@ -25,7 +25,7 @@ export default function Page() {
     setAddress(addr);
 
     // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+    const resNonce = await fetch("https://agriethos-9wy5.onrender.com/api/auth/request-nonce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr }),
@@ -48,7 +48,7 @@ Only sign this message if you trust AgriEthos.
   `;
     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+    const resLogin = await fetch("https://agriethos-9wy5.onrender.com/api/auth/wallet-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr, signature }),
@@ -75,7 +75,7 @@ Only sign this message if you trust AgriEthos.
   //     const address = await signer.getAddress();
   //     const signature = await signer.signMessage('Log in to AgriEthos');
 
-  //     const response = await fetch('http://localhost:5000/api/auth/wallet-login', {
+  //     const response = await fetch('https://agriethos-9wy5.onrender.com/api/auth/wallet-login', {
   //       method: 'POST',
   //       headers: {
   //         'Content-Type': 'application/json'

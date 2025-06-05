@@ -109,7 +109,7 @@ export default function Home() {
       const fetchFarm = async () => {
         try {
           console.log('Fetching farm data for user ID:', user._id);
-          const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${user._id}`);
+          const res = await fetch(`https://agriethos-9wy5.onrender.com/api/farm/farm-properties/${user._id}`);
           
           if (!res.ok) {
             const errorText = await res.text();
@@ -139,7 +139,7 @@ export default function Home() {
  const addr = await signer.getAddress();
     if(user && user._id){
   // send request to get Nonce and transaction timestamp (addr as payload)
-const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce/"+user._id, {
+const resNonce = await fetch("https://agriethos-9wy5.onrender.com/api/auth/request-nonce/"+user._id, {
 method: "PUT",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify({ address: addr }),
@@ -163,7 +163,7 @@ Only sign this message if you trust AgriEthos.
 console.log(addr,nonce,timestamp)
 const signature = await signer.signMessage(message);
 
-const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login/"+user._id, {
+const resLogin = await fetch("https://agriethos-9wy5.onrender.com/api/auth/wallet-login/"+user._id, {
 method: "POST",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify({ address: addr, signature }),

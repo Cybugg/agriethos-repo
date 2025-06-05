@@ -147,7 +147,7 @@ export default function FarmOnboardingForm() {
         data.append('images', file); // 'images' must match backend field
       });
     
-      const res = await axios.post('http://localhost:5000/api/farm/farm-properties', data, {headers: {
+      const res = await axios.post('https://agriethos-9wy5.onrender.com/api/farm/farm-properties', data, {headers: {
           'Content-Type': 'multipart/form-data',
         }});
     

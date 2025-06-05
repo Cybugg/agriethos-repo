@@ -33,7 +33,7 @@ const reverify = async() =>{
 
   let email = localStorage.getItem("emailToVerify");
   try{
-    const res = await fetch("http://localhost:5000/api/auth/email-reverify",{
+    const res = await fetch("https://agriethos-9wy5.onrender.com/api/auth/email-reverify",{
       headers:{"Content-Type":"json/application"},
       method:"POST",
       body:JSON.stringify({email:email})
@@ -66,7 +66,7 @@ const reverify = async() =>{
     
 
     // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+    const resNonce = await fetch("https://agriethos-9wy5.onrender.com/api/auth/request-nonce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr }),
@@ -90,7 +90,7 @@ Only sign this message if you trust AgriEthos.
   console.log(addr,nonce,timestamp)
     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+    const resLogin = await fetch("https://agriethos-9wy5.onrender.com/api/auth/wallet-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr, signature }),

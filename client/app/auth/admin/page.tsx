@@ -45,7 +45,7 @@ export default function Page() {
     
 
     // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/admin/request-nonce", {
+    const resNonce = await fetch("https://agriethos-9wy5.onrender.com/api/admin/request-nonce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ walletAddress: addr }),
@@ -69,7 +69,7 @@ Only sign this message if you trust AgriEthos.
   console.log(addr,nonce,timestamp)
     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/admin/wallet-login", {
+    const resLogin = await fetch("https://agriethos-9wy5.onrender.com/api/admin/wallet-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: addr, signature }),

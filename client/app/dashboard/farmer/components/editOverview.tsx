@@ -90,7 +90,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
           console.log('Sending data to server:', JSON.stringify(formData, null, 2));
           
           if(farm) {
-            const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${farm._id}`, {
+            const res = await fetch(`https://agriethos-9wy5.onrender.com/api/farm/farm-properties/${farm._id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(formData),

@@ -71,7 +71,7 @@ export default function Home() {
     const fetchPendingCrops = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/crops/pending');
+        const response = await axios.get('https://agriethos-9wy5.onrender.com/api/crops/pending');
         setPendingCrops(response.data.data);
       } catch (err) {
         console.error('Error fetching pending crops:', err);

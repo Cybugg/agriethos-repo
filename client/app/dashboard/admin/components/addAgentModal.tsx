@@ -47,7 +47,7 @@ const AddAgentModal:React.FC<props> = ({setDisplayAddAgentModal, setAlertCreate,
         
           console.log('Submitting farm data*****:', data);
     
-          const res = await fetch('http://localhost:5000/api/admin/create/agent', {
+          const res = await fetch('https://agriethos-9wy5.onrender.com/api/admin/create/agent', {
             method: "POST",
             body: data, 
           });

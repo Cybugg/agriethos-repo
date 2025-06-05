@@ -125,7 +125,7 @@ useEffect(() => {
         if(!farm && user && !isLoginStatusLoading){
           const fetchFarm = async () => {
             try {
-              const res = await fetch('http://localhost:5000/api/farm/farm-properties/'+user._id);
+              const res = await fetch('https://agriethos-9wy5.onrender.com/api/farm/farm-properties/'+user._id);
               if (!res.ok) throw new Error('Failed to fetch');
               const data = await res.json();
               console.log(data);
@@ -146,7 +146,7 @@ useEffect(() => {
         ()=>{
           const fetchCrops = async() =>{
             try{
-              const res = await fetch("http://localhost:5000/api/crops/farmer/"+farmerId) 
+              const res = await fetch("https://agriethos-9wy5.onrender.com/api/crops/farmer/"+farmerId) 
               const {data} = await res.json();
               setCrops(data);
               console.log(data)
@@ -212,7 +212,7 @@ useEffect(() => {
               const addr = await signer.getAddress();
       
                // send request to get Nonce and transaction timestamp (addr as payload)
-          const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+          const resNonce = await fetch("https://agriethos-9wy5.onrender.com/api/auth/request-nonce", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ address: addr }),
@@ -236,7 +236,7 @@ useEffect(() => {
         console.log(addr,nonce,timestamp)
           const signature = await signer.signMessage(message);
       
-          const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+          const resLogin = await fetch("https://agriethos-9wy5.onrender.com/api/auth/wallet-login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ address: addr, signature }),

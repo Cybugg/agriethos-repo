@@ -29,7 +29,7 @@ export default function Weather() {
      
     const fetchWeather = async (lat: number, lon: number) => {
       try {
-        const res = await axios.get(`http://localhost:5000/weather?lat=${lat}&lon=${lon}`);
+        const res = await axios.get(`https://agriethos-9wy5.onrender.com/weather?lat=${lat}&lon=${lon}`);
         setWeather(res.data);
       } catch (err) {
         console.error('Failed to fetch weather data:', err);
@@ -41,7 +41,7 @@ export default function Weather() {
     const updateFarmCoord = async (lat:number,lon:number)=>{
       try {
         if(farm && !weather){
-           const res = await axios.put(`http://localhost:5000/api/farm/farm-properties/${farm[0]._id}`,{latitude:lat,longitude:lon});
+           const res = await axios.put(`https://agriethos-9wy5.onrender.com/api/farm/farm-properties/${farm[0]._id}`,{latitude:lat,longitude:lon});
         setFarm(res.data);
         console.log(res.data);
         }

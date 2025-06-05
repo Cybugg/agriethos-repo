@@ -39,7 +39,7 @@ export default function Home() {
   useEffect(
     ()=>{
         const fetchCrop =async()=>{
-            const result =  await fetch("http://localhost:5000/api/crops/"+id);
+            const result =  await fetch("https://agriethos-9wy5.onrender.com/api/crops/"+id);
             const {data,message} =  await result.json();
             if(!result.ok ){
                 console.log("Error:",message)

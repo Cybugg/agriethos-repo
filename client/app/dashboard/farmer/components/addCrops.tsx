@@ -65,7 +65,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
     
       console.log('Submitting farm data*****:', data);
 
-      const res = await axios.post('http://localhost:5000/api/crops/', data, {headers: {
+      const res = await axios.post('https://agriethos-9wy5.onrender.com/api/crops/', data, {headers: {
           'Content-Type': 'multipart/form-data',
         }});
  

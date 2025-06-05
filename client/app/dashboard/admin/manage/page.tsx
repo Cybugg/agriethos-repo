@@ -59,7 +59,7 @@ export default function Home() {
             const fetchAdmins = async()=>{
                 try{
                   if(user){
-                     const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
+                     const result = await fetch("https://agriethos-9wy5.onrender.com/api/admin/admins/"+user._id);
                      const {data} = await result.json();
                      setAdmins(data);
                      data && setLoadingAdmins(false);
@@ -79,7 +79,7 @@ export default function Home() {
     const fetchAgents = async()=>{
         try{
           if(user){
-             const result = await fetch("http://localhost:5000/api/admin/agents/"+user._id);
+             const result = await fetch("https://agriethos-9wy5.onrender.com/api/admin/agents/"+user._id);
              const {data} = await result.json();
              setAgents(data);
              data && setLoadingAgents(false);

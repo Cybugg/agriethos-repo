@@ -27,7 +27,7 @@ export default function Page() {
   // Autopass already logged in users ...
   useEffect(()=>
     {
-      if (address || farmerId || email){router.replace("/dashboard/farmer/")}
+      if ( farmerId && email){router.replace("/dashboard/farmer/")}
      
     },[address,farmerId]
   )

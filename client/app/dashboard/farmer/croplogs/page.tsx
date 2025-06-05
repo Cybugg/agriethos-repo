@@ -24,6 +24,7 @@ import ImageViewer from '@/app/components/imageViewer';
 import DisplayQRCode from '../components/qrcodePreview';
 import { CiMail } from 'react-icons/ci';
 import { ethers } from 'ethers';
+import Link from 'next/link';
 
 // Define the type for a single data item
 interface PieDataItem {
@@ -100,6 +101,12 @@ function page() {
       const {farm,setFarm} = useFarm();
       const [statusData,setStatusData] = useState<StatusData[]>([])
 
+
+         // Route protection
+          useEffect(() => {
+          if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
+          if(user && newUser ==="true"){router.push('/onboard')}
+        }, [email])
       const openViewer = (index: number) => {
         setCurrentIndex(index);
         setIsViewerOpen(true);
@@ -490,9 +497,9 @@ Close
 { ele && ele.verificationStatus === "toUpgrade" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setDisplayUpgradeCrop(true)}>
 Upgrade
 </button>}
-{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
-View on Explorer
-</button>}
+{ele && ele.verificationStatus === "verified" && ele.blockchainTxHash && <Link  href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}  className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
+View on Etherscan
+</Link>}
 {ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setShowQRCode(true)}>
 View QR Code
 </button>

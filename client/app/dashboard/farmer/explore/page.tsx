@@ -37,9 +37,14 @@ export default function Home() {
   const observer = useRef<IntersectionObserver | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
  const {setCurrentPage,setMobileDisplay} = useNavContext();
- const { address, logout ,isLoginStatusLoading,newUser,farmerId, setAddress,email} = useAuth();
+ const { address, logout ,isLoginStatusLoading,newUser,farmerId, setAddress,email,user} = useAuth();
  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
 const router = useRouter();
+   // Route protection
+    useEffect(() => {
+    if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
+    if(user && newUser ==="true"){router.push('/onboard')}
+  }, [email])
     useEffect(()=>{
           setCurrentPage("explore");
           setMobileDisplay(false);
@@ -265,7 +270,7 @@ const router = useRouter();
             </div>
             
             {/* Blockchain verification link */}
-            {ele.blockchainTxHash && (
+            {/* {ele.blockchainTxHash && (
               <div className="mt-2">
                 <a
                   href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}
@@ -276,7 +281,7 @@ const router = useRouter();
                   🔗 View on Blockchain
                 </a>
               </div>
-            )}
+            )} */}
           </div>
         </Link>
    

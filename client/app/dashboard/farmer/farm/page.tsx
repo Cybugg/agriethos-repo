@@ -43,7 +43,7 @@ function page() {
 
     // Route protection
     useEffect(() => {
-    if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
+    if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
     if(user && newUser ==="true"){router.push('/onboard')}
   }, [email])
 

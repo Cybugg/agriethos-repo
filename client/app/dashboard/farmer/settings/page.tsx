@@ -52,6 +52,12 @@ export default function Home() {
  const [error, setError] = useState<string>('');
 const router = useRouter();
 
+   // Route protection
+    useEffect(() => {
+    if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
+    if(user && newUser ==="true"){router.push('/onboard')}
+  }, [email])
+  
     useEffect(()=>{
           setCurrentPage("settings");
           setMobileDisplay(false);

@@ -92,7 +92,7 @@ export default function Home() {
   // Route protection
   useEffect(() => {
 
-    if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
+    if (!isLoginStatusLoading && !email ) {router.push('/auth')}
     if(!isLoginStatusLoading && farmerId && newUser ==="true"){router.push('/onboard');
        console.log("new user ni") }
        console.log(newUser)

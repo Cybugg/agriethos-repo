@@ -155,7 +155,16 @@ exports.updateCrop = async (req, res) => {
     // Condition updated: Proceed if farmerId exists, walletAddress can be a placeholder.
     if (verificationStatus === 'verified' && updatedCrop.harvestingDate && updatedCrop.farmerId) {
       try {
-        console.log('Adding verified crop to blockchain...');
+        console.log('=== BLOCKCHAIN VERIFICATION PROCESS STARTED ===');
+        console.log(`Crop ID: ${updatedCrop._id}`);
+        console.log(`Crop Name: ${updatedCrop.cropName}`);
+        console.log(`Growth Stage: ${updatedCrop.growthStage}`);
+        console.log(`Farmer ID: ${updatedCrop.farmerId._id}`);
+        console.log(`Farm Property ID: ${updatedCrop.farmPropertyId?._id}`);
+        console.log(`Pre-Harvest Agent: ${updatedCrop.preHarvestAgent || 'N/A'}`);
+        console.log(`Post-Harvest Agent: ${updatedCrop.postHarvestAgent || 'N/A'}`);
+        console.log(`Harvesting Date: ${updatedCrop.harvestingDate}`);
+        console.log('=== PREPARING FARMING DETAILS ===');
         
         const farmingDetails = {
           preNotes: updatedCrop.preNotes || 'N/A',
@@ -171,40 +180,98 @@ exports.updateCrop = async (req, res) => {
           growthStageAtVerification: updatedCrop.growthStage,
           farmName: updatedCrop.farmPropertyId?.farmName || 'N/A',
           farmType: updatedCrop.farmPropertyId?.farmType || 'N/A',
-          // Optionally include DB timestamps if required on-chain
-          // dbCreatedAt: updatedCrop.createdAt ? new Date(updatedCrop.createdAt).toISOString() : 'N/A',
-          // dbUpdatedAt: updatedCrop.updatedAt ? new Date(updatedCrop.updatedAt).toISOString() : 'N/A',
         };
+        
+        console.log('Farming Details Prepared:', JSON.stringify(farmingDetails, null, 2));
         const farmingMethodsJSON = JSON.stringify(farmingDetails);
+        console.log(`Farming Methods JSON Length: ${farmingMethodsJSON.length} characters`);
 
         const cropDetails = {
-          // Use the reviewer's wallet address as the placeholder since they're performing the verification
-          // This farmerWalletAddress is part of the data sent *within* farmingMethodsJSON via verifyCropOnBlockchain.
-          // The farmId parameter in the smart contract call itself will still use the placeholderFarmAddress (signer's address)
-          // as set in verifyCropOnBlockchain.
-          farmerWalletAddress: updatedCrop.preHarvestAgent || updatedCrop.postHarvestAgent, 
+          farmerWalletAddress: updatedCrop.preHarvestAgent || updatedCrop.postHarvestAgent || "REVIEWER_WALLET_NOT_FOUND", 
           cropId: updatedCrop._id.toString(),
           cropType: updatedCrop.cropName,
-          farmingMethods: farmingMethodsJSON, // Send all details as a JSON string
+          farmingMethods: farmingMethodsJSON,
           harvestDateTimestamp: Math.floor(new Date(updatedCrop.harvestingDate).getTime() / 1000),
           geographicOrigin: updatedCrop.farmPropertyId?.location || 'Unknown location'
         };
         
-        const txHash = await verifyCropOnBlockchain(cropDetails);
-        console.log(`Crop ${updatedCrop._id} successfully added to blockchain. Transaction hash: ${txHash}`);
+        console.log('=== CROP DETAILS FOR BLOCKCHAIN ===');
+        console.log(`Farmer Wallet Address (Placeholder): ${cropDetails.farmerWalletAddress}`);
+        console.log(`Crop ID: ${cropDetails.cropId}`);
+        console.log(`Crop Type: ${cropDetails.cropType}`);
+        console.log(`Harvest Date Timestamp: ${cropDetails.harvestDateTimestamp}`);
+        console.log(`Geographic Origin: ${cropDetails.geographicOrigin}`);
+        console.log(`Farming Methods JSON Size: ${cropDetails.farmingMethods.length} bytes`);
         
-        // Store the transaction hash and update blockchain status in the crop record
-        await Crop.findByIdAndUpdate(id, { 
+        console.log('=== CALLING BLOCKCHAIN SERVICE ===');
+        const txHash = await verifyCropOnBlockchain(cropDetails);
+        console.log(`✅ BLOCKCHAIN SUCCESS: Crop ${updatedCrop._id} successfully added to blockchain`);
+        console.log(`Transaction Hash: ${txHash}`);
+        
+        console.log('=== UPDATING DATABASE WITH TX HASH ===');
+        const dbUpdateResult = await Crop.findByIdAndUpdate(id, { 
           blockchainTxHash: txHash,
-          // Assuming you have a field like blockchainStatus, otherwise adapt as needed
-          // blockchainStatus: 'verified' 
         });
         
+        if (dbUpdateResult) {
+          console.log(`✅ DATABASE SUCCESS: Transaction hash stored in database for crop ${id}`);
+        } else {
+          console.error(`❌ DATABASE ERROR: Failed to store transaction hash for crop ${id}`);
+        }
+        
+        console.log('=== BLOCKCHAIN VERIFICATION PROCESS COMPLETED SUCCESSFULLY ===');
+        
       } catch (blockchainError) {
-        console.error('Failed to add crop to blockchain:', blockchainError.message);
-        // Optionally, store the error or set a status for retry
-        // await Crop.findByIdAndUpdate(id, { blockchainStatus: 'failed', blockchainError: blockchainError.message });
+        console.error('=== BLOCKCHAIN VERIFICATION PROCESS FAILED ===');
+        console.error(`❌ CROP ID: ${updatedCrop._id}`);
+        console.error(`❌ ERROR MESSAGE: ${blockchainError.message}`);
+        console.error(`❌ ERROR STACK:`, blockchainError.stack);
+        
+        // Try to parse and log more detailed error information
+        if (blockchainError.data) {
+          console.error(`❌ ERROR DATA:`, JSON.stringify(blockchainError.data, null, 2));
+        }
+        
+        if (blockchainError.reason) {
+          console.error(`❌ ERROR REASON: ${blockchainError.reason}`);
+        }
+        
+        if (blockchainError.code) {
+          console.error(`❌ ERROR CODE: ${blockchainError.code}`);
+        }
+        
+        // Log the current state of crop data for debugging
+        console.error('❌ CROP DATA AT TIME OF ERROR:', {
+          cropId: updatedCrop._id,
+          cropName: updatedCrop.cropName,
+          growthStage: updatedCrop.growthStage,
+          verificationStatus: updatedCrop.verificationStatus,
+          preHarvestAgent: updatedCrop.preHarvestAgent,
+          postHarvestAgent: updatedCrop.postHarvestAgent,
+          harvestingDate: updatedCrop.harvestingDate,
+          farmPropertyLocation: updatedCrop.farmPropertyId?.location
+        });
+        
+        // Optionally, store the error in database for later analysis
+        try {
+          await Crop.findByIdAndUpdate(id, { 
+            blockchainError: blockchainError.message,
+            blockchainErrorTimestamp: new Date(),
+            blockchainStatus: 'failed'
+          });
+          console.log(`📝 ERROR LOG: Blockchain error stored in database for crop ${id}`);
+        } catch (dbError) {
+          console.error(`❌ DB ERROR LOG FAILED: Could not store blockchain error in database:`, dbError.message);
+        }
+        
+        console.error('=== END BLOCKCHAIN ERROR LOG ===');
       }
+    } else {
+      console.log('=== BLOCKCHAIN VERIFICATION SKIPPED ===');
+      console.log(`Verification Status: ${verificationStatus}`);
+      console.log(`Has Harvesting Date: ${!!updatedCrop.harvestingDate}`);
+      console.log(`Has Farmer ID: ${!!updatedCrop.farmerId}`);
+      console.log('Conditions not met for blockchain verification');
     }
     
     res.status(200).json({

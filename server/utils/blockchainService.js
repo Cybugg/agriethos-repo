@@ -26,7 +26,16 @@ if (!RPC_URL || !SIGNER_KEY || !LEDGER_CONTRACT_ADDRESS) {
   );
 } else {
   try {
-    provider = new ethers.JsonRpcProvider(RPC_URL);
+    // Initialize provider with custom settings
+    provider = new ethers.JsonRpcProvider(RPC_URL, {
+      name: 'sepolia',
+      chainId: 11155111
+    }, {
+      staticNetwork: true,
+      timeout: 30000, // 30 seconds timeout
+      retryLimit: 3
+    });
+    
     signer = new ethers.Wallet(SIGNER_KEY, provider);
     contract = new ethers.Contract(LEDGER_CONTRACT_ADDRESS, AgriEthosProductLedgerABI, signer);
     console.log(`Blockchain service initialized. Connected to contract at ${LEDGER_CONTRACT_ADDRESS} via ${signer.address}`);

@@ -21,7 +21,7 @@ async function addReviewerDirectly() {
 
     // Check if reviewer already exists
     const existingReviewer = await Reviewer.findOne({ 
-      walletAddress: "0x6542034145F96b8F244716F37Cd0e337D1fCDa08" 
+      walletAddress: "0xEfEeBe3fE9F1d64F8B8C44108541E650AaaBbBBb" 
     });
     
     if (existingReviewer) {
@@ -33,7 +33,7 @@ async function addReviewerDirectly() {
     // Create the new reviewer
     const newReviewer = new Reviewer({
       name: "New Reviewer", // Replace with actual name
-      walletAddress: "0x6542034145F96b8F244716F37Cd0e337D1fCDa08",
+      walletAddress: "0xEfEeBe3fE9F1d64F8B8C44108541E650AaaBbBBb",
       createdBy: admin._id
     });
 

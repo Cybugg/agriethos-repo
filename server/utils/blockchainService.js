@@ -1,6 +1,17 @@
 const { ethers } = require('ethers');
 const AgriEthosProductLedgerABI = require('../abi/AgriEthosProductLedger.json').abi;
 
+// Enhanced debugging
+console.log('=== ENVIRONMENT VARIABLES DEBUG ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('SEPOLIA_RPC_URL exists:', !!process.env.SEPOLIA_RPC_URL);
+console.log('SEPOLIA_RPC_URL value:', process.env.SEPOLIA_RPC_URL?.substring(0, 50) + '...');
+console.log('SIGNER_PRIVATE_KEY exists:', !!process.env.SIGNER_PRIVATE_KEY);
+console.log('SIGNER_PRIVATE_KEY length:', process.env.SIGNER_PRIVATE_KEY?.length);
+console.log('CONTRACT_ADDRESS exists:', !!process.env.CONTRACT_ADDRESS);
+console.log('CONTRACT_ADDRESS value:', process.env.CONTRACT_ADDRESS);
+console.log('=== END DEBUG ===');
+
 const RPC_URL = process.env.SEPOLIA_RPC_URL;
 const SIGNER_KEY = process.env.SIGNER_PRIVATE_KEY; // Using SIGNER_PRIVATE_KEY as requested
 const LEDGER_CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS; // Using CONTRACT_ADDRESS as requested

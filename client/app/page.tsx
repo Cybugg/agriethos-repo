@@ -179,7 +179,7 @@ export default function Home() {
             </div>
             
             {/* Blockchain verification link */}
-            {ele.blockchainTxHash && (
+            {/* {ele.blockchainTxHash && (
               <div className="mt-2">
                 <a
                   href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}
@@ -190,7 +190,7 @@ export default function Home() {
                   🔗 View on Blockchain
                 </a>
               </div>
-            )}
+            )} */}
           </div>
         </Link>
    

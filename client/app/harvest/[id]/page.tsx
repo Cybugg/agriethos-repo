@@ -84,8 +84,9 @@ export default function Home() {
       </div>
         
           </div>
-          {crop?.farmPropertyId?._id && (
-            <div className="my-8">
+          <div className="flex gap-2 my-2">
+             {crop?.farmPropertyId?._id && (
+            <div className="my-3">
                <Link 
                             href={`/harvest/farm/${crop?.farmPropertyId._id}`}
                             className="px-3 py-1 bg-white text-black rounded-md text-sm border border-black "
@@ -95,6 +96,19 @@ export default function Home() {
             </div>
                          
                         )}
+                        {crop?.blockchainTxHash && (
+            <div className="my-3">
+               <Link 
+                            href={`https://sepolia.etherscan.io/tx/${crop.blockchainTxHash}`}
+                            className="px-3 py-1 bg-white text-black rounded-md text-sm border border-black "
+                          >
+                           View on etherscan
+                          </Link>
+            </div>
+                         
+                        )}  
+          </div>
+       
 <div className="w-full" >
          {crop?.cropName &&
           <div className="flex flex-col xl:flex-row justify-between  gap-32 items-start w-full">

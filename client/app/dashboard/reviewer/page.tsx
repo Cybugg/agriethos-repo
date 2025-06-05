@@ -54,7 +54,7 @@ export default function Home() {
          // Route protection
          useEffect(
            ()=> {
-             if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+             if(!isLoginStatusLoading && (!user  || !address)){
                router.replace("/auth/reviewer")
              }
            },[user,address,isLoginStatusLoading]
@@ -97,12 +97,12 @@ export default function Home() {
       <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:px-8  ">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Home</h1>
-            <p className="text-sm md:text-base text-[#898989]">Manage all crop submissions.</p>
+            <h1 className="text-2xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Home</h1>
+            <p className="text-sm md:text-base text-[#898989] hidden lg:block">Manage all crop submissions.</p>
           </div>
           <div className="flex items-center gap-2">
              
-          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={()=> window.location.reload()}>
         Reload
        </div>
                 <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
@@ -119,8 +119,8 @@ export default function Home() {
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={40} height={24} />
             </button>
-            <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
-              <Menu size={24} />
+            <button className="md:hidden p-2 rounded- text-black hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
+              <Menu size={40} />
             </button>
           </div>
         </header>
@@ -142,7 +142,7 @@ export default function Home() {
             <div className="space-y-4">
               {/* Map through pending crops */}
               {pendingCrops.map((crop) => (
-                <div key={crop._id} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg px-4 hover:bg-gray-100">
+                <div key={crop._id} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 rounded-lg px-4 hover:bg-gray-100 border border-slate-200">
                   <div className="flex basis-1/4 items-center gap-4 mb-3 md:mb-0">
                     <div className="w-12 h-12 rounded-full overflow-hidden">
                       <Image
@@ -161,7 +161,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center justify-between md:justify-end w-full ">
                     <div className="w-full basis-1/3 md:mx-8 text-start my-3 md:my-0">
-                      <span className="font-medium text-black mr-[170px]">{crop.cropName}</span>
+                      <span className="font-semibold text-lg lg:text-normal  text-black mr-[170px]">{crop.cropName}</span>
                     </div>
                     <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-32">
                       {crop.growthStage === 'pre-harvest' ? (

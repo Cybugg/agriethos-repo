@@ -57,7 +57,7 @@ export default function CropReviewPage() {
   // Route protection
   useEffect(
     ()=> {
-      if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+      if(!isLoginStatusLoading && (!user  || !address)){
         router.replace("/auth/reviewer")
       }
     },[user,address,,isLoginStatusLoading]
@@ -308,19 +308,19 @@ export default function CropReviewPage() {
                 <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Review Submission</h1>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex text-black items-center gap-2">
               <button 
                 onClick={handleReload}
                 className="p-2 rounded-full hover:bg-[#f6fded]"
                 title="Reload page"
               >
-                <RefreshCw size={24} />
+                <RefreshCw size={30} />
               </button>
               <button className="p-2 rounded-full hover:bg-[#f6fded]">
-                <Bell size={24} />
+                <Bell size={30} />
               </button>
               <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
-                <Menu size={24} />
+                <Menu size={30} />
               </button>
             </div>
           </header>

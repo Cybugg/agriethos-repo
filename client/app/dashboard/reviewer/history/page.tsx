@@ -26,10 +26,19 @@ export default function CropHistoryPage() {
   const [cropHistory, setCropHistory] = useState<Crop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const {address, logout, user} = useAgentAuth();
+  const {address, logout, user,isLoginStatusLoading} = useAgentAuth();
   const [displayLogout, setDisplayLogout] = useState<boolean>(false);
   const {setCurrentPage, setMobileDisplay} = useNavContext();
   
+const router = useRouter()
+    // Route protection
+    useEffect(
+      ()=> {
+        if(!isLoginStatusLoading && (!user  || !address)){
+          router.replace("/auth/reviewer")
+        }
+      },[user,address,,isLoginStatusLoading]
+    )
   //Navbar default settings
   useEffect(() => {
     setCurrentPage("history");
@@ -99,7 +108,7 @@ export default function CropHistoryPage() {
 
   // Card view for mobile screens
   const MobileCardView = () => (
-    <div className="flex flex-col gap-4 md:hidden">
+    <div className="flex flex-col gap-4 md:hidden p-5">
       {cropHistory.map((crop) => (
         <div key={crop.id} className="border border-[#cfcfcf] rounded-lg p-4 hover:bg-[#f6fded]">
           <div className="flex justify-between items-center mb-2">
@@ -126,9 +135,7 @@ export default function CropHistoryPage() {
                 Reviewed: {crop.reviewStage}
               </span>
             </div>
-            <Link href={`/dashboard/reviewer/review/${crop.id}`} className="text-[#003024] text-sm">
-              View
-            </Link>
+           
           </div>
         </div>
       ))}
@@ -179,13 +186,13 @@ export default function CropHistoryPage() {
       
       {/* Main content */}
       <div className="flex-1 overflow-auto mt-[55px]">
-        <header className="flex justify-between items-center p-4 md:px-8">
+        <header className="flex justify-between items-center md:py-4 px-5 md:px-8">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">History</h1>
-            <p className="text-sm md:text-base text-[#898989]">View past crop submissions</p>
+            <h1 className="text-2xl md:text-2xl font-semibold lg:font-normal text-[#000000]">History</h1>
+            <p className="text-sm md:text-base text-[#898989] hidden lg:block">View past crop submissions</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className='px-2 py-1 border border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={() => window.location.reload()}>
+            <div className='px-2 py-1 border border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={() => window.location.reload()}>
               Reload
             </div>
             <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl lg:block text-grey-800'>
@@ -202,8 +209,8 @@ export default function CropHistoryPage() {
             <button className="p-2 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={40} height={24} />
             </button>
-            <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
-              <Menu size={24} />
+            <button className="md:hidden p-2 rounded-full text-black hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
+              <Menu size={40} />
             </button>
           </div>
         </header>

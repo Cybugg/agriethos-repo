@@ -25,10 +25,10 @@ export default function StatisticsPage() {
        // Route protection
        useEffect(
          ()=> {
-           if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+           if(!isLoginStatusLoading && (!user  || !address)){
              router.replace("/auth/reviewer")
            }
-         },[user,address,isLoginStatusLoading]
+         },[user,address,,isLoginStatusLoading]
        )
      //Navbar default settings
      useEffect(()=>{
@@ -180,18 +180,18 @@ export default function StatisticsPage() {
     <div className="flex flex-col gap-4 md:hidden">
       {topFarmsData.map((farm) => (
         <div key={farm.id} className="border border-[#cfcfcf] rounded-lg p-4">
-          <h3 className="font-medium mb-2">{farm.name}</h3>
+          <h3 className="font-medium mb-2 text-primary-700">{farm.name}</h3>
           <div className="grid grid-cols-3 gap-2 text-sm">
             <div>
-              <p className="text-[#898989]">Reviewed</p>
-              <p>{farm.reviewed}</p>
+              <p className="text-black">Reviewed</p>
+              <p className="text-black">{farm.reviewed}</p>
             </div>
             <div>
-              <p className="text-[#898989]">Success</p>
+              <p className="text-black">Success</p>
               <p className="text-[#96d645]">{farm.successful}</p>
             </div>
             <div>
-              <p className="text-[#898989]">Rejected</p>
+              <p className="text-black">Rejected</p>
               <p className="text-[#e30e0e]">{farm.rejected}</p>
             </div>
           </div>
@@ -213,11 +213,11 @@ export default function StatisticsPage() {
       <div className="flex-1 overflow-auto mt-[55px]">
         <header className="flex justify-between items-center p-4 md:p-6  ">
           <div>
-            <h1 className="text-xl md:text-2xl font-semibold lg:font-normal text-[#000000]">Statistics</h1>
-            <p className="text-sm md:text-base text-[#898989]">View your review performance and metrics</p>
+            <h1 className="text-2xl md:text-2xl font-semibold lg:font-normal text-[#000000] ">Statistics</h1>
+            <p className="text-sm md:text-base text-black hidden lg:block">View your review performance and metrics</p>
           </div>
           <div className="flex items-center gap-2">
-          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer' onClick={()=> window.location.reload()}>
+          <div className='px-2 py-1 border  border-gray-500 text-gray-600 rounded-full cursor-pointer hidden lg:block' onClick={()=> window.location.reload()}>
         Reload
        </div>
         <button className='px-2 py-1 border-2 w-full border-[#a5eb4c] rounded-2xl  lg:block text-grey-800'>
@@ -232,17 +232,17 @@ export default function StatisticsPage() {
                                           
                                           </button>
                
-            <button className="p-2 rounded-full hover:bg-[#f6fded]">
+            <button className="p-5 rounded-full hover:bg-[#f6fded]">
               <Image src="/icons/bell.svg" alt="Notifications" width={40} height={24} />
             </button>
-            <button className="md:hidden p-2 rounded-full hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
-              <Menu size={24} />
+            <button className="md:hidden p-2 rounded-full text-black hover:bg-[#f6fded]" onClick={() => setMobileNavOpen(true)}>
+              <Menu size={40} />
             </button>
           </div>
         </header>
 
         {/* Main content */}
-        <div className="p-4 md:p-6">
+        <div className="p-5 md:p-6">
           {loading ? (
             <div className="flex justify-center text-grey-600 items-center h-64">
               <p>Loading statistics data...</p>
@@ -256,15 +256,15 @@ export default function StatisticsPage() {
               {/* Summary Stats Cards */}
               <div className="grid grid-cols-1 overflow-hidden rounded-lg sm:grid-cols-2 md:grid-cols-3 mb-6 ">
                 <div className="bg-white border border-[#cfcfcf] p-4 md:p-6">
-                  <p className="text-[#898989] text-sm mb-2">Crops Approved</p>
+                  <p className="text-black text-sm mb-2">Crops Approved</p>
                   <h2 className="text-2xl md:text-3xl font-bold text-[#149414]">{summaryStats.cropsApproved}</h2>
                 </div>
                 <div className="bg-white border border-[#cfcfcf] p-4 md:p-6">
-                  <p className="text-[#898989] text-sm mb-2">Crops Rejected</p>
+                  <p className="text-black text-sm mb-2">Crops Rejected</p>
                   <h2 className="text-2xl md:text-3xl font-bold text-[#e30e0e]">{summaryStats.cropsRejected}</h2>
                 </div>
                 <div className="bg-white border border-[#cfcfcf] p-4 md:p-6 sm:col-span-2 md:col-span-1">
-                  <p className="text-[#898989] text-sm mb-2">Total Crops Reviewed</p>
+                  <p className="text-black text-sm mb-2">Total Crops Reviewed</p>
                   <h2 className="text-2xl md:text-3xl font-bold text-[#003024]">{summaryStats.totalCropsReviewed}</h2>
                 </div>
               </div>
@@ -352,11 +352,11 @@ export default function StatisticsPage() {
                     <div className="flex gap-6 mt-4">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-[#149414]"></div>
-                        <span className="text-xs md:text-sm text-[#898989]">Verified</span>
+                        <span className="text-xs md:text-sm text-black">Verified</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-[#e30e0e]"></div>
-                        <span className="text-xs md:text-sm text-[#898989]">Rejected</span>
+                        <span className="text-xs md:text-sm text-black">Rejected</span>
                       </div>
                     </div>
                   </div>
@@ -377,10 +377,10 @@ export default function StatisticsPage() {
                   <table className="min-w-full">
                     <thead>
                       <tr className="text-left bg-[#f9f9f9]">
-                        <th className="px-6 py-3 text-sm font-medium text-[#898989]">Farm Name</th>
-                        <th className="px-6 py-3 text-sm font-medium text-[#898989]">Crops Reviewed</th>
-                        <th className="px-6 py-3 text-sm font-medium text-[#898989]">Successful Reviews</th>
-                        <th className="px-6 py-3 text-sm font-medium text-[#898989]">Rejected Reviews</th>
+                        <th className="px-6 py-3 text-sm font-medium text-black">Farm Name</th>
+                        <th className="px-6 py-3 text-sm font-medium text-black">Crops Reviewed</th>
+                        <th className="px-6 py-3 text-sm font-medium text-black">Successful Reviews</th>
+                        <th className="px-6 py-3 text-sm font-medium text-black">Rejected Reviews</th>
                       </tr>
                     </thead>
                     <tbody>

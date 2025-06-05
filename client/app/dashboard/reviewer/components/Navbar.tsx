@@ -71,7 +71,7 @@ const {currentPage, mobileDisplay, setMobileDisplay} = useNavContext();
 </button>
     </div>
 {/* nav links */}
-<div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] ">
+<div className="h-full w-full  flex flex-col items-center text-center justify-start text-2xl gap-8 mt-[152px] text-black">
 <NavItemMobile label="Home" active={currentPage === "home"} address="/" />
 <NavItemMobile label="History" active={currentPage === "history"} address="/history" />
 <NavItemMobile label="Statistics" active={currentPage === "statistics"} address="/statistics" />

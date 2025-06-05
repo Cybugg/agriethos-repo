@@ -22,7 +22,7 @@ function Page() {
        // Route protection
        useEffect(
          ()=> {
-           if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "reviewer")){
+           if(!isLoginStatusLoading && (!user  || !address )){
              router.replace("/auth/reviewer")
            }
          },[user,address,,isLoginStatusLoading]

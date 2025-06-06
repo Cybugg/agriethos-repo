@@ -1,68 +1,55 @@
 "use client"
 import Image from "next/image";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { BiSearch } from "react-icons/bi";
+import { useEffect, useState } from "react";
+
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import Loader from "../../../components/loader";
-import Link from "next/link";
+
 import { useNavContext } from "../NavContext";
 import { useAuth } from "@/app/Context/AuthContext";
-import { BsPerson, BsWallet } from "react-icons/bs";
+
 import { CiMail } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-import { ethers } from "ethers";
+
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Alert from "@/app/components/alert";
 
 dayjs.extend(relativeTime);
-// capitalize first character
-function CFL(string_: string | undefined | null) {
-  if (!string_) return ""; // Return empty string or fallback
-  return string_.charAt(0).toUpperCase() + string_.slice(1);
-}
-type Crop = {
-  _id: string;
-  name: string;
-  description: string;
-};
+
+
 
 
 export default function Home() {
   
-  const [crops, setCrops] = useState<Crop[]>([]);
-  const [page, setPage] = useState(1);
+
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const observer = useRef<IntersectionObserver | null>(null);
-  const [searchQuery, setSearchQuery] = useState(""); // 🔍 
  const {setCurrentPage,setMobileDisplay} = useNavContext();
  const [msg, setMsg] = useState<string>('');
  const [success, setSuccess] = useState<string>('');
  const [successSub, setSuccessSub] = useState<boolean>(false);
  const [warning , setWarning]= useState<boolean>(false);
- const { address, logout ,isLoginStatusLoading,newUser,farmerId, setAddress,email,user} = useAuth();
+ const { address, isLoginStatusLoading,newUser,email,user} = useAuth();
  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
  const [viewPass, setViewPass] = useState<boolean>(false);
  const [viewNewPass, setViewNewPass] = useState<boolean>(false);
  const [strength, setStrength] = useState<string>('');
  const [form, setForm] = useState({  password: '', newPassword: '' });
- const [error, setError] = useState<string>('');
+//  const [error, setError] = useState<string>('');
 const router = useRouter();
 
    // Route protection
     useEffect(() => {
     if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
     if(user && newUser ==="true"){router.push('/onboard')}
-  }, [email])
+  }, [email,isLoginStatusLoading,router,user,newUser])
   
     useEffect(()=>{
           setCurrentPage("settings");
           setMobileDisplay(false);
         
-        },[])
+        },[setCurrentPage,setMobileDisplay])
 
         if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
         const checkPasswordStrength = (password: string) => {
@@ -161,13 +148,13 @@ const router = useRouter();
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMsg("");
-    setError('');
+    // setError('');
     setSuccess('');
     setLoading(true)
     const { password, newPassword } = form;
 
     if (!password || !newPassword) {
-      setError('All fields are required.');
+      // setError('All fields are required.');
       return;
     }
 
@@ -198,8 +185,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       })
       router.refresh()
        
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      // setError(err.message);
+      console.log(err);
     }
   };
 

@@ -2,7 +2,6 @@
 
 import { useAuth } from '../Context/AuthContext';
 import { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import Loader from '../components/loader';
 import {useRouter} from "next/navigation";
@@ -14,7 +13,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail, email} = useAuth();
+  const { setFarmerId,setNewUser, farmerId , setUser,setEmail, email} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false);
@@ -29,7 +28,7 @@ export default function Page() {
     {
       if ( farmerId && email){router.replace("/dashboard/farmer/")}
      
-    },[address,farmerId]
+    },[email,farmerId, router]
   )
 
   // Change event function for the form
@@ -76,72 +75,6 @@ const signInWithEmail = async()=>{
       console.log(err);
     }
 };
-
-  // onConnect getNonce -> 
-  const connectWallet = async () => {
-    // init
-    setLoading(true);
-    setMsg("");
-    if (!(window as any).ethereum) return alert("Please install MetaMask");
-
-    // Provider for the EVM wallet
-    const provider = new ethers.BrowserProvider((window as any).ethereum);
-    // client 
-    const signer = await provider.getSigner();
-
-    const addr = await signer.getAddress();
-
-    
-
-    // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr }),
-    });
-   // Parse Nonce data
-    const { nonce, timestamp } = await resNonce.json();
-    console.log(nonce)
-
-    const message = `Welcome to AgriEthos 🌱
-
-Sign this message to verify you own this wallet and authenticate securely.
-
-Wallet Address: ${addr}
-Nonce: ${nonce}
-Timestamp: ${timestamp}
-
-This request will not trigger a blockchain transaction or cost any gas.
-
-Only sign this message if you trust AgriEthos.
-  `;
-  console.log(addr,nonce,timestamp)
-    const signature = await signer.signMessage(message);
-
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr, signature }),
-    }); 
-    const loginData = await resLogin.json();
-    const {address,farmerId,newUser,userPack} = await loginData.data
-    if (loginData.success) {
-      console.log("✅ Login successful!");
-        setLoading(false);
-        setSuccess("sucess")
-        setAddress(address);
-        setFarmerId(farmerId);
-        setNewUser(newUser);
-        setSuccessSub(true);
-        setUser(userPack)
-        console.log(address,farmerId)
-      if(newUser === "false")  router.replace("/dashboard/farmer")
-        else if (newUser === "true") router.replace("/onboard")
-    } else {
-      setMsg(loginData.error || "Login failed.");
-      setLoading(false);
-    }
-  };
 
   
 

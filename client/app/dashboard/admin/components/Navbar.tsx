@@ -2,7 +2,6 @@
 // components/VerticalNavbar.tsx
 import Image from "next/image";
 import React from "react";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useNavContext } from "../NavContext";
 import Link from "next/link";
 

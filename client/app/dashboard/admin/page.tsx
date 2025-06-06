@@ -37,10 +37,10 @@ export default function Home() {
   // Route protection
   useEffect(
     ()=> {
-      if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "admin")){
+      if(!isLoginStatusLoading && (!user || !address|| user && user.role !== "admin")){
         router.replace("/auth/admin")
       }
-    },[user,address]
+    },[user,address,isLoginStatusLoading,router]
   )
 
   useEffect(
@@ -72,7 +72,7 @@ export default function Home() {
                        const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
                        const {data} = await result.json();
                        setAdmins(data);
-                       data && setLoadingAdmins(false);
+                       if(data) setLoadingAdmins(false);
                     }
                    
                   }
@@ -91,7 +91,7 @@ export default function Home() {
                          const result = await fetch("http://localhost:5000/api/admin/agents/"+user._id);
                          const {data} = await result.json();
                          setAgents(data);
-                         data && setLoadingAgents(false);
+                         if(data) setLoadingAgents(false);
                       }
                      
                     }
@@ -105,7 +105,7 @@ export default function Home() {
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
-        },[])
+        },[setCurrentPage,setMobileDisplay])
   
         // to fetch farm properties and set it to state
   
@@ -151,7 +151,7 @@ export default function Home() {
              <div className='flex flex-col gap-[24px] w-full py-[32px] px-[24px] lg:border-r-[0.75px] border-b-[0.75px] lg:border-b-0 border-grey-200'>
           <div className='flex'>
            <div className='text-sm text-grey-400'>
-          Farmers's registered
+          Farmers&apos;s registered
           </div>
          
           </div>

@@ -2,13 +2,11 @@
 import Alert from "@/app/components/alert";
 import ImageUploader from "@/app/components/imageUploader";
 import Loader from "@/app/components/loader";
-import Switch from "@/app/components/switch";
 import { useFarm } from "@/app/Context/FarmContext";
 import axios from "axios";
 import Image from "next/image";
-import React, {ReactNode, useState} from "react";
-import { BiUpload } from "react-icons/bi";
-import { MdFileUpload } from "react-icons/md";
+import React, {useState} from "react";
+
 
 
 interface props {
@@ -18,7 +16,7 @@ const EditFarmImage:React.FC<props> = ({setEditImage}) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const {farm} = useFarm();
-  const [msg, setMsg] = useState<string>('');
+  // const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [warning , setWarning]= useState<boolean>(false);
@@ -45,7 +43,7 @@ const EditFarmImage:React.FC<props> = ({setEditImage}) => {
         
       );
      
-    setMsg(res.data.message)
+ 
     setSuccess(res.data.message)
       console.log('Upload success:', res.data);
     } catch (err) {

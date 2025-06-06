@@ -1,10 +1,9 @@
 "use client"
 import { useAuth } from "@/app/Context/AuthContext";
 import { useFarm } from "@/app/Context/FarmContext";
-import axios from "axios";
 import Image from "next/image";
-import React, {ReactNode, useEffect, useState} from "react";
-import { useRouter } from "next/navigation";
+import React, {useEffect, useState} from "react";
+
 
     interface props {
     setEditOverview: (data:boolean) => void 
@@ -17,7 +16,7 @@ import { useRouter } from "next/navigation";
     farmType: string,
     waterSource: string,
     soilType: string,
-    [key:string]:any
+    [key:string]:any 
 }
 
 const NIGERIAN_STATES = [
@@ -28,7 +27,7 @@ const NIGERIAN_STATES = [
   "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
 ];
 const EditOverview:React.FC<props> = ({setEditOverview}) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FarmFormData>({
     farmName:"",
     location: "",
@@ -43,9 +42,9 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
   const {isLoginStatusLoading} = useAuth();
   const {farm,setFarm} = useFarm();
 
-  const fullUrl = window.location.href;
+ 
   useEffect(()=>{
- !isLoginStatusLoading &&farm && setFormData({
+ if(!isLoginStatusLoading &&farm )setFormData({
     farmName:farm.farmName,
     location: farm.location,
     size: farm.size,
@@ -53,7 +52,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
     waterSource: farm.waterSource,
     soilType:farm.soilType
   })
-  },[]);
+  },[isLoginStatusLoading,farm]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -65,24 +64,24 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
         }));
       };
 
-      const router = useRouter();
+   
 
 
       const handleSubmit = async () => {
-        setLoading(true);
+        // setLoading(true);
         console.log('Submitting farm data:', formData);
        
         // Validate required fields
         if(!formData.farmType || !formData.location || !formData.size || 
            !formData.soilType || !formData.waterSource || !formData.farmName) {
           alert("Fill out all fields");
-          setLoading(false);
+          // setLoading(false);
           return;
         } 
         
         if(formData.size && !Number(formData.size)) {
           alert("Farm size must be a number");
-          setLoading(false);
+          // setLoading(false);
           return;
         }
         
@@ -112,7 +111,7 @@ const EditOverview:React.FC<props> = ({setEditOverview}) => {
           console.error('Upload failed:', err);
           alert(`Failed to update: ${err}`);
         } finally {
-          setLoading(false);
+          // setLoading(false);
         }
       };
 

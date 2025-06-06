@@ -1,18 +1,16 @@
 "use client"
 import ImageUploader from "@/app/components/imageUploader";
-import Switch from "@/app/components/switch";
 import { useAuth } from "@/app/Context/AuthContext";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, {ReactNode, useState} from "react";
+import React, { useState} from "react";
 
 
 interface props {
     setDisplayUpgradeCrop:(boolVal:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
     setAlertErrorCreate:(boolVal:boolean)=>void
-    setCrops:React.Dispatch<React.SetStateAction<any[]>>
+    setCrops:React.Dispatch<React.SetStateAction<crop[]>>
     setSelectedCrop:React.Dispatch<React.SetStateAction<crop|undefined>>
     selectedCrop:crop | undefined
 }
@@ -43,7 +41,7 @@ const UpgradeCrop:React.FC<props> = ({setDisplayUpgradeCrop, setAlertCreate,setC
       })
       const [images, setImages] = useState<File[]>([]);
       const {farmerId} = useAuth();
-      const router = useRouter();
+      
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -67,7 +65,7 @@ const UpgradeCrop:React.FC<props> = ({setDisplayUpgradeCrop, setAlertCreate,setC
       const data = new FormData();
       
       // Append text fields
-      farmerId && data.append('farmerId',farmerId.toString())
+      if(farmerId){data.append('farmerId',farmerId?.toString());}
       data.append('harvestingDate', formData.harvestingDate);
       data.append('postNotes', formData.postNotes);
       data.append('growthStage', formData.growthStage);

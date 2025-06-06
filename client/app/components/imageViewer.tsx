@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useEffect } from 'react';
 
 interface ImageViewerProps {
@@ -41,11 +42,13 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
       {"‹"}
       </button>
 
-      <img
-        src={images && images[currentIndex]}
+    {images &&  <Image
+      width={100}
+      height={100}
+        src={images[currentIndex]}
         alt={`image-${currentIndex}`}
         className="max-h-[90vh]  w-full  object-contain rounded shadow-lg"
-      />
+      />}
 
       <button
         onClick={onNext}

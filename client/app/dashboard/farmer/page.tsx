@@ -8,83 +8,81 @@ import {
 import { useNavContext } from './NavContext';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsMailbox, BsPerson, BsWallet } from 'react-icons/bs';
-import { GiFarmer } from 'react-icons/gi';
+
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
-import axios from 'axios';
+
 import Weather from './components/weather';
 import { CiMail } from 'react-icons/ci';
-import { ethers } from 'ethers';
 import Alert from '@/app/components/alert';
 
 
 // Define the shape of the chart data
-interface GrowthDataPoint {
-  time: string;
-  preHarvest: number;
-  postHarvest: number;
-}
+// interface GrowthDataPoint {
+//   time: string;
+//   preHarvest: number;
+//   postHarvest: number;
+// }
 
 // Define available crop types
-type CropType = 'maize' | 'rice';
-type RangeType = 'week' | 'month' | 'year';
+// type CropType = 'maize' | 'rice';
+// type RangeType = 'week' | 'month' | 'year';
 
 // Mock dataset
-const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
-  maize: {
-    week: [
-      { time: 'Mon', preHarvest: 20, postHarvest: 5 },
-      { time: 'Tue', preHarvest: 35, postHarvest: 10 },
-      { time: 'Wed', preHarvest: 50, postHarvest: 15 },
-      { time: 'Thu', preHarvest: 65, postHarvest: 20 },
-      { time: 'Fri', preHarvest: 80, postHarvest: 25 },
-    ],
-    month: [
-      { time: 'Week 1', preHarvest: 30, postHarvest: 10 },
-      { time: 'Week 2', preHarvest: 60, postHarvest: 15 },
-      { time: 'Week 3', preHarvest: 90, postHarvest: 20 },
-      { time: 'Week 4', preHarvest: 100, postHarvest: 30 },
-    ],
-    year: [
-      { time: 'Q1', preHarvest: 25, postHarvest: 5 },
-      { time: 'Q2', preHarvest: 50, postHarvest: 20 },
-      { time: 'Q3', preHarvest: 75, postHarvest: 40 },
-      { time: 'Q4', preHarvest: 100, postHarvest: 60 },
-    ],
-  },
-  rice: {
-    week: [
-      { time: 'Mon', preHarvest: 10, postHarvest: 2 },
-      { time: 'Tue', preHarvest: 25, postHarvest: 5 },
-      { time: 'Wed', preHarvest: 40, postHarvest: 10 },
-      { time: 'Thu', preHarvest: 60, postHarvest: 15 },
-      { time: 'Fri', preHarvest: 80, postHarvest: 18 },
-    ],
-    month: [
-      { time: 'Week 1', preHarvest: 20, postHarvest: 8 },
-      { time: 'Week 2', preHarvest: 50, postHarvest: 15 },
-      { time: 'Week 3', preHarvest: 70, postHarvest: 25 },
-      { time: 'Week 4', preHarvest: 100, postHarvest: 35 },
-    ],
-    year: [
-      { time: 'Q1', preHarvest: 20, postHarvest: 5 },
-      { time: 'Q2', preHarvest: 45, postHarvest: 15 },
-      { time: 'Q3', preHarvest: 75, postHarvest: 30 },
-      { time: 'Q4', preHarvest: 100, postHarvest: 50 },
-    ],
-  },
-};
+// const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
+//   maize: {
+//     week: [
+//       { time: 'Mon', preHarvest: 20, postHarvest: 5 },
+//       { time: 'Tue', preHarvest: 35, postHarvest: 10 },
+//       { time: 'Wed', preHarvest: 50, postHarvest: 15 },
+//       { time: 'Thu', preHarvest: 65, postHarvest: 20 },
+//       { time: 'Fri', preHarvest: 80, postHarvest: 25 },
+//     ],
+//     month: [
+//       { time: 'Week 1', preHarvest: 30, postHarvest: 10 },
+//       { time: 'Week 2', preHarvest: 60, postHarvest: 15 },
+//       { time: 'Week 3', preHarvest: 90, postHarvest: 20 },
+//       { time: 'Week 4', preHarvest: 100, postHarvest: 30 },
+//     ],
+//     year: [
+//       { time: 'Q1', preHarvest: 25, postHarvest: 5 },
+//       { time: 'Q2', preHarvest: 50, postHarvest: 20 },
+//       { time: 'Q3', preHarvest: 75, postHarvest: 40 },
+//       { time: 'Q4', preHarvest: 100, postHarvest: 60 },
+//     ],
+//   },
+//   rice: {
+//     week: [
+//       { time: 'Mon', preHarvest: 10, postHarvest: 2 },
+//       { time: 'Tue', preHarvest: 25, postHarvest: 5 },
+//       { time: 'Wed', preHarvest: 40, postHarvest: 10 },
+//       { time: 'Thu', preHarvest: 60, postHarvest: 15 },
+//       { time: 'Fri', preHarvest: 80, postHarvest: 18 },
+//     ],
+//     month: [
+//       { time: 'Week 1', preHarvest: 20, postHarvest: 8 },
+//       { time: 'Week 2', preHarvest: 50, postHarvest: 15 },
+//       { time: 'Week 3', preHarvest: 70, postHarvest: 25 },
+//       { time: 'Week 4', preHarvest: 100, postHarvest: 35 },
+//     ],
+//     year: [
+//       { time: 'Q1', preHarvest: 20, postHarvest: 5 },
+//       { time: 'Q2', preHarvest: 45, postHarvest: 15 },
+//       { time: 'Q3', preHarvest: 75, postHarvest: 30 },
+//       { time: 'Q4', preHarvest: 100, postHarvest: 50 },
+//     ],
+//   },
+// };
 
 export default function Home() {
-  const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
-  const [selectedRange, setSelectedRange] = useState<RangeType>('week');
+  // const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
+  // const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [error,setError] = useState<boolean>(false);
   const [msg,setMsg] = useState<string>("");
   const {setCurrentPage,setMobileDisplay} = useNavContext();
-  const { address, setAddress,logout ,isLoginStatusLoading,farmerId,newUser,user,setUser,email} = useAuth();
-  const data = cropData[selectedCrop][selectedRange];
+  const { address, isLoginStatusLoading,farmerId,newUser,user,email} = useAuth();
+  // const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
   const { farm, setFarm } = useFarm();
  
@@ -96,12 +94,12 @@ export default function Home() {
     if(!isLoginStatusLoading && farmerId && newUser ==="true"){router.push('/onboard');
        console.log("new user ni") }
        console.log(newUser)
-  }, [address,farmerId,isLoginStatusLoading])
+  }, [address,farmerId,isLoginStatusLoading,newUser,router,email])
 
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
-        },[address,email])
+        },[address,email,setCurrentPage,setMobileDisplay])
   
         // to fetch farm properties and set it to state
   useEffect(() => {
@@ -110,13 +108,14 @@ export default function Home() {
         try {
           console.log('Fetching farm data for user ID:', user._id);
           const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${user._id}`);
-          
+          const data = await res.json();
           if (!res.ok) {
             const errorText = await res.text();
+            setMsg("FETCH ERROR")
             throw new Error(`Failed to fetch: ${res.status} ${errorText}`);
           }
           
-          const data = await res.json();
+      
           console.log('Farm data received:', data);
           setFarm(data);
         } catch (err) {
@@ -126,67 +125,67 @@ export default function Home() {
 
       fetchFarm();
     }
-  }, [user, isLoginStatusLoading]);
+  }, [user, isLoginStatusLoading,setFarm]);
 
 
-  const connectWallet = async () =>{
-      if (!(window as any).ethereum) return alert("Please install MetaMask");
-      // Provider for the EVM wallet
- const provider = new ethers.BrowserProvider((window as any).ethereum);
- // client 
- const signer = await provider.getSigner();
+//   const connectWallet = async () =>{
+//       if (!(window as any).ethereum) return alert("Please install MetaMask");
+//       // Provider for the EVM wallet
+//  const provider = new ethers.BrowserProvider((window as any).ethereum);
+//  // client 
+//  const signer = await provider.getSigner();
 
- const addr = await signer.getAddress();
-    if(user && user._id){
-  // send request to get Nonce and transaction timestamp (addr as payload)
-const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce/"+user._id, {
-method: "PUT",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ address: addr }),
-});
-// Parse Nonce data
-const { nonce, timestamp } = await resNonce.json();
-console.log(nonce)
+//  const addr = await signer.getAddress();
+//     if(user && user._id){
+//   // send request to get Nonce and transaction timestamp (addr as payload)
+// const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce/"+user._id, {
+// method: "PUT",
+// headers: { "Content-Type": "application/json" },
+// body: JSON.stringify({ address: addr }),
+// });
+// // Parse Nonce data
+// const { nonce, timestamp } = await resNonce.json();
+// console.log(nonce)
 
-const message = `Welcome to AgriEthos 🌱
+// const message = `Welcome to AgriEthos 🌱
 
-Sign this message to verify you own this wallet and authenticate securely.
+// Sign this message to verify you own this wallet and authenticate securely.
 
-Wallet Address: ${addr}
-Nonce: ${nonce}
-Timestamp: ${timestamp}
+// Wallet Address: ${addr}
+// Nonce: ${nonce}
+// Timestamp: ${timestamp}
 
-This request will not trigger a blockchain transaction or cost any gas.
+// This request will not trigger a blockchain transaction or cost any gas.
 
-Only sign this message if you trust AgriEthos.
-`;
-console.log(addr,nonce,timestamp)
-const signature = await signer.signMessage(message);
+// Only sign this message if you trust AgriEthos.
+// `;
+// console.log(addr,nonce,timestamp)
+// const signature = await signer.signMessage(message);
 
-const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login/"+user._id, {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ address: addr, signature }),
-}); 
-const loginData = await resLogin.json();
-const {address,farmerId,newUser,userPack} = await loginData.data
-if (loginData.success && resLogin.ok) {
-console.log("✅ Login successful!");
+// const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login/"+user._id, {
+// method: "POST",
+// headers: { "Content-Type": "application/json" },
+// body: JSON.stringify({ address: addr, signature }),
+// }); 
+// const loginData = await resLogin.json();
+// const {address,farmerId,newUser,userPack} = await loginData.data
+// if (loginData.success && resLogin.ok) {
+// console.log("✅ Login successful!");
  
- setAddress(address);
+//  setAddress(address);
  
 
 
-} else {
-console.log(loginData.error || "Login failed.");
-setMsg(loginData.message)
-setError(true)
-}
+// } else {
+// console.log(loginData.error || "Login failed.");
+// setMsg(loginData.message)
+// setError(true)
+// }
 
-    }
+//     }
        
     
-  }
+//   }
 
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px] bg-white text-black">
@@ -337,7 +336,7 @@ Crop Growth
 </div>
 </div>
 <ResponsiveContainer width="100%" height={300} className={"mt-16 hidden lg:block"}>
-        <LineChart data={data}>
+        <LineChart data={["Maize"]}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" />
           <YAxis />
@@ -355,7 +354,7 @@ Crop Growth
     <div className='w-full lg:min-h-[440px] lg:w-[448px] rounded-lg border-[0.75px] border-grey-200 p-4 gap-6 flex flex-col'>
 {/* Title */}
 <div className='text-lg font-semibold lg:font-normal lg:text-xl'>
-  Today's Weather
+  Today&apos;s Weather
 </div>
 {/* lists of weather variables */}
 <div className='flex flex-col gap-4 lg:w-[416px]'>

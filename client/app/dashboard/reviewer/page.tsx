@@ -18,7 +18,7 @@ interface FarmProperty {
   farmName: string;
   location: string;
   images: string[];
-  [key:string]:any;
+  [key:string]:string | string[];
 }
 
 interface Farmer {
@@ -37,7 +37,7 @@ interface PendingCrop {
   preNotes: string;
   verificationStatus: string;
   createdAt: string;
-  [key:string]:any;
+  [key:string]:string | string[] | FarmProperty | Farmer;
 }
 
 export default function Home() {
@@ -57,14 +57,14 @@ export default function Home() {
              if(!isLoginStatusLoading && (!user  || !address)){
                router.replace("/auth/reviewer")
              }
-           },[user,address,isLoginStatusLoading]
+           },[user,address,isLoginStatusLoading,router]
          )
 
    //Navbar default settings
    useEffect(()=>{
             setCurrentPage("home");
             setMobileDisplay(false);
-          },[])
+          },[setCurrentPage,setMobileDisplay])
 
   // Fetch pending crops when component mounts
   useEffect(() => {

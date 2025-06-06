@@ -1,15 +1,13 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import Switch from './switch';
-import { BiUpload } from 'react-icons/bi';
 import axios from 'axios';
 import { useAuth } from '../Context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Alert from './alert';
 import Confirm from './confirm';
-import Loader from './loader';
 import ImageUploader from './imageUploader';
+import Image from 'next/image';
 
 interface FarmFormData {
     farmName: string,
@@ -35,7 +33,7 @@ const NIGERIAN_STATES = [
 const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
 
 export default function FarmOnboardingForm() {
-  const {farmerId,setNewUser} = useAuth();
+  const {farmerId,user,email,setNewUser} = useAuth();
   const [formData, setFormData] = useState<FarmFormData>({
     farmName: "",
     location: "",
@@ -62,11 +60,11 @@ export default function FarmOnboardingForm() {
 
   useEffect(
     ()=>{
-      if(!farmerId)router.replace("/auth");
+      if(!farmerId || !email || !user)router.replace("/auth");
 
-    },[]
+    },[farmerId,email,user,router]
   )
-  function boolToStr (arg:Boolean){
+  function boolToStr (arg:boolean){
     return arg === true? "true" : "false";
   }
 
@@ -96,22 +94,8 @@ export default function FarmOnboardingForm() {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      if (e.target.files.length != 4) {
-        alert('Please select 4 images.');
-        return;
-      }
-      const filesArray = Array.from(e.target.files);
-      setFormData((prev) => ({
-        ...prev,
-        images: filesArray,
-      }));
-    }
-  };
-  const str2Bool = (val:string)=>{
-    return val==="true"? true: val==="false"?false:undefined
-};
+
+
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -129,7 +113,7 @@ export default function FarmOnboardingForm() {
       const data = new FormData();
       
       // Append text fields
-      farmerId && data.append('farmerId',farmerId.toString())
+      if(farmerId) data.append('farmerId',farmerId.toString())
       data.append('farmName', formData.farmName);
       data.append('location', formData.location);
       data.append('size', formData.size);
@@ -191,7 +175,7 @@ export default function FarmOnboardingForm() {
       {currentStep === 0 && (
         <div className="space-y-4 w-full">
             <div className='text-3xl py-12 text-center'>
-                What's the name of your farm?
+                What&apos;s the name of your farm?
                 </div>
           <input
             type="text"
@@ -401,12 +385,12 @@ Note: You are required to upload 4 images of your farm
           {formData.images.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {formData.images.map((file, index) => (
-                <img
+                <Image
                   key={index}
                   src={URL.createObjectURL(file)}
                   alt={`Farm Image ${index + 1}`}
                   className="w-24 h-24 object-cover rounded"
-                 
+                 height={96} width={96}
                 />
               ))}
             </div>

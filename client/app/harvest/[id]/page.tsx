@@ -1,18 +1,19 @@
 "use client"
 import IndexNavbar from "@/app/components/indexNavbar";
-import Image from "next/image";
+
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from "next/link";
 import ImageViewer from "@/app/components/imageViewer";
 import { useAuth } from "@/app/Context/AuthContext";
+import Image from "next/image";
 
 
 interface crop{
     cropName:string
     images:string[]
-    [key:string]:any|any[]
+    [key:string]:string|string[]|any
 }
 
 export default function Home() {
@@ -22,19 +23,19 @@ export default function Home() {
    const { id } = useParams();
    const router = useRouter();
 
-   function getGridCols(count:number) {
-    switch (count) {
-      case 1:
-        return 'grid-cols-1';
-      case 2:
-        return 'grid-cols-2';
-      case 3:
-        return 'grid-cols-2 md:grid-cols-3';
-      case 4:
-      default:
-        return 'grid-cols-2 md:grid-cols-4';
-    }
-  }
+  //  function getGridCols(count:number) {
+  //   switch (count) {
+  //     case 1:
+  //       return 'grid-cols-1';
+  //     case 2:
+  //       return 'grid-cols-2';
+  //     case 3:
+  //       return 'grid-cols-2 md:grid-cols-3';
+  //     case 4:
+  //     default:
+  //       return 'grid-cols-2 md:grid-cols-4';
+  //   }
+  // }
   //  let's fetch the crop details  
   useEffect(
     ()=>{
@@ -48,10 +49,19 @@ export default function Home() {
             setCrop(data);
         } 
         fetchCrop();
-    },[crop]
+    },[crop,id]
   )
 
   const [selectedImages, setSelectedImages] = useState<string[]>([""]);
+
+  useEffect(
+    ()=>{
+      if(crop){
+        setSelectedImages(crop.images);
+      }
+    },[crop]
+
+  )
   const [isViewerOpen, setIsViewerOpen] = useState(false);
         const [currentIndex, setCurrentIndex] = useState(0);
       
@@ -66,7 +76,7 @@ export default function Home() {
   return (
     <div className="bg-white h-screen flex w-full">
 <div className="flex bg-white w-full">
-<IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
+<IndexNavbar currentPage="home" mobileDisplay={mobileDisplay} setMobileDisplay={setMobileDisplay}/>
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
   <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px]  bg-white text-black w-full">
    {/* Header */}
@@ -213,7 +223,9 @@ export default function Home() {
           <div className='flex gap-4 basis-2/3 w-full'>
             <div className={`grid grid-cols-1 xl:grid-cols-2 gap-5`}>
  {crop && crop.images[0] && crop.images.map((img:string, idx:number) => (
-        <img
+        <Image
+        height={100}
+        width={100}
           key={idx}
           src={img}
           alt={`thumb-${idx}`}

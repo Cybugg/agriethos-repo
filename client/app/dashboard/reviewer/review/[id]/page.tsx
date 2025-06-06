@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Menu, Bell, RefreshCw } from 'lucide-react';
+import { Menu, Bell, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import Image from "next/image";
+
 import { useParams, useRouter } from 'next/navigation';
 import MobileNav from "../../components/MobileNav";
 import axios from 'axios';
 import AnimatedPopup from '@/app/components/AnimatedPopup';
 import ImageViewer from '@/app/components/imageViewer';
-import Confirm from '@/app/components/confirm'; // Import the Confirm component
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useAgentAuth } from '@/app/Context/AgentAuthContext';
+import Image from 'next/image';
 
 // Define a type for the popup configuration
 interface PopupConfig {
@@ -51,7 +51,7 @@ export default function CropReviewPage() {
   const router = useRouter();
   const id = params.id as string;
 
-  const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
+  const {address, user, isLoginStatusLoading} = useAgentAuth();
 
 
   // Route protection
@@ -60,17 +60,17 @@ export default function CropReviewPage() {
       if(!isLoginStatusLoading && (!user  || !address)){
         router.replace("/auth/reviewer")
       }
-    },[user,address,,isLoginStatusLoading]
+    },[user,address,,isLoginStatusLoading,router]
   )
   useEffect(() => {
-    cropData && setSelectedImages(cropData.images);
+    if(cropData) setSelectedImages(cropData.images);
   }, [cropData]);
 
   useEffect(() => {
     const fetchCropData = async () => {
       if (!id) {
         setError("Crop ID is missing.");
-        setLoading(false); 'farmName location'
+        setLoading(false); 
         return;
       }
       try {
@@ -83,7 +83,7 @@ export default function CropReviewPage() {
         } else {
           setError('Failed to load crop data: ' + (response.data.message || 'Unknown error'));
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching crop data:', err);
         if (axios.isAxiosError(err) && err.response) {
           setError(`Error loading crop data: ${err.response.status} - ${err.response.data.message || err.message}`);
@@ -168,7 +168,7 @@ export default function CropReviewPage() {
         setShowConfirmation(false);
         showPopup('Failed to approve crop: ' + (response.data.message || 'Unknown error'), 'error');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error approving crop:', err);
       setShowConfirmation(false);
       if (axios.isAxiosError(err) && err.response) {
@@ -199,7 +199,7 @@ export default function CropReviewPage() {
         setShowConfirmation(false);
         showPopup('Failed to reject crop: ' + (response.data.message || 'Unknown error'), 'error');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error rejecting crop:', err);
       setShowConfirmation(false);
       if (axios.isAxiosError(err) && err.response) {
@@ -426,10 +426,12 @@ export default function CropReviewPage() {
                     </div>
                     </div>
                      }
-                    { cropData.images[0] && <div className='text-black'>"Images:" </div>}
+                    { cropData.images[0] && <div className='text-black'>Images: </div>}
 <div className='flex gap-4'>
  {cropData && cropData.images[0] && cropData.images.map((img:string, idx:number) => (
-        <img
+        <Image
+        height={100}
+        width={100}
           key={idx}
           src={img}
           alt={`thumb-${idx}`}

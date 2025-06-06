@@ -46,12 +46,12 @@ export default function Home() {
         if(!isLoginStatusLoading && (!user  || !address|| user && user.role !== "admin")){
           router.replace("/auth/admin")
         }
-      },[user,address]
+      },[user,address,isLoginStatusLoading,router]
     )
    useEffect(()=>{
           setCurrentPage("manage");
           setMobileDisplay(false);
-        },[])
+        },[setCurrentPage,setMobileDisplay])
   
         // to fetch admins properties and set it to state
         useEffect(
@@ -62,7 +62,9 @@ export default function Home() {
                      const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
                      const {data} = await result.json();
                      setAdmins(data);
-                     data && setLoadingAdmins(false);
+                     if(data){
+                      setLoadingAdmins(false);
+                     }
                   }
                  
                 }
@@ -82,9 +84,8 @@ export default function Home() {
              const result = await fetch("http://localhost:5000/api/admin/agents/"+user._id);
              const {data} = await result.json();
              setAgents(data);
-             data && setLoadingAgents(false);
-          }
-         
+            if(data) setLoadingAgents(false);
+          } 
         }
         catch(err){
           console.log(err);

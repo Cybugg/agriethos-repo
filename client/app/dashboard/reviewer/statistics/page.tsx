@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Bell, ChevronDown, ChevronUp, Menu } from 'lucide-react';
-import Link from 'next/link';
+import { ChevronDown, ChevronUp, Menu } from 'lucide-react';
+
 import Image from "next/image";
-import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
 import MobileNav from "../components/MobileNav";
 import { useNavContext } from '../NavContext';
 import axios from 'axios';
@@ -25,16 +25,17 @@ export default function StatisticsPage() {
        // Route protection
        useEffect(
          ()=> {
+          setTimeframe("This Week")
            if(!isLoginStatusLoading && (!user  || !address)){
              router.replace("/auth/reviewer")
            }
-         },[user,address,,isLoginStatusLoading]
+         },[user,address,isLoginStatusLoading,router]
        )
      //Navbar default settings
      useEffect(()=>{
               setCurrentPage("statistics");
               setMobileDisplay(false);
-            },[])
+            },[setCurrentPage,setMobileDisplay])
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +117,7 @@ export default function StatisticsPage() {
           });
           
           // Convert to array format needed for chart
-          const activityData: ((prevState: never[]) => never[]) | { name: string; value: any; }[] = [];
+          const activityData: ((prevState: never[]) => never[]) | { name: string; value: Date | any; }[] = [];
           dayNames.forEach(day => {
             activityData.push({ name: day, value: activityMap.get(day) });
           });
@@ -127,7 +128,7 @@ export default function StatisticsPage() {
           // Group crops by farm
           const farmMap = new Map();
           
-          reviewedCrops.forEach((crop: { farmPropertyId: { farmName: any; _id: any; }; verificationStatus: string; }) => {
+          reviewedCrops.forEach((crop: { farmPropertyId: { farmName: string; _id: string; }; verificationStatus: string; }) => {
             if (crop.farmPropertyId && crop.farmPropertyId.farmName) {
               const farmName = crop.farmPropertyId.farmName;
               const farmId = crop.farmPropertyId._id;
@@ -171,9 +172,7 @@ export default function StatisticsPage() {
     fetchStatistics();
   }, [timeframe, user?._id]); // Add user._id as dependency
   
-  const toggleTimeframe = () => {
-    setTimeframe(timeframe === 'This Week' ? 'This Month' : 'This Week');
-  };
+
 
   // Mobile card view for top farms
   const MobileFarmCards = () => (

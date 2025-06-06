@@ -2,21 +2,30 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
+
 import { PiPlant } from 'react-icons/pi'
-import { ArrowLeft } from 'lucide-react'
+
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { IoMdArrowRoundBack } from 'react-icons/io'
 import { useAgentAuth } from '@/app/Context/AgentAuthContext'
 
+type FarmData = {
+  farmName: string;
+  location: string;
+  size: string;
+  crops: string[];
+  images: string[];
+  [key: string]: string | string[]|any; // for flexibility
+};
+
 function Page() {
-  const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
+  const [farm, setFarm] = useState<FarmData>() // Add a more specific type if you have one for FarmProperty
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const params = useParams()
   const id = params.id as string // This 'id' is the farmPropertyId from the URL
-     const {address, user, logout,isLoginStatusLoading} = useAgentAuth();
+     const {address, user,isLoginStatusLoading} = useAgentAuth();
   
        const router = useRouter();
        // Route protection
@@ -25,7 +34,7 @@ function Page() {
            if(!isLoginStatusLoading && (!user  || !address )){
              router.replace("/auth/reviewer")
            }
-         },[user,address,,isLoginStatusLoading]
+         },[user,address,isLoginStatusLoading,router]
        )
 
   useEffect(() => {
@@ -47,7 +56,7 @@ function Page() {
           // This case might not be hit if axios throws for non-2xx responses
           setError('Failed to load farm details: No data received');
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching farm details:', err);
         if (axios.isAxiosError(err) && err.response?.status === 404) {
           setError('Farm not found.');

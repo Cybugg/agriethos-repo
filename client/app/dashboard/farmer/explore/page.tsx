@@ -10,10 +10,10 @@ import Loader from "../../../components/loader";
 import Link from "next/link";
 import { useNavContext } from "../NavContext";
 import { useAuth } from "@/app/Context/AuthContext";
-import { BsPerson, BsWallet } from "react-icons/bs";
+
 import { CiMail } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-import { ethers } from "ethers";
+
 
 dayjs.extend(relativeTime);
 // capitalize first character
@@ -37,19 +37,20 @@ export default function Home() {
   const observer = useRef<IntersectionObserver | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
  const {setCurrentPage,setMobileDisplay} = useNavContext();
- const { address, logout ,isLoginStatusLoading,newUser,farmerId, setAddress,email,user} = useAuth();
+ const { address, isLoginStatusLoading,newUser, email,user} = useAuth();
  const [displayLogout,setDisplayLogout] = useState<boolean>(false);
 const router = useRouter();
+
    // Route protection
     useEffect(() => {
     if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
     if(user && newUser ==="true"){router.push('/onboard')}
-  }, [email])
+  }, [email,user,newUser,isLoginStatusLoading,router])
+
     useEffect(()=>{
           setCurrentPage("explore");
           setMobileDisplay(false);
-        
-        },[])
+        },[setCurrentPage,setMobileDisplay])
 
         if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
 
@@ -86,7 +87,7 @@ const router = useRouter();
   useEffect(() => {
     if (page === 1) return; // already fetched in searchQuery effect
     fetchCrops(page, searchQuery);
-  }, [page]);
+  }, [page,searchQuery]);
 
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -102,60 +103,60 @@ const router = useRouter();
     [loading, hasMore]
   );
 
-  const connectWallet = async () =>{
-        if (!(window as any).ethereum) return alert("Please install MetaMask");
+  // const connectWallet = async () =>{
+  //       if (!(window as any).ethereum) return alert("Please install MetaMask");
       
-          // Provider for the EVM wallet
-          const provider = new ethers.BrowserProvider((window as any).ethereum);
-          // client 
-          const signer = await provider.getSigner();
+  //         // Provider for the EVM wallet
+  //         const provider = new ethers.BrowserProvider((window as any).ethereum);
+  //         // client 
+  //         const signer = await provider.getSigner();
       
-          const addr = await signer.getAddress();
+  //         const addr = await signer.getAddress();
   
-           // send request to get Nonce and transaction timestamp (addr as payload)
-      const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: addr }),
-      });
-     // Parse Nonce data
-      const { nonce, timestamp } = await resNonce.json();
-      console.log(nonce)
+  //          // send request to get Nonce and transaction timestamp (addr as payload)
+  //     const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ address: addr }),
+  //     });
+  //    // Parse Nonce data
+  //     const { nonce, timestamp } = await resNonce.json();
+  //     console.log(nonce)
   
-      const message = `Welcome to AgriEthos 🌱
+  //     const message = `Welcome to AgriEthos 🌱
   
-  Sign this message to verify you own this wallet and authenticate securely.
+  // Sign this message to verify you own this wallet and authenticate securely.
   
-  Wallet Address: ${addr}
-  Nonce: ${nonce}
-  Timestamp: ${timestamp}
+  // Wallet Address: ${addr}
+  // Nonce: ${nonce}
+  // Timestamp: ${timestamp}
   
-  This request will not trigger a blockchain transaction or cost any gas.
+  // This request will not trigger a blockchain transaction or cost any gas.
   
-  Only sign this message if you trust AgriEthos.
-    `;
-    console.log(addr,nonce,timestamp)
-      const signature = await signer.signMessage(message);
+  // Only sign this message if you trust AgriEthos.
+  //   `;
+  //   console.log(addr,nonce,timestamp)
+  //     const signature = await signer.signMessage(message);
   
-      const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: addr, signature }),
-      }); 
-      const loginData = await resLogin.json();
-      const {address,farmerId,newUser,userPack} = await loginData.data
-      if (loginData.success) {
-        console.log("✅ Login successful!");
+  //     const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ address: addr, signature }),
+  //     }); 
+  //     const loginData = await resLogin.json();
+  //     const {address,farmerId,newUser,userPack} = await loginData.data
+  //     if (loginData.success) {
+  //       console.log("✅ Login successful!");
         
-          setAddress(address);
+  //         setAddress(address);
         
         
-      } else {
-        console.log(loginData.error || "Login failed.");
+  //     } else {
+  //       console.log(loginData.error || "Login failed.");
         
-      }
+  //     }
       
-    }
+  //   }
   return (
  
 <main className=" w-full flex-1 bg-white ">
@@ -229,7 +230,7 @@ const router = useRouter();
        <section className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3  mt-8 w-full gap-5 h-full'>
         
         {/* item */}
-       {crops[0] && crops.map((ele:any,idx)=>{
+       {crops[0] ? crops.map((ele:any,idx)=>{
         const isLast = idx === crops.length - 1;
         return(<div className="flex flex-col p-4 border rounded-lg cursor-pointer"  key={idx}
       ref={isLast ? lastItemRef : null}  >
@@ -286,7 +287,7 @@ const router = useRouter();
         </Link>
    
      
-        </div>)}) }
+        </div>)}):<div></div> }
            
             
         

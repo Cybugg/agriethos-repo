@@ -1,5 +1,6 @@
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface ImageUploaderProps {
   setImages: React.Dispatch<React.SetStateAction<File[]>>;
@@ -66,10 +67,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ setImages }) => {
       <div className="flex gap-3 flex-wrap mt-4">
         {previews.map((file, index) => (
           <div key={index} className="relative w-24 h-24">
-            <img
+            <Image
               src={file.preview}
               alt={`preview-${index}`}
               className="rounded object-cover w-full h-full"
+              height={100} width={100}
             />
             <button
               type="button"

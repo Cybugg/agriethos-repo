@@ -3,8 +3,13 @@ import { useAdminAuth } from '@/app/Context/AdminAuthContext'
 import Image from 'next/image'
 import React, { useState } from 'react'
 
+interface admin{
+  name : string;
+  [key:string]:string
+}
+
 interface props {
-    setAdmins:React.Dispatch<React.SetStateAction<any[]>>
+    setAdmins:React.Dispatch<React.SetStateAction<admin[]>>
     setDisplayAddAdminModal:(bool:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
     setAlertErrorCreate:(boolVal:boolean)=>void
@@ -19,7 +24,7 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
      const [formData, setFormData] = useState<FarmFormData>({
         name:"",
         walletAddress:"" })
-    const {adminId,user}  = useAdminAuth();
+    const {user}  = useAdminAuth();
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -41,7 +46,7 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
           const data = new FormData();
           
           // Append text fields
-          user && data.append('adminId',user._id.toString());
+          if(user)data.append('adminId',user._id.toString());
           data.append('name', formData.name);
           data.append('walletAddress', formData.walletAddress);
         

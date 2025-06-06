@@ -1,17 +1,20 @@
 "use client"
-import Switch from "@/app/components/switch";
 import { useAuth } from "@/app/Context/AuthContext";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, {ReactNode, useState} from "react";
+import React, {useState} from "react";
 
 
+interface crop {
+  cropName:string;
+  images:string[]
+  [key: string]: string | string[];
+}
 interface props {
     setDisplayAddCrop:(boolVal:boolean)=>void
     setAlertCreate:(boolVal:boolean)=>void
     setAlertErrorCreate:(boolVal:boolean)=>void
-    setCrops:React.Dispatch<React.SetStateAction<any[]>>}
+    setCrops:React.Dispatch<React.SetStateAction<crop[]>>}
 
 
 interface FarmFormData {
@@ -32,7 +35,6 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
         preNotes:""
       })
       const {farmerId} = useAuth();
-      const router = useRouter();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -56,7 +58,7 @@ const AddCrop:React.FC<props> = ({setDisplayAddCrop, setAlertCreate,setCrops,set
       const data = new FormData();
       
       // Append text fields
-      farmerId && data.append('farmerId',farmerId.toString())
+      if(farmerId) data.append('farmerId',farmerId.toString());
       data.append('cropName', formData.cropName);
       data.append('expectedHarvestingDate', formData.expectedHarvestingDate);
       data.append('growthStage', formData.growthStage);

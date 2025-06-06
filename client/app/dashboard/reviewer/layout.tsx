@@ -1,6 +1,6 @@
 // app/dashboard/reviewer/layout.tsx
 import React from "react";
-import { AuthProvider } from "@/app/Context/AuthContext";
+
 import { NavProvider } from "./NavContext"; // Update import to use reviewer's NavContext
 import Navbar from "./components/Navbar";
 import { AgentAuthProvider } from "@/app/Context/AgentAuthContext";

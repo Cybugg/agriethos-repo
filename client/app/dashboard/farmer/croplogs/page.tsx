@@ -13,7 +13,6 @@ import {
 import AddCrop from '../components/addCrops';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsPerson, BsWallet } from 'react-icons/bs';
 import { PiPlant } from 'react-icons/pi';
 import { GrUpdate } from "react-icons/gr";
 import Alert from '@/app/components/alert';
@@ -23,19 +22,10 @@ import UpgradeCrop from '../components/upgradeCrop';
 import ImageViewer from '@/app/components/imageViewer';
 import DisplayQRCode from '../components/qrcodePreview';
 import { CiMail } from 'react-icons/ci';
-import { ethers } from 'ethers';
+
 import Link from 'next/link';
 
-// Define the type for a single data item
-interface PieDataItem {
-  name: string;
-  value: number;
-}
 
-// Define props type
-interface PieChartComponentProps {
-  data: PieDataItem[];
-}
 
 // Custom color palette
 const COLORS = ['#149414', '#ffc600', '#e30e0e', '#FF8042'];
@@ -58,14 +48,7 @@ interface crop {
   [key: string]: string | string[];
 }
 
-type cropData = {
-    cropName:string;
-    plantingDate:string;
-    expectedHarvestingDate:string;
-    growthStage:string;
-    preNotes:string;
-    [key:string]:string;
-}
+
 type VerificationStatus = 'pending' | 'verified' | 'rejected' | 'toUpgrade';
 
 interface CropData {
@@ -82,13 +65,13 @@ interface ChartData {
   name: string;
   value: number;
 }
-function page() {
+function Page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
       const [displayUpgradeCrop,setDisplayUpgradeCrop] = useState<boolean>(false)
       const [showQRCode,setShowQRCode] = useState<boolean>(false)
       const {setCurrentPage,setMobileDisplay} = useNavContext();
-      const { address, logout ,isLoginStatusLoading,newUser,farmerId,user,email,setAddress} = useAuth();
+      const { address,isLoginStatusLoading,newUser,farmerId,user,email} = useAuth();
       const [alertCreate, setAlertCreate] = useState(false);
       const [alertErrorCreate, setAlertErrorCreate] = useState(false);
       const [collaInd , setCollaInd] = useState<number|undefined>(undefined);
@@ -106,7 +89,8 @@ function page() {
           useEffect(() => {
           if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
           if(user && newUser ==="true"){router.push('/onboard')}
-        }, [email])
+        }, [email,newUser,isLoginStatusLoading,router,user]);
+
       const openViewer = (index: number) => {
         setCurrentIndex(index);
         setIsViewerOpen(true);
@@ -119,7 +103,7 @@ function page() {
         setCurrentPage("logs");
         setMobileDisplay(false);
       
-      },[])
+      },[setCurrentPage,setMobileDisplay])
       // fetch farm details
 useEffect(() => {
         if(!farm && user && !isLoginStatusLoading){
@@ -139,7 +123,7 @@ useEffect(() => {
           fetchFarm();
         }
         }
-          , [farmerId,farm,setFarm]);
+          , [farmerId,farm,setFarm,isLoginStatusLoading,user]);
 
           // fetch crop details
       useEffect(
@@ -149,15 +133,15 @@ useEffect(() => {
               const res = await fetch("http://localhost:5000/api/crops/farmer/"+farmerId) 
               const {data} = await res.json();
               setCrops(data);
-              console.log(data)
-              data && res.ok && setLoadingData(false)
+              console.log(data);
+              if(data && res.ok){ setLoadingData(false)}
             }
             catch(err){
               console.log(err)
             }
           };
-         farmerId && fetchCrops();
-        },[farmerId]
+         if(farmerId) {fetchCrops();} 
+        },[farmerId,setCrops,setLoadingData]
       )
     //  function for the pie chart togenerate summary of the verication status
     const generateStatusSummary = (data: CropData[]): ChartData[] => {
@@ -189,7 +173,7 @@ useEffect(() => {
         ()=>{
           
           if(crops){
-            let dataPack = generateStatusSummary(crops);
+            const dataPack = generateStatusSummary(crops);
             setStatusData(dataPack);
             console.log(dataPack)
           }
@@ -200,61 +184,61 @@ useEffect(() => {
           useEffect(() => {
           if (!isLoginStatusLoading && !address && !email ) {router.push('/auth')}
           if(user && newUser ==="true"){router.push('/onboard')}
-        }, [email])
-      const connectWallet = async () =>{
-            if (!(window as any).ethereum) return alert("Please install MetaMask");
+        }, [email,isLoginStatusLoading,newUser,router,user,address])
+      // const connectWallet = async () =>{
+      //       if (!(window as any).ethereum) return alert("Please install MetaMask");
           
-              // Provider for the EVM wallet
-              const provider = new ethers.BrowserProvider((window as any).ethereum);
-              // client 
-              const signer = await provider.getSigner();
+      //         // Provider for the EVM wallet
+      //         const provider = new ethers.BrowserProvider((window as any).ethereum);
+      //         // client 
+      //         const signer = await provider.getSigner();
           
-              const addr = await signer.getAddress();
+      //         const addr = await signer.getAddress();
       
-               // send request to get Nonce and transaction timestamp (addr as payload)
-          const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ address: addr }),
-          });
-         // Parse Nonce data
-          const { nonce, timestamp } = await resNonce.json();
-          console.log(nonce)
+      //          // send request to get Nonce and transaction timestamp (addr as payload)
+      //     const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify({ address: addr }),
+      //     });
+      //    // Parse Nonce data
+      //     const { nonce, timestamp } = await resNonce.json();
+      //     console.log(nonce)
       
-          const message = `Welcome to AgriEthos 🌱
+      //     const message = `Welcome to AgriEthos 🌱
       
-      Sign this message to verify you own this wallet and authenticate securely.
+      // Sign this message to verify you own this wallet and authenticate securely.
       
-      Wallet Address: ${addr}
-      Nonce: ${nonce}
-      Timestamp: ${timestamp}
+      // Wallet Address: ${addr}
+      // Nonce: ${nonce}
+      // Timestamp: ${timestamp}
       
-      This request will not trigger a blockchain transaction or cost any gas.
+      // This request will not trigger a blockchain transaction or cost any gas.
       
-      Only sign this message if you trust AgriEthos.
-        `;
-        console.log(addr,nonce,timestamp)
-          const signature = await signer.signMessage(message);
+      // Only sign this message if you trust AgriEthos.
+      //   `;
+      //   console.log(addr,nonce,timestamp)
+      //     const signature = await signer.signMessage(message);
       
-          const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ address: addr, signature }),
-          }); 
-          const loginData = await resLogin.json();
-          const {address,farmerId,newUser,userPack} = await loginData.data
-          if (loginData.success) {
-            console.log("✅ Login successful!");
+      //     const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body: JSON.stringify({ address: addr, signature }),
+      //     }); 
+      //     const loginData = await resLogin.json();
+      //     const {address,farmerId,newUser,userPack} = await loginData.data
+      //     if (loginData.success) {
+      //       console.log("✅ Login successful!");
             
-              setAddress(address);
+      //         setAddress(address);
             
             
-          } else {
-            console.log(loginData.error || "Login failed.");
+      //     } else {
+      //       console.log(loginData.error || "Login failed.");
             
-          }
+      //     }
           
-        }
+      //   }
   return (
     <div>
        {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
@@ -369,11 +353,16 @@ useEffect(() => {
       </div>
        {/* Variable */}
        <div className='flex flex-col gap-2 lg:gap-4 w-full justify-start  max-h-96 overflow-y-scroll min-h-56'>
+
         {!crops[0]&& !loadingCrop && <div className='w-full h-56 flex items-center justify-center'>No crops has been added yet...</div>}
         {loadingCrop && <div className='h-56 w-full flex items-center justify-center'><Loader /></div>}
-             { crops && crops.map((ele,ind)=><div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>
+        {/*  */}
+        
+        <>
+        {/*eslint-disable-next-line @typescript-eslint/no-unused-expressions */}
+        {crops&&crops.map((ele,ind)=>(<div className='relative' key={ind*2*1020}> <div className='hover:bg-gray-100 gap-24 flex items-center  justify-between w-full text-center my-1'  onClick={()=>{collaInd!== ind ?setCollaInd(ind):setCollaInd(undefined); setSelectedCrop(ele)}}>
            {/* s/n */}
-           <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center hidden lg:block '>
+           <div className='basis-1/2 lg:basis-1/5 items-center justify-center hidden lg:flex '>
           {ind+1}
         </div>
         {/* Variable Name */}
@@ -389,33 +378,28 @@ useEffect(() => {
     {ele.createdAt&&ele.createdAt.slice(0,10)}
       </div>
       {/* Button arena */}
-   {ele.verificationStatus === "toUpgrade"?       <div className='  basis-1/2 lg:basis-1/5 flex items-center justify-center '>
+   {ele.verificationStatus === "toUpgrade"?       (<div className='  basis-1/2 lg:basis-1/5 flex items-center justify-center '>
            <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
            <div className="w-4 h-4"><GrUpdate /></div>
            <div className='text-xs'>Upgrade</div>
 </button>
-      </div>: ele.verificationStatus === "rejected"?  <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center  text-error-500'>
+      </div>): ele.verificationStatus === "rejected"? ( <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center  text-error-500'>
       
       <button className=' px-2 py-1 gap-1 flex items-center text-error-500 rounded-2xl border border-[#e30e0e] '>
 <Image src={"/icons/fail.svg"} alt='rejection img' width={16} height={16} />
 <div className='text-xs'>Rejected</div>
 </button>
-      </div>:ele.verificationStatus === "verified"? <div className='basis-1/2 lg:basis-1/5   flex items-center justify-center'>
+      </div>):ele.verificationStatus === "verified"? (<div className='basis-1/2 lg:basis-1/5   flex items-center justify-center'>
       <button className='  px-2 py-1 gap-1 flex items-center text-success-500 rounded-2xl border border-[#149414] '>
 <Image src={"/icons/success.svg"} alt='success img' width={16} height={16} />
 <div className='text-xs'>Success</div>
 </button>
-      </div>:ele.verificationStatus === "pending"?      <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center '>
+      </div>):ele.verificationStatus === "pending"?     ( <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center '>
       <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
 <Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
 <div className='text-xs'>Pending</div>
 </button>
-      </div>:      <div className='basis-1/2 lg:basis-1/5 flex items-center justify-center '>
-      <button className='px-2 py-1 gap-1 flex items-center text-warning-600 rounded-2xl border border-[#e8b400] '>
-<Image src={"/icons/pending.svg"} alt='Pending img' width={16} height={16} />
-<div className='text-xs'>Unkown</div>
-</button>
-      </div>}
+      </div>): null}
       </div>
 
    {collaInd === ind &&   <div className='p-5 w-full flex flex-col gap-1 bg-gray-100
@@ -471,7 +455,9 @@ Verification Status: {ele.verificationStatus==="toUpgrade"?"To be upgraded with 
 { ele.images[0] && "Images:" }
 <div className="flex gap-4">
       {ele && ele.images[0] && ele.images.map((img:string, idx:number) => (
-        <img
+        <Image
+        height={100}
+        width={100}
           key={idx}
           src={img}
           alt={`thumb-${idx}`}
@@ -506,8 +492,11 @@ View QR Code
 }
 </div>
       </div>}
-      </div>)
+      </div>)) 
 }
+
+        </>
+        
        </div>
        {/* __v: 0
 ​​
@@ -735,4 +724,4 @@ View QR Code
   )
 }
 
-export default page;
+export default Page;

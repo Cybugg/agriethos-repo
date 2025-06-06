@@ -4,7 +4,6 @@ import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PiPlant } from 'react-icons/pi'
-import { ArrowLeft } from 'lucide-react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import IndexNavbar from '@/app/components/indexNavbar'
@@ -14,7 +13,7 @@ import { useAuth } from '@/app/Context/AuthContext'
 function Page() {
 const [mobileDisplay,setMobileDisplay] = useState(false);
   const [farm, setFarm] = useState<any>(null) // Add a more specific type if you have one for FarmProperty
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const {user} =useAuth();
   const params = useParams()
@@ -39,7 +38,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
           // This case might not be hit if axios throws for non-2xx responses
           setError('Failed to load farm details: No data received');
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching farm details:', err);
         if (axios.isAxiosError(err) && err.response?.status === 404) {
           setError('Farm not found.');
@@ -82,7 +81,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
   return (
     <div className="bg-white h-screen flex w-full">
     <div className="flex bg-white w-full">
-    <IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
+    <IndexNavbar currentPage="home" mobileDisplay={mobileDisplay} setMobileDisplay={setMobileDisplay}/>
     <main className="lg:ml-[352px] w-full flex-1 bg-white ">
     <div className="text-sm md:text-lg min-h-screen px-[32px] py-5 lg:py-[80px]  bg-white text-black">
       {/* Header and Descriptive Text */}

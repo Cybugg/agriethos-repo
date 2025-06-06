@@ -44,9 +44,9 @@ const AnimatedPopup: React.FC<AnimatedPopupProps> = ({
   }
 
   // Changed to position at the top of the screen instead of the middle
-  let baseClasses = 'fixed inset-0 flex items-start justify-center z-50';
+  const baseClasses = 'fixed inset-0 flex items-start justify-center z-50';
   // Added padding-top to give some space from the very top edge
-  let popupClasses = 'p-4 rounded-lg shadow-xl text-sm md:text-base mx-4 mt-16';
+  const popupClasses = 'p-4 rounded-lg shadow-xl text-sm md:text-base mx-4 mt-16';
   let typeClasses = '';
   let animationClasses = '';
 

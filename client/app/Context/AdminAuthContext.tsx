@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import React, {createContext, useContext, useState, useEffect, ReactNode, Children} from "react";
+import React, {createContext, useContext, useState, useEffect} from "react";
 
 interface AuthContextType {
  
@@ -22,7 +22,7 @@ export interface User {
   nounce:string;
  
   role:string;
-  [key: string]: any;
+  [key: string]: string;
 }
 
 const AuthContext = createContext<AuthContextType >({

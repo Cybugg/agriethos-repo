@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, X, Menu, RefreshCw } from 'lucide-react';
-import Link from 'next/link';
+import { Check, X, Menu} from 'lucide-react';
 import Image from "next/image";
 import MobileNav from "../components/MobileNav";
 import axios from 'axios';
@@ -14,6 +13,7 @@ interface Crop {
   growthStage: string;
   status: 'Success' | 'Rejected';
   reviewStage: 'Pre-harvest' | 'Post-harvest'; // Add this to show which stage was reviewed
+  [key:string]:string | any
 }
 
 import { useNavContext } from '../NavContext';
@@ -37,13 +37,13 @@ const router = useRouter()
         if(!isLoginStatusLoading && (!user  || !address)){
           router.replace("/auth/reviewer")
         }
-      },[user,address,,isLoginStatusLoading]
+      },[user,address,isLoginStatusLoading,router]
     )
   //Navbar default settings
   useEffect(() => {
     setCurrentPage("history");
     setMobileDisplay(false);
-  }, [])
+  }, [setCurrentPage,setMobileDisplay])
   
   // Fetch crops from API
   useEffect(() => {
@@ -57,7 +57,7 @@ const router = useRouter()
         
         if (response.data.success) {
           // Map the API response to match the existing cropHistory structure
-          const formattedData = response.data.data.map((crop: any) => {
+          const formattedData = response.data.data.map((crop:Crop) => {
             // Determine which stage this reviewer reviewed
             let reviewStage = 'Pre-harvest';
             if (crop.postHarvestAgent === user._id) {
@@ -142,38 +142,38 @@ const router = useRouter()
     </div>
   );
 
-  // Refresh function
-  const handleRefresh = async () => {
-    if (!user?._id) return;
+  // // Refresh function
+  // const handleRefresh = async () => {
+  //   if (!user?._id) return;
     
-    try {
-      setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
       
-      if (response.data.success) {
-        const formattedData = response.data.data.map((crop: any) => {
-          let reviewStage = 'Pre-harvest';
-          if (crop.postHarvestAgent === user._id) {
-            reviewStage = 'Post-harvest';
-          }
+  //     if (response.data.success) {
+  //       const formattedData = response.data.data.map((crop: any) => {
+  //         let reviewStage = 'Pre-harvest';
+  //         if (crop.postHarvestAgent === user._id) {
+  //           reviewStage = 'Post-harvest';
+  //         }
           
-          return {
-            id: crop._id,
-            cropName: crop.cropName,
-            farm: crop.farmPropertyId?.farmName || 'N/A',
-            growthStage: crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest',
-            status: crop.verificationStatus === 'rejected' ? 'Rejected' : 'Success',
-            reviewStage
-          };
-        });
-        setCropHistory(formattedData);
-      }
-    } catch (err) {
-      console.error('Error refreshing data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //         return {
+  //           id: crop._id,
+  //           cropName: crop.cropName,
+  //           farm: crop.farmPropertyId?.farmName || 'N/A',
+  //           growthStage: crop.growthStage === 'pre-harvest' ? 'Pre-harvest' : 'Post-harvest',
+  //           status: crop.verificationStatus === 'rejected' ? 'Rejected' : 'Success',
+  //           reviewStage
+  //         };
+  //       });
+  //       setCropHistory(formattedData);
+  //     }
+  //   } catch (err) {
+  //     console.error('Error refreshing data:', err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen bg-white">

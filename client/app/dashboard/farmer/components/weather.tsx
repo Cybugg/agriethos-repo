@@ -15,7 +15,7 @@ interface WeatherData {
   humidity: string;
   sunlightDuration: string;
   dewPoint: string;
-  extremeWeatherAlert: string | any[];
+  extremeWeatherAlert: string | string[];
 }
 
 export default function Weather() {
@@ -25,7 +25,7 @@ export default function Weather() {
   const {farm,setFarm} = useFarm();
 
   useEffect(() => {
-    farm && farm.latitude && farm.longitude && setSync(true);
+    if(farm && farm.latitude && farm.longitude )setSync(true);
      
     const fetchWeather = async (lat: number, lon: number) => {
       try {
@@ -52,23 +52,23 @@ export default function Weather() {
         setLoading(false);
     }}
   
-   sync && farm && navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (!farm.latitude || !farm.longitude){
-          fetchWeather(latitude, longitude)
-         updateFarmCoord(latitude,longitude)
-        };
-         if(farm.latitude && farm.longitude){
-          fetchWeather(farm.latitude,farm.longitude)
-         }
-      },
-      (error) => {
-        console.error('Geolocation error:', error);
-        setLoading(false);
-      }
-    );
-  }, [farm,sync]);
+  if(sync && farm) navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      if (!farm.latitude || !farm.longitude){
+        fetchWeather(latitude, longitude)
+        updateFarmCoord(latitude,longitude)
+      };
+        if(farm.latitude && farm.longitude){
+        fetchWeather(farm.latitude,farm.longitude)
+        }
+    },
+    (error) => {
+      console.error('Geolocation error:', error);
+      setLoading(false);
+    }
+  );
+  }, [farm,sync,setFarm,weather]);
   
 
   if (sync && loading) return <div className="text-center h-full flex gap-4 flex-col items-center justify-center text-gray-600 mt-10"><Loader /> <div className=''>Loading...</div></div>;

@@ -1,10 +1,9 @@
 "use client"
 import { useAuth } from "@/app/Context/AuthContext";
 import { useFarm } from "@/app/Context/FarmContext";
-import axios from "axios";
 import Image from "next/image";
-import React, {ReactNode, useEffect, useState} from "react";
-import { useRouter } from "next/navigation";
+import React, {useEffect, useState} from "react";
+
 import Switch from "@/app/components/switch";
 
     interface props {
@@ -17,10 +16,10 @@ import Switch from "@/app/components/switch";
         pesticideUsage: string,
         coverCrops:string,
         companionPlanting:string,
-    [key:string]:any
+    [key:string]:any,
 }
 const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FarmFormData>({
     irrigationType: "",
     fertilizerType: "",
@@ -34,16 +33,16 @@ const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
   const {isLoginStatusLoading} = useAuth();
   const {farm,setFarm} = useFarm();
 
-  const fullUrl = window.location.href;
+ 
   useEffect(()=>{
- !isLoginStatusLoading &&farm && setFormData({
+ if(!isLoginStatusLoading &&farm) {setFormData({
     irrigationType:  farm.irrigationType,
     fertilizerType:  farm.fertilizerType,
     pesticideUsage:   farm.pesticideUsage,
     coverCrops: farm.coverCrops,
     companionPlanting: farm.companionPlanting,
-  })
-  },[]);
+  })}
+  },[isLoginStatusLoading,farm]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -55,11 +54,11 @@ const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
         }));
       };
 
-      const router = useRouter();
+    
 
 
       const handleSubmit = async () => {
-        setLoading(true);
+        // setLoading(true);
         console.log('Submitting farm data:', formData);
        
         if(!(formData.companionPlanting)||!(formData.coverCrops)||!(formData.pesticideUsage)||!formData.fertilizerType||!formData.irrigationType){
@@ -93,7 +92,7 @@ const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
           console.log(result)
            setFarm(result);
           console.log('Upload result:', result);
-          result && window.location.reload();
+          if(result) {window.location.reload();}
          setEditMethod(false);
         }
          

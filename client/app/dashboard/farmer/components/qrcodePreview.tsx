@@ -1,11 +1,7 @@
 "use client"
-import { useAuth } from "@/app/Context/AuthContext";
-import { useFarm } from "@/app/Context/FarmContext";
-import axios from "axios";
+
 import Image from "next/image";
-import React, {ReactNode, useEffect, useState} from "react";
-import { useRouter } from "next/navigation";
-import Switch from "@/app/components/switch";
+import React from "react";
 import { QRCodeCanvas } from 'qrcode.react';
 import CopyButton from "@/app/components/copyButton";
 
@@ -28,11 +24,7 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,url=""}) => {
         a.click();
       }
 
-      const router = useRouter();
-
-      const str2Bool = (val:string)=>{
-            return val==="true"? true: val==="false"?false:undefined
-      };
+      
 
     return (
         <div className="z-50 h-screen fixed flex items-center justify-center w-full bg-black bg-opacity-10 backdrop-blur-lg text-black p-8">

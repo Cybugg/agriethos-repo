@@ -1,6 +1,5 @@
 'use client';
 
-import { useAdminAuth } from '../../Context/AdminAuthContext';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import Image from 'next/image';
@@ -13,7 +12,7 @@ import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setAgentId, agentId , address,user,setUser} = useAgentAuth();
+  const { setAddress ,setAgentId, address,user,setUser} = useAgentAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -26,7 +25,7 @@ export default function Page() {
     {
       if (address  && user && user.role && user.role ==="reviewer"){router.replace("/dashboard/reviewer/")}
      
-    },[address,user]
+    },[address,user,router]
   )
 
   // onConnect getNonce -> 
@@ -34,9 +33,11 @@ export default function Page() {
     // init
     setLoading(true);
     setMsg("");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(window as any).ethereum) return alert("Please install MetaMask");
 
     // Provider for the EVM wallet
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     // client 
     const signer = await provider.getSigner();

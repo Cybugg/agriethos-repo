@@ -7,15 +7,14 @@ import EditFarmMethod from '../components/editFarmMethod';
 import EditFarmImage from '../components/ediitFarmImage';
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/Context/AuthContext';
-import { BsPerson, BsWallet } from 'react-icons/bs';
 import { PiPlant } from 'react-icons/pi';
 import { useFarm } from '@/app/Context/FarmContext';
 import Alert from '@/app/components/alert';
 import { CiMail } from 'react-icons/ci';
-import { ethers } from 'ethers';
+
 import ImageViewer from '@/app/components/imageViewer';
 
-function page() {
+function Page() {
     const [displayLogout,setDisplayLogout] = useState<boolean>(false);
     const [editOverview, setEditOverview] = useState<boolean | null>(false);
     const [editMethod, setEditMethod] = useState<boolean| null>(false);
@@ -24,9 +23,8 @@ function page() {
       const [alertSub, setAlertSub] = useState<boolean>(false);
       const [isViewerOpen, setIsViewerOpen] = useState(false);
        const [currentIndex, setCurrentIndex] = useState(0);
-       const [selected, setSelected] = useState<string>();
-        const { address, logout ,isLoginStatusLoading,farmerId, newUser, user, email, setAddress} = useAuth();
-          const { farm, setFarm } = useFarm();
+        const { isLoginStatusLoading,farmerId, newUser, user, email} = useAuth();
+          const {farm, setFarm} = useFarm();
         const router = useRouter();
 
 
@@ -45,12 +43,12 @@ function page() {
     useEffect(() => {
     if (!isLoginStatusLoading  && !email ) {router.push('/auth')}
     if(user && newUser ==="true"){router.push('/onboard')}
-  }, [email])
+  }, [email,isLoginStatusLoading,newUser,router,user])
 
       useEffect(()=>{
         setCurrentPage("farm");
         setMobileDisplay(false);
-      },[])
+      },[setCurrentPage,setMobileDisplay])
       
       useEffect(() => {
         if(!farm && user && !isLoginStatusLoading){
@@ -70,7 +68,7 @@ function page() {
           fetchFarm();
         }
         }
-          , [farmerId,farm,setFarm]);
+          , [farmerId,farm,setFarm,isLoginStatusLoading,user]);
           // capitalize first character
           function CFL(string_: string | undefined | null) {
   if (!string_) return ""; // Return empty string or fallback
@@ -81,60 +79,60 @@ const str2Bool = (val:string)=>{
   return val==="true"? true: val==="false"?false:undefined
 };
 
-const connectWallet = async () =>{
-      if (!(window as any).ethereum) return alert("Please install MetaMask");
+// const connectWallet = async () =>{
+//       if (!(window as any).ethereum) return alert("Please install MetaMask");
     
-        // Provider for the EVM wallet
-        const provider = new ethers.BrowserProvider((window as any).ethereum);
-        // client 
-        const signer = await provider.getSigner();
+//         // Provider for the EVM wallet
+//         const provider = new ethers.BrowserProvider((window as any).ethereum);
+//         // client 
+//         const signer = await provider.getSigner();
     
-        const addr = await signer.getAddress();
+//         const addr = await signer.getAddress();
 
-         // send request to get Nonce and transaction timestamp (addr as payload)
-    const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr }),
-    });
-   // Parse Nonce data
-    const { nonce, timestamp } = await resNonce.json();
-    console.log(nonce)
+//          // send request to get Nonce and transaction timestamp (addr as payload)
+//     const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ address: addr }),
+//     });
+//    // Parse Nonce data
+//     const { nonce, timestamp } = await resNonce.json();
+//     console.log(nonce)
 
-    const message = `Welcome to AgriEthos 🌱
+//     const message = `Welcome to AgriEthos 🌱
 
-Sign this message to verify you own this wallet and authenticate securely.
+// Sign this message to verify you own this wallet and authenticate securely.
 
-Wallet Address: ${addr}
-Nonce: ${nonce}
-Timestamp: ${timestamp}
+// Wallet Address: ${addr}
+// Nonce: ${nonce}
+// Timestamp: ${timestamp}
 
-This request will not trigger a blockchain transaction or cost any gas.
+// This request will not trigger a blockchain transaction or cost any gas.
 
-Only sign this message if you trust AgriEthos.
-  `;
-  console.log(addr,nonce,timestamp)
-    const signature = await signer.signMessage(message);
+// Only sign this message if you trust AgriEthos.
+//   `;
+//   console.log(addr,nonce,timestamp)
+//     const signature = await signer.signMessage(message);
 
-    const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: addr, signature }),
-    }); 
-    const loginData = await resLogin.json();
-    const {address,farmerId,newUser,userPack} = await loginData.data
-    if (loginData.success) {
-      console.log("✅ Login successful!");
+//     const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ address: addr, signature }),
+//     }); 
+//     const loginData = await resLogin.json();
+//     const {address,farmerId,newUser,userPack} = await loginData.data
+//     if (loginData.success) {
+//       console.log("✅ Login successful!");
       
-        setAddress(address);
+//         setAddress(address);
       
       
-    } else {
-      console.log(loginData.error || "Login failed.");
+//     } else {
+//       console.log(loginData.error || "Login failed.");
       
-    }
+//     }
     
-  }
+//   }
 
   return (
     <div className='relative'> 
@@ -400,4 +398,4 @@ Only sign this message if you trust AgriEthos.
   )
 }
 
-export default page;
+export default Page;

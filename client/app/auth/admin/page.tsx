@@ -12,7 +12,7 @@ import Alert from '../../components/alert';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setAdminId, adminId , address,user,setUser} = useAdminAuth();
+  const { setAddress ,setAdminId, address,user,setUser} = useAdminAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -25,7 +25,7 @@ export default function Page() {
     {
       if (address  && user && user.role ==="admin"){router.replace("/dashboard/admin/")}
      
-    },[address,user]
+    },[address,user,router]
   )
 
   // onConnect getNonce -> 
@@ -33,9 +33,11 @@ export default function Page() {
     // init
     setLoading(true);
     setMsg("");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(window as any).ethereum) return alert("Please install MetaMask");
 
     // Provider for the EVM wallet
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     // client 
     const signer = await provider.getSigner();

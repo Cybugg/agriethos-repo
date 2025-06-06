@@ -17,10 +17,13 @@ function CFL(string_: string | undefined | null) {
   if (!string_) return ""; // Return empty string or fallback
   return string_.charAt(0).toUpperCase() + string_.slice(1);
 }
+
+
 type Crop = {
   _id: string;
   name: string;
   description: string;
+[key:string]:any 
 };
 
 
@@ -32,14 +35,14 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
   const [searchQuery, setSearchQuery] = useState(""); // 🔍 
-  const { setAddress ,setFarmerId,setNewUser, farmerId , address,newUser,user,setUser,setEmail,email} = useAuth();
+  const { farmerId,address,user,email} = useAuth();
   const router = useRouter();
         // Autopass already logged in users ...
         useEffect(()=>
           {
             if (address || farmerId || email){router.replace("/dashboard/farmer/explore/")}
            
-          },[email,user,farmerId]
+          },[email,user,farmerId,address,router]
         )
   const fetchCrops = async (pageNum: number, search: string) => {
     setLoading(true);
@@ -76,7 +79,7 @@ export default function Home() {
   useEffect(() => {
     if (page === 1) return; // already fetched in searchQuery effect
     fetchCrops(page, searchQuery);
-  }, [page]);
+  }, [page,searchQuery]);
 
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -94,7 +97,7 @@ export default function Home() {
   return (
     <div className="bg-white h-screen flex w-full">
 <div className="flex bg-white w-full">
-<IndexNavbar currentPage="home" mobileDisplay={false} setMobileDisplay={setMobileDisplay}/>
+<IndexNavbar currentPage="home" mobileDisplay={mobileDisplay} setMobileDisplay={setMobileDisplay}/>
 <main className="lg:ml-[352px] w-full flex-1 bg-white ">
 <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px] bg-white text-black w-full ">
        {/* Header for mobile */}
@@ -138,7 +141,7 @@ export default function Home() {
        <section className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3  mt-8 w-full gap-5 h-full'>
         
         {/* item */}
-       {crops[0] && crops.map((ele:any,idx)=>{
+       {crops[0] ?crops.map((ele:Crop,idx)=>{
         const isLast = idx === crops.length - 1;
         return(<div className="flex flex-col p-4 border rounded-lg cursor-pointer"  key={idx}
       ref={isLast ? lastItemRef : null}  >
@@ -195,7 +198,7 @@ export default function Home() {
         </Link>
    
      
-        </div>)}) }
+        </div>)}) :<div></div>}
            
             
         

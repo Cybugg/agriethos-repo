@@ -8,7 +8,7 @@ type FarmData = {
   size: string;
   crops: string[];
   images: string[];
-  [key: string]: string | string[]; // for flexibility
+  [key: string]: string | string[] | any; // for flexibility
 };
 
 type FarmContextType = {

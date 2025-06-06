@@ -18,65 +18,67 @@ import Alert from '@/app/components/alert';
 
 
 // Define the shape of the chart data
-// interface GrowthDataPoint {
-//   time: string;
-//   preHarvest: number;
-//   postHarvest: number;
-// }
+interface GrowthDataPoint {
+  time: string;
+  preHarvest: number;
+  postHarvest: number;
+}
 
 // Define available crop types
-// type CropType = 'maize' | 'rice';
-// type RangeType = 'week' | 'month' | 'year';
+type CropType = 'maize' | 'rice';
+type RangeType = 'week' | 'month' | 'year';
 
 // Mock dataset
-// const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
-//   maize: {
-//     week: [
-//       { time: 'Mon', preHarvest: 20, postHarvest: 5 },
-//       { time: 'Tue', preHarvest: 35, postHarvest: 10 },
-//       { time: 'Wed', preHarvest: 50, postHarvest: 15 },
-//       { time: 'Thu', preHarvest: 65, postHarvest: 20 },
-//       { time: 'Fri', preHarvest: 80, postHarvest: 25 },
-//     ],
-//     month: [
-//       { time: 'Week 1', preHarvest: 30, postHarvest: 10 },
-//       { time: 'Week 2', preHarvest: 60, postHarvest: 15 },
-//       { time: 'Week 3', preHarvest: 90, postHarvest: 20 },
-//       { time: 'Week 4', preHarvest: 100, postHarvest: 30 },
-//     ],
-//     year: [
-//       { time: 'Q1', preHarvest: 25, postHarvest: 5 },
-//       { time: 'Q2', preHarvest: 50, postHarvest: 20 },
-//       { time: 'Q3', preHarvest: 75, postHarvest: 40 },
-//       { time: 'Q4', preHarvest: 100, postHarvest: 60 },
-//     ],
-//   },
-//   rice: {
-//     week: [
-//       { time: 'Mon', preHarvest: 10, postHarvest: 2 },
-//       { time: 'Tue', preHarvest: 25, postHarvest: 5 },
-//       { time: 'Wed', preHarvest: 40, postHarvest: 10 },
-//       { time: 'Thu', preHarvest: 60, postHarvest: 15 },
-//       { time: 'Fri', preHarvest: 80, postHarvest: 18 },
-//     ],
-//     month: [
-//       { time: 'Week 1', preHarvest: 20, postHarvest: 8 },
-//       { time: 'Week 2', preHarvest: 50, postHarvest: 15 },
-//       { time: 'Week 3', preHarvest: 70, postHarvest: 25 },
-//       { time: 'Week 4', preHarvest: 100, postHarvest: 35 },
-//     ],
-//     year: [
-//       { time: 'Q1', preHarvest: 20, postHarvest: 5 },
-//       { time: 'Q2', preHarvest: 45, postHarvest: 15 },
-//       { time: 'Q3', preHarvest: 75, postHarvest: 30 },
-//       { time: 'Q4', preHarvest: 100, postHarvest: 50 },
-//     ],
-//   },
-// };
+const cropData: Record<CropType, Record<RangeType, GrowthDataPoint[]>> = {
+  maize: {
+    week: [
+      { time: 'Mon', preHarvest: 20, postHarvest: 5 },
+      { time: 'Tue', preHarvest: 35, postHarvest: 10 },
+      { time: 'Wed', preHarvest: 50, postHarvest: 15 },
+      { time: 'Thu', preHarvest: 65, postHarvest: 20 },
+      { time: 'Fri', preHarvest: 80, postHarvest: 25 },
+    ],
+    month: [
+      { time: 'Week 1', preHarvest: 30, postHarvest: 10 },
+      { time: 'Week 2', preHarvest: 60, postHarvest: 15 },
+      { time: 'Week 3', preHarvest: 90, postHarvest: 20 },
+      { time: 'Week 4', preHarvest: 100, postHarvest: 30 },
+    ],
+    year: [
+      { time: 'Q1', preHarvest: 25, postHarvest: 5 },
+      { time: 'Q2', preHarvest: 50, postHarvest: 20 },
+      { time: 'Q3', preHarvest: 75, postHarvest: 40 },
+      { time: 'Q4', preHarvest: 100, postHarvest: 60 },
+    ],
+  },
+  rice: {
+    week: [
+      { time: 'Mon', preHarvest: 10, postHarvest: 2 },
+      { time: 'Tue', preHarvest: 25, postHarvest: 5 },
+      { time: 'Wed', preHarvest: 40, postHarvest: 10 },
+      { time: 'Thu', preHarvest: 60, postHarvest: 15 },
+      { time: 'Fri', preHarvest: 80, postHarvest: 18 },
+    ],
+    month: [
+      { time: 'Week 1', preHarvest: 20, postHarvest: 8 },
+      { time: 'Week 2', preHarvest: 50, postHarvest: 15 },
+      { time: 'Week 3', preHarvest: 70, postHarvest: 25 },
+      { time: 'Week 4', preHarvest: 100, postHarvest: 35 },
+    ],
+    year: [
+      { time: 'Q1', preHarvest: 20, postHarvest: 5 },
+      { time: 'Q2', preHarvest: 45, postHarvest: 15 },
+      { time: 'Q3', preHarvest: 75, postHarvest: 30 },
+      { time: 'Q4', preHarvest: 100, postHarvest: 50 },
+    ],
+  },
+};
+
+
 
 export default function Home() {
-  // const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
-  // const [selectedRange, setSelectedRange] = useState<RangeType>('week');
+  const [selectedCrop, setSelectedCrop] = useState<CropType>('maize');
+  const [selectedRange, setSelectedRange] = useState<RangeType>('week');
   const [displayLogout,setDisplayLogout] = useState<boolean>(false);
   const [error,setError] = useState<boolean>(false);
   const [msg,setMsg] = useState<string>("");
@@ -85,7 +87,7 @@ export default function Home() {
   // const data = cropData[selectedCrop][selectedRange];
   const router = useRouter();
   const { farm, setFarm } = useFarm();
- 
+  const data = cropData[selectedCrop][selectedRange];
 
   // Route protection
   useEffect(() => {
@@ -126,6 +128,11 @@ export default function Home() {
       fetchFarm();
     }
   }, [user, isLoginStatusLoading,setFarm]);
+
+  // to fetch overview
+  // useEffect(() => {
+    
+  //   });
 
 
 //   const connectWallet = async () =>{
@@ -336,7 +343,7 @@ Crop Growth
 </div>
 </div>
 <ResponsiveContainer width="100%" height={300} className={"mt-16 hidden lg:block"}>
-        <LineChart data={["Maize"]}>
+        <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" />
           <YAxis />

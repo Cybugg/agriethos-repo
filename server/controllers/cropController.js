@@ -571,3 +571,37 @@ exports.getReviewedCropsByReviewer = async (req,res)=>{
     });
   }
 };
+
+
+exports.fetchOverview = async (req,res)=>{
+  const {id} = req.params;
+    // Validate request
+    if(!id){
+      return res.status(400).json({message:"Bad request:Invalid input"})
+    }
+    
+    try{
+      // Check if the user exists
+      const existingUser = await Farmer.findOne({_id:id});
+      if(!existingUser){
+        return res.status(401).json({message:"UNAUTHORIZED ACCESS"})
+      }
+      // Attempt to get farm
+      const existingUserFarm = await FarmProperty.findOne({_id:existingUser.farmId}).populate("crops");
+      if(!existingUserFarm){
+        return res.status(404).json({message:"Cannot Find User Farm"});
+      }
+      // Attempt to get crops
+      const existingUserFarmCrops = await existingUserFarm.crops;
+      const existingUserFarmVerifiedCropswithHash = await existingUserFarmCrops.filter(ele => ele.blockchainTxHash && ele.verificationStatus ==="verified " );
+     
+      res.status(200).json({
+        message:"success", data:{cropsLen:existingUserFarmCrops.length,location:existingUserFarm.location, size:existingUserFarm.size, hashLen:existingUserFarmVerifiedCropswithHash.length}
+      })
+    }
+    catch(err){
+      console.log(err);
+      res.status(500).json({message:"Internal Server Error"})
+    }
+
+}

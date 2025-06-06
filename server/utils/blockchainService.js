@@ -32,7 +32,7 @@ if (!RPC_URL || !SIGNER_KEY || !LEDGER_CONTRACT_ADDRESS) {
       chainId: 11155111
     }, {
       staticNetwork: true,
-      timeout: 30000, // 30 seconds timeout
+      timeout: 45000, // Increased timeout to 45 seconds
       retryLimit: 3
     });
     
@@ -161,28 +161,22 @@ async function verifyCropOnBlockchain(cropDetails) {
     console.error(`❌ ERROR TYPE: ${error.constructor.name}`);
     console.error(`❌ ERROR MESSAGE: ${error.message}`);
     
-    // Enhanced error logging
+    // Enhanced error logging (existing)
     if (error.data) {
       console.error(`❌ ERROR DATA:`, JSON.stringify(error.data, null, 2));
     }
-    
     if (error.reason) {
       console.error(`❌ ERROR REASON: ${error.reason}`);
     }
-    
     if (error.code) {
       console.error(`❌ ERROR CODE: ${error.code}`);
     }
-    
     if (error.transaction) {
       console.error(`❌ FAILED TRANSACTION:`, JSON.stringify(error.transaction, null, 2));
     }
-    
     if (error.receipt) {
       console.error(`❌ TRANSACTION RECEIPT:`, JSON.stringify(error.receipt, null, 2));
     }
-    
-    // Network/Provider specific errors
     if (error.network) {
       console.error(`❌ NETWORK ERROR:`, error.network);
     }
@@ -190,15 +184,33 @@ async function verifyCropOnBlockchain(cropDetails) {
     console.error(`❌ FULL ERROR OBJECT:`, JSON.stringify(error, null, 2));
     console.error(`❌ ERROR STACK:`, error.stack);
     
-    let detailedMessage = error.message;
-    if (error.data && error.data.message) {
-        detailedMessage = error.data.message;
-    } else if (error.reason) {
-        detailedMessage = error.reason;
+    let specificMessage;
+    const baseErrorMessage = `Blockchain verification for crop ${cropDetails.cropId}`;
+
+    if (error.code === 'TIMEOUT') {
+        specificMessage = `${baseErrorMessage} timed out. The network may be congested or unresponsive. Please try again.`;
+    } else if (
+        error.code === 'NETWORK_ERROR' ||
+        (error.message && (
+            error.message.toLowerCase().includes('network') ||
+            error.message.toLowerCase().includes('failed to detect network') ||
+            error.message.toLowerCase().includes('server error') // Catch generic server errors that might be network related
+        )) ||
+        (error.reason && typeof error.reason === 'string' && error.reason.toLowerCase().includes('network'))
+    ) {
+        specificMessage = `${baseErrorMessage} failed due to a network error. Please check your connection and try again. (Details: ${error.message})`;
+    } else if (error.reason && typeof error.reason === 'string') {
+        specificMessage = `${baseErrorMessage} failed: ${error.reason}`;
+    } else if (error.data && error.data.message && typeof error.data.message === 'string') {
+        specificMessage = `${baseErrorMessage} failed: ${error.data.message}`;
+    } else if (error.message && typeof error.message === 'string') {
+        specificMessage = `${baseErrorMessage} failed: ${error.message}`;
+    } else {
+        specificMessage = `${baseErrorMessage} failed due to an unknown blockchain error.`;
     }
     
     console.error('=== END BLOCKCHAIN SERVICE ERROR ===');
-    throw new Error(`Blockchain transaction failed for crop ${cropDetails.cropId}: ${detailedMessage}`);
+    throw new Error(specificMessage);
   }
 }
 

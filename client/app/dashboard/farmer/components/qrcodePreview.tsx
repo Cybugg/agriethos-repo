@@ -25,7 +25,7 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,cropName,cropId}) => {
     
         try {
           setLoading(true);
-          const res = await axios.get(`https://tinyurl.com/api-create.php?url=${`http://localhost:3000/harvest/${cropId}`}`);
+          const res = await axios.get(`https://tinyurl.com/api-create.php?url=${`https://app.agriethos.com/harvest/${cropId}`}`);
           console.log(res.data);
           setShortURL(res.data);
           setLoading(false);

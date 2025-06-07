@@ -75,7 +75,7 @@ export default function CropReviewPage() {
       }
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/crops/${id}`);
+        const response = await axios.get(`https://api.agriethos.com/api/crops/${id}`);
         
         if (response.data.success) {
           setCropData(response.data.data);
@@ -155,7 +155,7 @@ export default function CropReviewPage() {
     }
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
+      const response = await axios.put(`https://api.agriethos.com/api/crops/${id}`, {
         verificationStatus: newStatus,
         reviewerId: user?._id // Add reviewerId to the request
       });
@@ -186,7 +186,7 @@ export default function CropReviewPage() {
     setConfirmationLoading(true);
     
     try {
-      const response = await axios.put(`http://localhost:5000/api/crops/${id}`, {
+      const response = await axios.put(`https://api.agriethos.com/api/crops/${id}`, {
         verificationStatus: 'rejected',
         reviewerId: user?._id // Add reviewerId to the request
       });

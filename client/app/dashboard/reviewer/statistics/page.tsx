@@ -60,7 +60,7 @@ export default function StatisticsPage() {
         setLoading(true);
         
         // Use reviewer-specific endpoint
-        const reviewedResponse = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+        const reviewedResponse = await axios.get(`https://api.agriethos.com/api/crops/reviewed/${user._id}`);
         
         if (reviewedResponse.data.success) {
           const reviewedCrops = reviewedResponse.data.data;

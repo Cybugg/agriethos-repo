@@ -53,7 +53,7 @@ const router = useRouter()
       try {
         setLoading(true);
         // Use reviewer-specific endpoint
-        const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+        const response = await axios.get(`https://api.agriethos.com/api/crops/reviewed/${user._id}`);
         
         if (response.data.success) {
           // Map the API response to match the existing cropHistory structure
@@ -148,7 +148,7 @@ const router = useRouter()
     
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(`http://localhost:5000/api/crops/reviewed/${user._id}`);
+  //     const response = await axios.get(`https://api.agriethos.com/api/crops/reviewed/${user._id}`);
       
   //     if (response.data.success) {
   //       const formattedData = response.data.data.map((crop: any) => {

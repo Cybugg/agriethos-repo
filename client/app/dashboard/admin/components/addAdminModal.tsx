@@ -52,7 +52,7 @@ const AddAdminModal:React.FC<props> = ({setDisplayAddAdminModal, setAlertCreate,
         
           console.log('Submitting farm data*****:', data);
     
-          const res = await fetch('http://localhost:5000/api/admin/create/admin', {
+          const res = await fetch('https://api.agriethos.com/api/admin/create/admin', {
             method: "POST",
             body: data, 
           });

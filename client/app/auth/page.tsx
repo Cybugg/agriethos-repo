@@ -43,7 +43,7 @@ export default function Page() {
 const signInWithEmail = async()=>{ 
  
     try{
-      const res = await fetch("http://localhost:5000/api/auth/email-login",{
+      const res = await fetch("https://api.agriethos.com/api/auth/email-login",{
         headers:{"Content-Type":"application/json"},
         method:"POST",
         body:JSON.stringify({email:form.email,password:form.password})

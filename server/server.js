@@ -12,11 +12,7 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'https://agriethos.com',
-        'https://api.agriethos.com'
-    ],
+    origin:"*",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));

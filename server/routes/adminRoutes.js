@@ -18,6 +18,6 @@ router.post("/super-create",superCreate)
 router.post("/request-nonce", adminLogin);
 router.post("/wallet-login", verifySignature);
 // Overview
-router.get("/overview:adminId",getAdminOverview);
+router.get("/overview/:adminId",getAdminOverview);
 
 module.exports = router;

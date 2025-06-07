@@ -15,7 +15,8 @@ dotenv.config();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://agriethos.com',
-  'https://api.agriethos.com'
+  'https://api.agriethos.com',
+  'https://app.agriethos.com'
 ];
 
 // Handle preflight and normal requests

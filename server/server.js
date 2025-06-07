@@ -12,9 +12,18 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-    origin: '*', // Allow Next.js frontend
-    credentials: true
-  }));
+    origin: [
+        'http://localhost:3000',
+        'https://your-frontend-domain.com',
+        'https://api.agriethos.com'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Add explicit OPTIONS handling
+app.options('*', cors());
 
 // Middleware
 app.use(express.json());

@@ -16,6 +16,7 @@ export default function Page() {
   const { setFarmerId,setNewUser, farmerId , setUser,setEmail, email} = useAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
   const [successSub, setSuccessSub] = useState<boolean>(false);
   const [warning , setWarning]= useState<boolean>(false);
   const [viewPass, setViewPass] = useState<boolean>(false);
@@ -50,8 +51,10 @@ const signInWithEmail = async()=>{
       const resJSON = await res.json();
       const {email,farmerId,newUser,userPack} = await resJSON.data;
 
-      if(!res.ok){
+      if(!resJSON.sucess){
         console.log("Cannot login user")
+       setError(true)
+       setMsg(resJSON.message || "Error while signing in")
         return;
       }
       if ( resJSON.success) {
@@ -69,10 +72,13 @@ const signInWithEmail = async()=>{
       } else {
         setMsg(resJSON.message || "Login failed.");
         setLoading(false);
+        setError(true);
       }
     }
     catch(err){
-      console.log(err);
+      console.log(err,"Actually showing the errors");
+      setError(true)
+       setMsg( "Something went wrong")
     }
 };
 
@@ -146,6 +152,7 @@ OR
       </div> 
     {successSub && <Alert message='Logged in successfully ...redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {warning&& <Alert message='Sorry, you cannot authenticate with this method, currently...' color='text-yellow-800' background='bg-yellow-100' onClose={()=> setWarning(false)}/>}
+    {error&& <Alert message={"Error:Check credentials or network connection"} color='text-red-800' background='bg-red-100' onClose={()=> setError(false)}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
   </div>
     </div>

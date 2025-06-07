@@ -100,6 +100,7 @@ Only sign this message if you trust AgriEthos.
     } else {
       setMsg(loginData.error || "Login failed... try again");
       setLoading(false);
+      
     }
   };
 

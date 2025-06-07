@@ -158,6 +158,7 @@ export default function Page() {
       if (!res.ok){
         console.log(data.message)
         setMsg(data.message);
+        setError(data.message || "Login failed.")
         throw new Error(data.message || 'Something went wrong');
      
         }
@@ -279,8 +280,9 @@ OR
       </div> 
     {successSub && <Alert message='Operation successful ...redirecting' color='text-green-800' background='bg-green-100' onClose={()=> setSuccessSub(false)}/>}
     {warning&& <Alert message='Sorry, you cannot authenticate with this method, currently...' color='text-yellow-800' background='bg-yellow-100' onClose={()=> setWarning(false)}/>}
+    {error&& <Alert message={msg} color='text-red-800' background='bg-red-100' onClose={()=> setError("")}/>}
     {msg && <p className="text-red-600 mt-2">{msg}</p>}
-    {error && <p className="text-red-600 mt-2">{error}</p>}
+   
   </div>
     </div>
   

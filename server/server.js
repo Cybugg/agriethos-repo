@@ -11,18 +11,20 @@ const reviewerRoutes = require("./routes/reviewerRoutes")
 const app = express();
 dotenv.config();
 
+//  Handle preflight requests
+app.options('*', cors());
+
+// CORS config (allow multiple origins)
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'https://agriethos.com',
-        'https://api.agriethos.com'
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+  origin: [
+    'http://localhost:3000',
+    'https://agriethos.com',
+    'https://api.agriethos.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));
 
-// Add explicit OPTIONS handling
-app.options('*', cors());
 
 // Middleware
 app.use(express.json());

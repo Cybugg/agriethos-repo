@@ -14,12 +14,11 @@ dotenv.config();
 app.use(cors({
     origin: [
         'http://localhost:3000',
-        'https://your-frontend-domain.com',
+        'https://agriethos.com',
         'https://api.agriethos.com'
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 }));
 
 // Add explicit OPTIONS handling

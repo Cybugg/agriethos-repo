@@ -50,13 +50,6 @@ const signInWithEmail = async()=>{
       })
       const resJSON = await res.json();
       const {email,farmerId,newUser,userPack} = await resJSON.data;
-
-      if(!resJSON.sucess){
-        console.log("Cannot login user")
-       setError(true)
-       setMsg(resJSON.message || "Error while signing in")
-        return;
-      }
       if ( resJSON.success) {
         console.log("✅ Login successful!");
           setEmail(email)

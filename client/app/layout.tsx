@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Agriethos",
-  description: "",
+  description: "Sustainably Grown, Globally Shared",
 };
 
 export default function RootLayout({

@@ -147,6 +147,7 @@ export default function FarmOnboardingForm() {
     } catch (err) {
       console.error('Upload failed:', err);
       setCurrentStep(0)
+      setErrorSub(true)
       setMsg("Something just happended, don't fret and try again. ")
       setShowConfirm(false)
     } 

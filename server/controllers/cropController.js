@@ -592,8 +592,8 @@ exports.fetchOverview = async (req,res)=>{
         return res.status(404).json({message:"Cannot Find User Farm"});
       }
       // Attempt to get crops
-      const existingUserFarmCrops = await existingUserFarm.crops;
-      const existingUserFarmVerifiedCropswithHash = await existingUserFarmCrops.filter(ele => ele.blockchainTxHash && ele.verificationStatus ==="verified " );
+      const existingUserFarmCrops = existingUserFarm.crops;
+      const existingUserFarmVerifiedCropswithHash = await Crop.find({farmerId:existingUser._id,blockchainTxHash:{$exists:true,$ne:""}}) 
      
       res.status(200).json({
         message:"success", data:{cropsLen:existingUserFarmCrops.length,location:existingUserFarm.location, size:existingUserFarm.size, hashLen:existingUserFarmVerifiedCropswithHash.length}

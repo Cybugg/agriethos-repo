@@ -224,7 +224,6 @@ export default function Home() {
        
     
 //   }
-
     return (
       <div className="text-sm md:text-md min-h-screen px-[32px] py-5 lg:py-[80px] bg-white text-black">
         <div className='flex gap-2 items-center w-full justify-end lg:hidden my-2'>

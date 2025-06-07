@@ -133,7 +133,7 @@ const str2Bool = (val:string)=>{
 //     }
     
 //   }
-
+if (!user) return null;
   return (
     <div className='relative'> 
         {/* Pop ups */}

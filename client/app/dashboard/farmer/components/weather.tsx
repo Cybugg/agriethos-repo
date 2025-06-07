@@ -159,7 +159,7 @@ Extreme weather Alert
 <div>
  {weather.extremeWeatherAlert? Array.isArray(weather.extremeWeatherAlert)
           ? weather.extremeWeatherAlert.length
-            ? weather.extremeWeatherAlert[0].headline
+            ? weather.extremeWeatherAlert[0]
             : 'No alerts'
           : weather.extremeWeatherAlert:"N/A"}
 </div>

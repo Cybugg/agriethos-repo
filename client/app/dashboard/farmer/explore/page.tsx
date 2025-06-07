@@ -58,7 +58,7 @@ const router = useRouter();
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(
+        `https://api.agriethos.com/api/crops/verified?page=${pageNum}&limit=10&search=${encodeURIComponent(
           search
         )}`
       );
@@ -114,7 +114,7 @@ const router = useRouter();
   //         const addr = await signer.getAddress();
   
   //          // send request to get Nonce and transaction timestamp (addr as payload)
-  //     const resNonce = await fetch("http://localhost:5000/api/auth/request-nonce", {
+  //     const resNonce = await fetch("https://api.agriethos.com/api/auth/request-nonce", {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
   //       body: JSON.stringify({ address: addr }),
@@ -138,7 +138,7 @@ const router = useRouter();
   //   console.log(addr,nonce,timestamp)
   //     const signature = await signer.signMessage(message);
   
-  //     const resLogin = await fetch("http://localhost:5000/api/auth/wallet-login", {
+  //     const resLogin = await fetch("https://api.agriethos.com/api/auth/wallet-login", {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
   //       body: JSON.stringify({ address: addr, signature }),

@@ -81,7 +81,7 @@ const EditFarmMethod:React.FC<props> = ({setEditMethod}) => {
          
             console.log(data);
         if(farm){
-             const res = await fetch(`http://localhost:5000/api/farm/farm-properties/${farm._id}`, {
+             const res = await fetch(`https://api.agriethos.com/api/farm/farm-properties/${farm._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),

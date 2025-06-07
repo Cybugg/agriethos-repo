@@ -29,7 +29,7 @@ const [mobileDisplay,setMobileDisplay] = useState(false);
       try {
         setLoading(true);
         // Use the new backend endpoint to fetch farm by its property ID
-        const response = await axios.get(`http://localhost:5000/api/farm/farm-properties/property/${id}`);
+        const response = await axios.get(`https://api.agriethos.com/api/farm/farm-properties/property/${id}`);
         
         // The backend directly returns the farm object on success
         if (response.data) {

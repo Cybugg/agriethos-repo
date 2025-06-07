@@ -76,7 +76,7 @@ const UpgradeCrop:React.FC<props> = ({setDisplayUpgradeCrop, setAlertCreate,setC
     
       console.log('Submitting farm data*****:', data);
 
-      const res = await axios.put('http://localhost:5000/api/crops/upgrade/'+selectedCrop?._id, data, {headers: {
+      const res = await axios.put('https://api.agriethos.com/api/crops/upgrade/'+selectedCrop?._id, data, {headers: {
           'Content-Type': 'multipart/form-data',
         }});
  

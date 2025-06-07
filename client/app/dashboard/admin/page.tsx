@@ -47,7 +47,7 @@ export default function Home() {
     ()=>{
    const fetchOverview = async ()=>{
     try{
-      const result = await fetch("http://localhost:5000/api/admin/overview"+(user && user._id));
+      const result = await fetch("https://api.agriethos.com/api/admin/overview"+(user && user._id));
       const {data} = await result.json();
       if(!result.ok){
         console.log("Error:Cannot fetch overview")
@@ -69,7 +69,7 @@ export default function Home() {
               const fetchAdmins = async()=>{
                   try{
                     if(user){
-                       const result = await fetch("http://localhost:5000/api/admin/admins/"+user._id);
+                       const result = await fetch("https://api.agriethos.com/api/admin/admins/"+user._id);
                        const {data} = await result.json();
                        setAdmins(data);
                        if(data) setLoadingAdmins(false);
@@ -88,7 +88,7 @@ export default function Home() {
                 const fetchAgents = async()=>{
                     try{
                       if(user){
-                         const result = await fetch("http://localhost:5000/api/admin/agents/"+user._id);
+                         const result = await fetch("https://api.agriethos.com/api/admin/agents/"+user._id);
                          const {data} = await result.json();
                          setAgents(data);
                          if(data) setLoadingAgents(false);

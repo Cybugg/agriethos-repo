@@ -17,7 +17,7 @@ router.post("/super-create",superCreate)
 // POST route for wallet-based login
 router.post("/request-nonce", adminLogin);
 router.post("/wallet-login", verifySignature);
-// Overview
-router.get("/overview:adminId",getAdminOverview);
+// Overview - FIXED: Added missing slash before :adminId
+router.get("/overview/:adminId", getAdminOverview);
 
 module.exports = router;

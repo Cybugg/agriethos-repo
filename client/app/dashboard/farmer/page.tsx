@@ -105,6 +105,8 @@ export default function Home() {
   
         // to fetch farm properties and set it to state
   useEffect(() => {
+    setSelectedCrop("maize");
+    setSelectedRange("week");
     if (!isLoginStatusLoading && user) {
       const fetchFarm = async () => {
         try {

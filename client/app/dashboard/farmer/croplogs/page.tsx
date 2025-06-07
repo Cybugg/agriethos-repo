@@ -65,6 +65,12 @@ interface ChartData {
   name: string;
   value: number;
 }
+interface QRCode {
+  cropName: string
+  cropId:string
+ 
+}
+
 function Page() {
       const [displayLogout,setDisplayLogout] = useState<boolean>(false);
       const [displayAddCrop,setDisplayAddCrop] = useState<boolean>(false)
@@ -83,6 +89,10 @@ function Page() {
       const [currentIndex, setCurrentIndex] = useState(0);
       const {farm,setFarm} = useFarm();
       const [statusData,setStatusData] = useState<StatusData[]>([])
+      const [QRCodeData,setQRCodeData] = useState<QRCode>({
+        cropName:"",
+        cropId:""
+      })
 
 
          // Route protection
@@ -243,7 +253,7 @@ useEffect(() => {
     <div>
        {displayAddCrop && <AddCrop setDisplayAddCrop={setDisplayAddCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} />}
        {displayUpgradeCrop && <UpgradeCrop setDisplayUpgradeCrop={setDisplayUpgradeCrop} setAlertCreate={setAlertCreate} setCrops={setCrops} setAlertErrorCreate={setAlertErrorCreate} selectedCrop={selectedCrop} setSelectedCrop={setSelectedCrop} />}
-       {showQRCode && <DisplayQRCode setShowQRCode={setShowQRCode} url='' />}
+       {showQRCode && <DisplayQRCode setShowQRCode={setShowQRCode} cropName={QRCodeData.cropName}  cropId={QRCodeData.cropId}/>}
       
 <div className="text-sm md:text-md min-h-screen px-5 py-5 lg:py-[80px] bg-white text-black">
        <div className='flex gap-2 items-center w-full justify-end lg:hidden my-2'>
@@ -486,7 +496,9 @@ Upgrade
 {ele && ele.verificationStatus === "verified" && ele.blockchainTxHash && <Link  href={`https://sepolia.etherscan.io/tx/${ele.blockchainTxHash}`}  className='bg-white border-2 px-2 py-1 rounded-lg text-black'>
 View on Etherscan
 </Link>}
-{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>setShowQRCode(true)}>
+{ele && ele.verificationStatus === "verified" && <button className='bg-white border-2 px-2 py-1 rounded-lg text-black' onClick={()=>{
+  setShowQRCode(true);
+  setQRCodeData(()=>({cropName:ele.cropName,cropId:ele._id}))}}>
 View QR Code
 </button>
 }

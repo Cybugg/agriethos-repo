@@ -1,16 +1,43 @@
 "use client"
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { QRCodeCanvas } from 'qrcode.react';
 import CopyButton from "@/app/components/copyButton";
+import axios from "axios";
+import Loader from "@/app/components/loader";
 
     interface props {
-    url: string
+    cropName: string
+    cropId:string
     setShowQRCode: (data:boolean) => void ;
 }
 
-const DisplayQRCode:React.FC<props> = ({setShowQRCode,url=""}) => {
+const DisplayQRCode:React.FC<props> = ({setShowQRCode,cropName,cropId}) => {
+
+  const [shortURL, setShortURL] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(
+    ()=>{
+      const shortenURL = async () => {
+        if (!cropId) return;
+    
+        try {
+          setLoading(true);
+          const res = await axios.get(`https://tinyurl.com/api-create.php?url=${`http://localhost:3000/harvest/${cropId}`}`);
+          console.log(res.data);
+          setShortURL(res.data);
+          setLoading(false);
+        } catch (err) {
+          console.error("Error shortening URL", err);
+          setShortURL("Failed to load link. Try again.");
+         
+        }
+      };
+      shortenURL();
+    },[setLoading,setShortURL,cropId]
+  )
 
     function downloadQRCode(canvasId = "qrCanvas", filename = "qrcode.png") {
         const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -32,7 +59,7 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,url=""}) => {
     {/* Title */}
     <div className="flex w-full h-full justify-between items-center">
      <div className="text-lg font-bold">
-      QR Code for <span className="text-primary-700">Maize</span>
+      QR Code for <span className="text-primary-700">{cropName}</span>
      </div>
     <div className="cursor-pointer" onClick={()=>setShowQRCode(false)}>
       <Image src="/icons/cancel.svg" alt="cancel" width={24} height={24} />
@@ -40,24 +67,24 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,url=""}) => {
     </div>    
 {/* Dispplay section */}
 <div className="w-full flex flex-col gap-6 items-center justify-center">
-<QRCodeCanvas
+{loading?<Loader />:<QRCodeCanvas
               id="qrCanvas"
-              value={url}
+              value={shortURL}
               size={220}
               bgColor="#ffffff"
               fgColor="#000000"
               className="mt-4 w-full h-80"
-            />
+            />}
 
             {/* Copy URL */}
-            <div className="flex overflow-hidden rounded-lg">
-            <div className=" border text-lg border-gray-400 p-5 text-black py-2 w-full">{`http://localhost:3000/harvest/`}</div>
-            <CopyButton textToCopy={`http://localhost:3000/harvest/`} />
-            </div>
+          {!loading &&  <div className="flex overflow-hidden rounded-lg">
+            <div className=" border text-lg border-gray-400 p-5 text-black py-2 w-full">{shortURL}</div>
+            <CopyButton textToCopy={shortURL} />
+            </div>}
 {/* item 6 submit*/}
-<button className="bg-primary-500 text-center p-3 rounded-lg w-full" onClick={() => downloadQRCode("qrCanvas", "crop_qr.png")}>
+{!loading && <button className="bg-primary-500 text-center p-3 rounded-lg w-full" onClick={() => downloadQRCode("qrCanvas", "crop_qr.png")}>
   Download QR Code
-</button>
+</button>}
 </div>
    </div>
         </div>

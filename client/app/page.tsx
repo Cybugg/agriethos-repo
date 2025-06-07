@@ -155,7 +155,7 @@ export default function Home() {
                <div className="text-primary-700">{ele && ele.farmPropertyId.farmName}</div>
               <div className="text-xs text-grey-900">
               {/* location */}
-            <div className=" font-thin">
+            <div className=" ">
            { ele.farmPropertyId.location}
             </div>
               </div>

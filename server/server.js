@@ -11,21 +11,27 @@ const reviewerRoutes = require("./routes/reviewerRoutes")
 const app = express();
 dotenv.config();
 
-//  Handle preflight requests
-app.options('*', cors());
+// Allow CORS for your frontends
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://agriethos.com',
+  'https://api.agriethos.com'
+];
 
-// CORS config (allow multiple origins)
+// Handle preflight and normal requests
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://agriethos.com',
-    'https://api.agriethos.com'
-  ],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
 }));
 
-
+// Must be above body parser
+app.options('*', cors());
 // Middleware
 app.use(express.json());
 

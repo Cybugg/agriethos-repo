@@ -23,6 +23,13 @@ interface GrowthDataPoint {
   preHarvest: number;
   postHarvest: number;
 }
+// Dashboard overview data-shape 
+interface Overview {
+  cropsLen:string;
+  location:string;
+  size:string;
+  hashLen:string;
+}
 
 // Define available crop types
 type CropType = 'maize' | 'rice';
@@ -84,10 +91,12 @@ export default function Home() {
   const [msg,setMsg] = useState<string>("");
   const {setCurrentPage,setMobileDisplay} = useNavContext();
   const { address, isLoginStatusLoading,farmerId,newUser,user,email} = useAuth();
-  // const data = cropData[selectedCrop][selectedRange];
+ const [overview, setOverview] = useState<Overview>();
+
   const router = useRouter();
   const { farm, setFarm } = useFarm();
   const data = cropData[selectedCrop][selectedRange];
+  
 
   // Route protection
   useEffect(() => {
@@ -98,6 +107,8 @@ export default function Home() {
        console.log(newUser)
   }, [address,farmerId,isLoginStatusLoading,newUser,router,email])
 
+
+// Set the navbar active value to homr
    useEffect(()=>{
           setCurrentPage("home");
           setMobileDisplay(false);
@@ -130,6 +141,24 @@ export default function Home() {
       fetchFarm();
     }
   }, [user, isLoginStatusLoading,setFarm]);
+
+  // Fetch overview data
+
+  useEffect(()=>{
+    const fetchOverview = async () =>{
+      try{const res = await fetch("http://localhost:5000/api/crops/overview/"+farmerId)
+      const json = await res.json();
+
+      if(!res.ok || json.message !== "success"){
+        console.log("Unable to fetch overview data")
+      }
+      setOverview(json.data);}
+      catch(err){
+        console.log(err);
+      }
+    };
+    fetchOverview();
+  },[setOverview,farmerId])
 
   // to fetch overview
   // useEffect(() => {
@@ -273,7 +302,7 @@ export default function Home() {
           </div >
           </div>
           <div className=' text-2xl '>
-            {farm?farm.crops.length:<div className='w-8 h-8 bg-gray-100'></div>}
+            {overview?overview.cropsLen:<div className='w-8 h-8 bg-gray-100'></div>}
           </div>
         </div>
              {/* Item 2 */}
@@ -285,7 +314,7 @@ export default function Home() {
          
           </div>
           <div className='text-2xl '>
-            {farm? farm.location : <div className='w-8 h-8 bg-gray-100'></div>}
+            {overview?overview.location : <div className='w-8 h-8 bg-gray-100'></div>}
           </div>
         </div>
              {/* Item 3 */}
@@ -299,7 +328,7 @@ export default function Home() {
           </div >
           </div>
           <div className='text-2xl '>
-          {farm?farm.size:<div className='w-8 h-8 bg-gray-100'></div>} {farm && farm.size && "Hectares"}
+          {overview?overview.size:<div className='w-8 h-8 bg-gray-100'></div>} {overview&& overview.size && "Hectares"}
           </div>
         </div>
              {/* Item 4 */}
@@ -311,7 +340,7 @@ export default function Home() {
       
           </div>
           <div className='text-2xl '>
-            {!farm?<div className='w-8 h-8 bg-gray-100'></div>:"0"}
+            {overview?overview.hashLen : <div className='w-8 h-8 bg-gray-100'></div>}
           </div>
         </div>
        </section>

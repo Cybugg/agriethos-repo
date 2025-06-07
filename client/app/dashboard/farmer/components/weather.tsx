@@ -54,6 +54,7 @@ export default function Weather() {
   
   if(sync && farm) navigator.geolocation.getCurrentPosition(
     (position) => {
+      setLoading(true);
       const { latitude, longitude } = position.coords;
       if (!farm.latitude || !farm.longitude){
         fetchWeather(latitude, longitude)
@@ -73,7 +74,7 @@ export default function Weather() {
 
   if (sync && loading) return <div className="text-center h-full flex gap-4 flex-col items-center justify-center text-gray-600 mt-10"><Loader /> <div className=''>Loading...</div></div>;
 
-  if (sync && !weather) return <p className="text-center text-red-600 mt-10">Failed to load weather data</p>;
+  if (sync && !weather) return <div className="text-center text-grey-700 mt-10 px-3 py-2  rounded-full cursor-pointer" onClick={()=>setSync(true)}>Wait ...</div>;
 
   return (<div>
      {sync && weather?<div className="max-w-xl mx-auto  p-6 rounded-2xl  bg-white space-y-4">

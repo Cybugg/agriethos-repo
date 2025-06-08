@@ -196,17 +196,17 @@ export default function FarmOnboardingForm() {
                 A bit more about your farm...
                 </div>
                 <div className="flex flex-col gap-1">
-    <div className="text-grey-600 text-xs">
-        Location:
+    <div className="text-grey-700 text-xs">
+        Location<span className='text-red-500'>*</span>:
         </div>
-        <div className='border-[0.75px] text-grey-700 border-[#CFCFCF] p-2 rounded  w-full'> <select
+        <div className='border text-grey-700 border-gray-700 p-2 rounded  w-full'> <select
         id="location"
         name="location"
         value={formData.location}
         onChange={handleChange}
         className="bg-white rounded  w-full"
       >
-        <option value="">Select a Location</option>
+        <option value="">Select </option>
         {NIGERIAN_STATES.map((state) => (
           <option key={state} value={`${state}, Nigeria`}>
             {state}, Nigeria
@@ -215,17 +215,17 @@ export default function FarmOnboardingForm() {
       </select></div>
        </div>
                     <div className="flex flex-col gap-1">
-    <div className="text-grey-600 text-xs">
-    Farm size {"(in acres)"}:
+    <div className="text-grey-700 text-xs">
+    Farm size {"(hectares)"}<span className='text-red-500'>*</span>:
         </div>
-        <div className='border-[0.75px] text-grey-700 border-[#CFCFCF] p-2 rounded  w-full'>    <select
+        <div className='border text-grey-700 border-gray-700 p-2 rounded  w-full'>    <select
   id="size"
   name="size"
   value={formData.size}
   onChange={handleChange}
  className="w-full bg-white "
 >
-<option value="">Select size (hectares)</option>
+<option value="">Select</option>
   {Array.from({ length: 200 }, (_, i) => {
     const value = (i + 1) * 0.5;
     return (
@@ -238,13 +238,13 @@ export default function FarmOnboardingForm() {
       
           </div>
                     <div className="">
-    <span className="text-grey-600 text-xs">
-        Farm type:
+    <span className="text-grey-700 text-xs">
+        Farm type<span className='text-red-500'>*</span>:
         </span>
      
-<div className="border-[0.75px] border-[#CFCFCF] p-2 rounded  w-full">
+<div className="border border-gray-700 p-2 rounded  w-full">
     <select id="farmType" value={formData.farmType} name="farmType" defaultValue={""} onChange={handleChange} className="bg-white outline-none border-none w-full text-gray-600" >
-        <option className='bg-white text-black' value={""} disabled   >Select one</option>
+        <option className='bg-white text-black' value={""} disabled   >Select</option>
         <option className='bg-white text-black' value={"organic"} >Organic farming</option>
         <option className='bg-white text-black' value={"conventional"} >Conventional farming</option>
         <option className='bg-white text-black' value={"hydroponic"} >Hydroponic farming</option>
@@ -261,13 +261,13 @@ export default function FarmOnboardingForm() {
         <div className="space-y-4 w-full">
         {/* Soil Type */}
             <div className="">
-<span className="text-grey-600 text-xs">
-Soil type:
+<span className="text-grey-700 text-xs">
+Soil type<span className='text-red-500'>*</span>:
     </span>
  
-    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <div className="border border-gray-700 p-3 rounded-lg w-full">
     <select id="location" value={formData.soilType} name="soilType" defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
-        <option className='bg-white text-black' value={""} disabled   >Select one</option>
+        <option className='bg-white text-black' value={""} disabled   >Select</option>
         <option className='bg-white text-black' value={"sandy"} >Sandy soil</option>
         <option className='bg-white text-black' value={"clay"} >Clay soil</option>
         <option className='bg-white text-black' value={"loamy"} >Loamy soil</option>
@@ -278,13 +278,13 @@ Soil type:
 </div></div>       
         {/* Fertilizer Type */}
         <div className="">
-<span className="text-grey-600 text-xs">
-Fertilizer type:
+<span className="text-grey-700 text-xs">
+Fertilizer type<span className='text-red-500'>*</span>:
     </span>
  
-    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <div className="border border-gray-700 p-3 rounded-lg w-full">
     <select id="location" name="fertilizerType" value={formData.fertilizerType} defaultValue={""}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
-    <option value={""} disabled  className="bg-white text-black" >Select one</option>
+    <option value={""} disabled  className="bg-white text-black" >Select</option>
         <option value={"organic"} className="bg-white text-black" >Organic</option>
         <option value={"synthetic"} className="bg-white text-black" >synthetic</option>
         <option value={"none"} className="bg-white text-black" >None</option>
@@ -292,13 +292,13 @@ Fertilizer type:
 </div></div>      
 {/* Water Source */}
 <div className="">
-<span className="text-grey-600 text-xs">
-Water source:
+<span className="text-grey-700 text-xs">
+Water source<span className='text-red-500'>*</span>:
     </span>
  
-    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <div className="border border-gray-700 p-3 rounded-lg w-full">
     <select id="location" name="waterSource" defaultValue={""} value={formData.waterSource}  onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
-        <option  value={""} disabled  className="bg-white text-black" >Select one</option>
+        <option  value={""} disabled  className="bg-white text-black" >Select</option>
         <option  value={"surface water"} className="bg-white text-black" >Surface water e.g rivers</option>
         <option  value={"ground water"} className="bg-white text-black" >Ground water e.g wells, boreholes, etc</option>
         <option  value={"rain water"} className="bg-white text-black" >Rain water</option>
@@ -308,13 +308,13 @@ Water source:
 {/* Fertilizer type  */}
 
                 <div className="">
-<span className="text-grey-600 text-xs">
-Irrigation method:
+<span className="text-grey-700 text-xs">
+Irrigation method<span className='text-red-500'>*</span>:
     </span>
  
-    <div className="border-[0.75px] border-[#CFCFCF] p-3 rounded-lg w-full">
+    <div className="border border-gray-700 p-3 rounded-lg w-full">
     <select id="irrigation" name="irrigationType" defaultValue={""} value={formData.irrigationType}   onChange={handleChange} className="bg-white outline-none border-none text-gray-600 w-full">
-        <option  value={""} disabled  className="bg-white text-black" >Select one</option>
+        <option  value={""} disabled  className="bg-white text-black" >Select</option>
         <option  value={"sprinkler"} className="bg-white text-black" >Sprinkler</option>
         <option  value={"drip"} className="bg-white text-black" >Drip</option>
         <option  value={"flood"} className="bg-white text-black" >Flood</option>
@@ -370,7 +370,7 @@ Companion planting
           <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">
           
       <div className='text-3xl py-12 text-center '>
-   Share 4  Images of Farm
+   Share exactly 4  Images of Farm
                 </div>
          {/* Upload area */}
 <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-5">

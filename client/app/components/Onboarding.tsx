@@ -58,12 +58,12 @@ export default function FarmOnboardingForm() {
   const router = useRouter();
 
 
-  useEffect(
-    ()=>{
-      if(!farmerId || !email || !user)router.replace("/auth");
+  // useEffect(
+  //   ()=>{
+  //     if(!farmerId || !email || !user)router.replace("/auth");
 
-    },[farmerId,email,user,router]
-  )
+  //   },[farmerId,email,user,router]
+  // )
   function boolToStr (arg:boolean){
     return arg === true? "true" : "false";
   }
@@ -146,6 +146,7 @@ export default function FarmOnboardingForm() {
     
     } catch (err) {
       console.error('Upload failed:', err);
+      setLoading(false)
       setCurrentStep(0)
       setErrorSub(true)
       setMsg("Something just happended, don't fret and try again. ")
@@ -157,7 +158,7 @@ export default function FarmOnboardingForm() {
   const progressPercentage = ((currentStep + 1) / totalSteps) * 100;
 
   return (
-    <div className="max-w-xl max-h-screen mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
+    <div className="max-w-xl relative max-h-screen mx-auto mt-36 p-6 w-full md:min-w-[500px] rounded bg-white">
       {showConfirm &&<Confirm loading={loading} onCancel={()=>setShowConfirm(false)} onConfirm={handleSubmit} mainMsg=' Have you confirmed that every details you provided are correct?' subMsg='Submissions are subjected to review'/>} 
       {/* Progress Bar */}
       <div className="mb-6">
@@ -425,8 +426,11 @@ Note: You are required to upload 4 images of your farm
           </button>
         )}
       </div>
-      {successSub && <Alert message={msg} onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
+      <div className='relative bg-red-500 top-0 z-[99999999999999]'>
+         {successSub && <Alert message={msg} onClose={()=> setSuccessSub(false)} color='text-green-800'  background='bg-green-100' />}
       {errorSub && <Alert message={msg}onClose={()=> setErrorSub(false)} color='text-red-800'  background='bg-red-100' />}
+      </div>
+     
     </div>
   );
 }

@@ -11,10 +11,10 @@ interface props{
 
 const Confirm:React.FC<props> = ({mainMsg,subMsg,onCancel,onConfirm,loading})=> {
   return (
-     <div className="p-3 bg-white w-full fixed items-center justify-center h-screen z-[9999999999]">
+     <div className="p-3 fixed top-0 left-0 bg-white  items-center justify-center h-screen z-[999]">
    
                {/* edit overview form */}
-      <div className="p-6 bg-white w-full flex flex-col items-center justify-center gap-8 lg:mr-80 border shadow max-w-[450px] mx-5 mt-24">
+      <div className="p-6 bg-white flex flex-col items-center justify-center gap-8 lg:mr-80 border shadow max-w-[450px] mx-5 mt-24">
        {/* Title */}
      {!loading &&  <div className="flex flex-col w-full h-full justify-between gap-3">
         <div className="text-lg">

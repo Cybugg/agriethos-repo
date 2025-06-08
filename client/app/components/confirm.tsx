@@ -11,7 +11,7 @@ interface props{
 
 const Confirm:React.FC<props> = ({mainMsg,subMsg,onCancel,onConfirm,loading})=> {
   return (
-     <div className="p-3 fixed top-0 left-0 bg-white  items-center justify-center h-screen z-[999]">
+     <div className="p-3 fixed top-0 left-0 bg-white w-full items-center justify-center h-screen z-[999]">
    
                {/* edit overview form */}
       <div className="p-6 bg-white flex flex-col items-center justify-center gap-8 lg:mr-80 border shadow max-w-[450px] mx-5 mt-24">

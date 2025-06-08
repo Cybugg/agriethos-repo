@@ -22,12 +22,12 @@ exports.createFarmProperty = async (req, res) => {
       const images = req.files.map(file => file.path); // 🖼️ Get all uploaded Cloudinary URLs
 
     // Check if exactly 4 images are uploaded
-    if (!images || images.length !== 4) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'Exactly 4 images are required.'
-      });
-    }
+    // if (!images || images.length !== 4) {
+    //   return res.status(400).json({ 
+    //     success: false,
+    //     message: 'Exactly 4 images are required.'
+    //   });
+    // }
 
       if (!farmerId || !farmName || !location) {
         return res.status(400).json({ error: 'Required fields missing' });

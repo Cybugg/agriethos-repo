@@ -30,7 +30,7 @@ const NIGERIAN_STATES = [
   "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
   "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
 ];
-const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices','Upload Images'];
+const steps = ['Basic Information', 'More information', 'Farming style','Farm Practices'];
 
 export default function FarmOnboardingForm() {
   const {farmerId,user,email,setNewUser} = useAuth();
@@ -105,10 +105,12 @@ export default function FarmOnboardingForm() {
       alert("Fill out all fields")
       console.log("Fill out all fields")
       return;
-    } if (selectedFiles.length !=4) {
-      alert('You must upload 4 images');
-      return;
     }
+
+    //  if (selectedFiles.length !=4) {
+    //   alert('You must upload 4 images');
+    //   return;
+    // }
     try {
       const data = new FormData();
       
@@ -127,9 +129,9 @@ export default function FarmOnboardingForm() {
       data.append('companionPlanting',boolToStr(formData.companionPlanting));
      
       // Append multiple images correctly
-      selectedFiles.forEach((file: File) => {
-        data.append('images', file); // 'images' must match backend field
-      });
+      // selectedFiles.forEach((file: File) => {
+      //   data.append('images', file); // 'images' must match backend field
+      // });
     
       const res = await axios.post('https://api.agriethos.com/api/farm/farm-properties', data, {headers: {
           'Content-Type': 'multipart/form-data',

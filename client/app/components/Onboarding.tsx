@@ -58,12 +58,12 @@ export default function FarmOnboardingForm() {
   const router = useRouter();
 
 
-  // useEffect(
-  //   ()=>{
-  //     if(!farmerId || !email || !user)router.replace("/auth");
+  useEffect(
+    ()=>{
+      if(!farmerId || !email || !user)router.replace("/auth");
 
-  //   },[farmerId,email,user,router]
-  // )
+    },[farmerId,email,user,router]
+  )
   function boolToStr (arg:boolean){
     return arg === true? "true" : "false";
   }

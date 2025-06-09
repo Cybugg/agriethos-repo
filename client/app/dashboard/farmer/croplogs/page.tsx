@@ -679,7 +679,7 @@ Crop Name
       </div>}
 {/* Verification action */}
 <div className='basis-1/2 lg:basis-1/3 flex items-center justify-center '>
-{ele.verificationStatus ==="verified"&&<button className='underline px-2 py-1 rounded-lg text-black' onClick={()=>{
+{ele.verificationStatus ==="verified"&&<button className='border border-black  px-2 font-semibold rounded-lg text-black' onClick={()=>{
   setShowQRCode(true);
   setQRCodeData(()=>({cropName:ele.cropName,cropId:ele._id}))}}>
 View QR Code

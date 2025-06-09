@@ -39,18 +39,36 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,cropName,cropId}) => {
     },[setLoading,setShortURL,cropId]
   )
 
-    function downloadQRCode(canvasId = "qrCanvas", filename = "qrcode.png") {
-        const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-        if (!canvas) return alert("QR code canvas not found");
-      
-        const url = canvas.toDataURL("image/png");
-      
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        a.click();
-      }
-
+  function downloadQRCode(canvasId = "qrCanvas", filename = "qrcode.png") {
+    const originalCanvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    if (!originalCanvas) return alert("QR code canvas not found");
+  
+    const originalSize = originalCanvas.width;
+    const padding = 40; // white padding (around all sides)
+    const finalSize = originalSize + padding * 2;
+  
+    const finalCanvas = document.createElement("canvas");
+    finalCanvas.width = finalSize;
+    finalCanvas.height = finalSize;
+    const ctx = finalCanvas.getContext("2d");
+    if (!ctx) return;
+  
+    // Draw white background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, finalSize, finalSize);
+  
+    // Draw QR image centered with padding
+    ctx.drawImage(originalCanvas, padding, padding, originalSize, originalSize);
+  
+    // Trigger download
+    const imageURL = finalCanvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = imageURL;
+    link.download = filename;
+    link.click();
+  }
+  
+  
       
 
     return (
@@ -73,7 +91,7 @@ const DisplayQRCode:React.FC<props> = ({setShowQRCode,cropName,cropId}) => {
               size={220}
               bgColor="#ffffff"
               fgColor="#000000"
-              className="mt-4 w-full h-80"
+              className="mt-4 w-full h-80 p-2 border-2 rounded-lg "
             />}
 
             {/* Copy URL */}

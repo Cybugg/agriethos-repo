@@ -12,7 +12,7 @@ import Alert from '../../components/alert';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setAdminId, address,user,setUser} = useAdminAuth();
+  const { setAddress ,setAdminId, address,user,setUser,isLoginStatusLoading} = useAdminAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -23,7 +23,7 @@ export default function Page() {
 
   useEffect(()=>
     {
-      if (address  && user && user.role ==="admin"){router.replace("/dashboard/admin/")}
+      if (isLoginStatusLoading &&address  && user && user.role ==="admin"){router.replace("/dashboard/admin/")}
      
     },[address,user,router]
   )

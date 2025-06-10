@@ -20,7 +20,6 @@ export interface User {
   walletAddress: string;
   email: string;
   nounce:string;
- 
   role:string;
   [key: string]: string;
 }
@@ -28,8 +27,6 @@ export interface User {
 const AuthContext = createContext<AuthContextType >({
   user:  null,
   setUser: () => {},
-
-
   address: null,
   setAddress: () => {},
   agentId: null,

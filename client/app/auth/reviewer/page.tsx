@@ -12,7 +12,7 @@ import { useAgentAuth } from '@/app/Context/AgentAuthContext';
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const { setAddress ,setAgentId, address,user,setUser} = useAgentAuth();
+  const { setAddress ,setAgentId, address,user,setUser,isLoginStatusLoading} = useAgentAuth();
   const [msg, setMsg] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [successSub, setSuccessSub] = useState<boolean>(false)
@@ -23,9 +23,9 @@ export default function Page() {
 
   useEffect(()=>
     {
-      if (address  && user && user.role && user.role ==="reviewer"){router.replace("/dashboard/reviewer/")}
+      if (isLoginStatusLoading && address  && user && user.role ==="reviewer"){router.replace("/dashboard/reviewer/")}
      
-    },[address,user,router]
+    },[address,user,router,isLoginStatusLoading]
   )
 
   // onConnect getNonce -> 
@@ -97,7 +97,7 @@ Only sign this message if you trust AgriEthos.
         console.log(address)
         console.log(agent)
         setSuccessSub(true);
-        setAgentId(agent._d)
+        setAgentId(agent._id)
         setUser(agent)
         console.log(agent)
       router.replace("/dashboard/reviewer")

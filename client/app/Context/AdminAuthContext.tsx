@@ -76,6 +76,7 @@ const handleSetId = ( id: string | null) => {
   const logout = () => {
     setAddress(null);
     setAdminId(null);
+    setUser(null);
     localStorage.removeItem("adminId")
     localStorage.removeItem("adminAddress")
     localStorage.removeItem("newUser")

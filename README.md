@@ -12,9 +12,6 @@ AgriEthos.com is a decentralized application (dApp) that enhances transparency, 
   - Crops receive a unique digital ID (QR Code) linked to the blockchain upon harvest.
   - Processing plants scan and update product details for quality compliance.
 
-- **Logistics & Supply Chain Management**
-  - Each stage of transportation and handling is logged on the blockchain.
-  - Smart contracts trigger alerts for storage condition violations.
 
 - **Retail & Consumer Transparency**
   - Consumers can scan QR codes to access the full history of a product.
